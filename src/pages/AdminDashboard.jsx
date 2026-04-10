@@ -1,45 +1,66 @@
 import { useEffect, useState } from "react";
-import { Navigate, useNavigate } from "react-router-dom";
+import { Navigate, useNavigate, useLocation } from "react-router-dom";
 import Sidebar from "../components/Sidebar";
 import Navbar from "../components/Navbar";
 import axios from "axios";
+import "./AdminDashboard.css";
 
 function AdminDashboard() {
   const [gaushalas, setGaushalas] = useState([]);
   const [doctorCount, setDoctorCount] = useState(0);
-  const [loginForm, setLoginForm] = useState({
-    name: "",
-    email: "",
-    password: "",
-    kosalaId: "",
-  });
+  const [admins, setAdmins] = useState([]);
+  const [loading, setLoading] = useState(false);
+  const [error, setError] = useState(null);
 
   const navigate = useNavigate();
+  const location = useLocation();
 
   useEffect(() => {
-    fetchGaushalas();
-    fetchDoctorCount();
-  }, []);
+    fetchAllData();
+  }, [location.key]);
 
   if (localStorage.getItem("role") !== "admin") {
     return <Navigate to="/" />;
   }
 
-  const fetchGaushalas = async () => {
+  const fetchAllData = async () => {
+    setLoading(true);
+    setError(null);
     try {
-      const res = await axios.get("http://localhost:5000/api/kosala/full");
-      setGaushalas(res.data);
-    } catch (err) {
-      console.error("Error fetching gaushalas:", err);
+      await Promise.all([
+        fetchGaushalas(),
+        fetchDoctorCount(),
+        fetchKosalaAdmins(),
+      ]);
+    } catch {
+      setError("Failed to load data");
+    } finally {
+      setLoading(false);
     }
   };
 
+  const fetchGaushalas = async () => {
+    const res = await axios.get("http://localhost:5000/api/kosala/full");
+    setGaushalas(res.data);
+  };
+
   const fetchDoctorCount = async () => {
+    const res = await axios.get("http://localhost:5000/api/doctors");
+    setDoctorCount(res.data.length);
+  };
+
+  const fetchKosalaAdmins = async () => {
     try {
-      const res = await axios.get("http://localhost:5000/api/doctors");
-      setDoctorCount(res.data.length);
-    } catch (err) {
-      console.error("Error fetching doctors:", err);
+      const res = await axios.get("http://localhost:5000/api/kosala-admins");
+
+      let adminsData = [];
+      if (Array.isArray(res.data)) adminsData = res.data;
+      else if (res.data.admins) adminsData = res.data.admins;
+      else if (res.data.data) adminsData = res.data.data;
+
+      setAdmins(adminsData);
+    } catch {
+      setAdmins([]);
     }
   };
 
@@ -48,33 +69,17 @@ function AdminDashboard() {
     navigate("/");
   };
 
-  const handleDoctorLogin = async (e) => {
-    e.preventDefault();
-
-    console.log("Sending login:", loginForm);
-
-    if (!loginForm.kosalaId) {
-      alert("Please select a Gaushala");
-      return;
-    }
-
-    try {
-      const res = await axios.post(
-        "http://localhost:5000/api/doctor-auth/login",
-        loginForm
-      );
-
-      localStorage.setItem("role", "doctor");
-      localStorage.setItem("doctorId", res.data._id);
-      localStorage.setItem("kosalaId", res.data.kosalaId.toString());
-      localStorage.setItem("doctorName", res.data.name);
-
-      navigate("/doctor-dashboard");
-    } catch (err) {
-      console.error("Login error:", err.response?.data);
-      alert(err.response?.data?.message || "Invalid Doctor Credentials");
-    }
-  };
+  if (loading && gaushalas.length === 0) {
+    return (
+      <div className="layout">
+        <Sidebar />
+        <div className="main">
+          <Navbar />
+          <h3 className="loading">Loading...</h3>
+        </div>
+      </div>
+    );
+  }
 
   return (
     <div className="layout">
@@ -82,43 +87,37 @@ function AdminDashboard() {
       <div className="main">
         <Navbar />
 
-        <h2>Admin Panel</h2>
+        <h2 className="title">Admin Panel</h2>
+
+        {error && <p className="error">{error}</p>}
 
         {/* ACTION BUTTONS */}
-        <div style={{ display: "flex", gap: "12px", marginBottom: "28px" }}>
-          <button
-            onClick={() => navigate("/add-gaushala")}
-            style={{ background: "var(--accent-green)", color: "#0f1410" }}
-          >
+        <div className="actions">
+          <button className="btn green" onClick={() => navigate("/add-gaushala")}>
             + Add Gaushala
           </button>
-          <button
-            onClick={() => navigate("/add-doctor")}
-            style={{ background: "var(--accent-amber)", color: "#0f1410" }}
-          >
+          <button className="btn orange" onClick={() => navigate("/add-doctor")}>
             + Add Doctor
+          </button>
+          <button className="btn red" onClick={fetchAllData}>
+            Refresh
           </button>
         </div>
 
-        {/* SUMMARY CARDS */}
-        <div className="card-container" style={{ marginBottom: "32px" }}>
-          <div
-            className="card blue clickable"
-            onClick={() => navigate("/gaushalas-list")}
-          >
-            <h3>Total Gaushalas</h3>
+        {/* CLICKABLE STATS */}
+        <div className="stats">
+          <div className="mini-card" onClick={() => navigate("/gaushalas-list")}>
+            <h4>Gaushalas</h4>
             <p>{gaushalas.length}</p>
           </div>
-          <div
-            className="card green clickable"
-            onClick={() => navigate("/doctors-list")}
-          >
-            <h3>Total Doctors</h3>
+
+          <div className="mini-card" onClick={() => navigate("/doctors-list")}>
+            <h4>Doctors</h4>
             <p>{doctorCount}</p>
           </div>
         </div>
 
-        {/* GAUSHALA TABLE */}
+        {/* TABLE */}
         <h3 className="section-title">Registered Gaushalas</h3>
 
         <div className="table-wrapper">
@@ -126,110 +125,58 @@ function AdminDashboard() {
             <thead>
               <tr>
                 <th>#</th>
-                <th>Gaushala Name</th>
-                <th>Doctor Assigned</th>
-                <th>Total Cows</th>
+                <th>Name</th>
+                <th>Admin</th>
+                <th>Doctor</th>
+                <th>Cows</th>
                 <th>Action</th>
               </tr>
             </thead>
+
             <tbody>
-              {gaushalas.length === 0 ? (
-                <tr>
-                  <td colSpan="5" style={{ textAlign: "center" }}>
-                    No gaushalas found
-                  </td>
-                </tr>
-              ) : (
-                gaushalas.map((g, i) => (
+              {gaushalas.map((g, i) => {
+                const admin = admins.find(
+                  (a) =>
+                    String(a.kosalaId?._id || a.kosalaId) === String(g._id)
+                );
+
+                return (
                   <tr key={g._id}>
                     <td>{i + 1}</td>
                     <td>{g.name}</td>
+
+                    <td>
+                      {g.admin?.name || admin?.name || "Not Assigned"}
+                    </td>
+
                     <td>{g.doctor?.name || "Not Assigned"}</td>
                     <td>{g.totalCows || 0}</td>
+
                     <td>
                       <button
+                        className="info-btn"
                         onClick={() => navigate(`/gaushala-info/${g._id}`)}
-                        style={{ marginRight: "6px" }}
                       >
                         Info
                       </button>
+
                       <button
+                        className="open-btn"
                         onClick={() => navigate(`/admin/kosala/${g._id}`)}
                       >
-                        Open Dashboard
+                        Open
                       </button>
                     </td>
                   </tr>
-                ))
-              )}
+                );
+              })}
             </tbody>
           </table>
         </div>
 
-        {/* DOCTOR LOGIN SECTION */}
-        <hr style={{ margin: "40px 0", borderColor: "var(--border)" }} />
-
-        <h3>Doctor Login</h3>
-
-        <form onSubmit={handleDoctorLogin} className="form-box">
-
-          <label>Doctor Name</label>
-          <input
-            placeholder="Enter doctor name"
-            value={loginForm.name}
-            onChange={(e) =>
-              setLoginForm({ ...loginForm, name: e.target.value })
-            }
-            required
-          />
-
-          <label>Email ID</label>
-          <input
-            type="email"
-            placeholder="Enter email"
-            value={loginForm.email}
-            onChange={(e) =>
-              setLoginForm({ ...loginForm, email: e.target.value })
-            }
-            required
-          />
-
-          <label>Password</label>
-          <input
-            type="password"
-            placeholder="Enter password"
-            value={loginForm.password}
-            onChange={(e) =>
-              setLoginForm({ ...loginForm, password: e.target.value })
-            }
-            required
-          />
-
-          <label>Select Gaushala</label>
-          <select
-            value={loginForm.kosalaId}
-            onChange={(e) =>
-              setLoginForm({ ...loginForm, kosalaId: e.target.value })
-            }
-            required
-          >
-            <option value="">-- Select Gaushala --</option>
-            {gaushalas.map((g) => (
-              <option key={g._id} value={g._id}>
-                {g.name}
-              </option>
-            ))}
-          </select>
-
-          <button type="submit">Login as Doctor</button>
-
-        </form>
-
-        <br />
-        <button className="cancel-btn" onClick={logout}>
+        <button className="logout" onClick={logout}>
           Logout
         </button>
-
       </div>
     </div>
   );

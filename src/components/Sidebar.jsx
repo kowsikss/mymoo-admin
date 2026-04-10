@@ -22,6 +22,7 @@ function Sidebar() {
         {role === "doctor" && (
           <>
             <li><Link to="/doctor-dashboard">Dashboard</Link></li>
+            <li><Link to="/doctor-manage-cow">🐄 Manage Cows</Link></li>
 
             <li><Link to="/add-deworming">Add Deworming</Link></li>
             <li><Link to="/manage-deworming">Manage Deworming</Link></li>

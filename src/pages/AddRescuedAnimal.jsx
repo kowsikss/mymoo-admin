@@ -1,6 +1,7 @@
 import { useEffect, useState } from "react";
-import { Navigate } from "react-router-dom";
+import { Navigate, useNavigate } from "react-router-dom";
 import Sidebar from "../components/Sidebar";
+import KosalaAdminSidebar from "../components/KosalaAdminSidebar";
 import Navbar from "../components/Navbar";
 import axios from "axios";
 
@@ -21,14 +22,9 @@ function AddRescuedAnimal() {
   const [animalPhoto, setAnimalPhoto] = useState(null);
   const [loading, setLoading] = useState(false);
 
-  useEffect(() => {
-    fetchBreeds();
-  }, []);
+  const role = localStorage.getItem("role");
 
-  if (localStorage.getItem("role") !== "doctor") {
-    return <Navigate to="/" />;
-  }
-
+  // ✅ FIX 1: Define fetchBreeds BEFORE useEffect
   const fetchBreeds = async () => {
     try {
       const res = await axios.get("http://localhost:5000/api/breeds");
@@ -38,6 +34,15 @@ function AddRescuedAnimal() {
     }
   };
 
+  useEffect(() => {
+    fetchBreeds();
+  }, []);
+
+  // ✅ FIX 2: Role check AFTER all hooks, and allow both roles
+  if (role !== "doctor" && role !== "kosala-admin") {
+    return <Navigate to="/" />;
+  }
+
   const handleChange = (e) => {
     setForm({ ...form, [e.target.name]: e.target.value });
   };
@@ -45,7 +50,6 @@ function AddRescuedAnimal() {
   const handleSubmit = async (e) => {
     e.preventDefault();
 
-    // Validate mandatory fields
     if (
       !form.dateOfRescued ||
       !form.sex ||
@@ -67,11 +71,9 @@ function AddRescuedAnimal() {
       const kosalaId = localStorage.getItem("kosalaId");
       const formData = new FormData();
 
-      // Append all text fields
       Object.keys(form).forEach((key) => formData.append(key, form[key]));
       formData.append("kosalaId", kosalaId);
 
-      // Append photo if selected
       if (animalPhoto) formData.append("animalPhoto", animalPhoto);
 
       await axios.post("http://localhost:5000/api/rescued", formData, {
@@ -80,7 +82,6 @@ function AddRescuedAnimal() {
 
       alert("Rescued Animal Record Added Successfully!");
 
-      // Reset form
       setForm({
         dateOfRescued: "",
         sex: "",
@@ -94,7 +95,6 @@ function AddRescuedAnimal() {
         tagNumber: "",
       });
       setAnimalPhoto(null);
-
     } catch (err) {
       console.error("Error saving record:", err);
       alert("Error saving record");
@@ -105,7 +105,8 @@ function AddRescuedAnimal() {
 
   return (
     <div className="layout">
-      <Sidebar />
+      {/* ✅ FIX 3: Show correct sidebar per role */}
+      {role === "kosala-admin" ? <KosalaAdminSidebar /> : <Sidebar />}
       <div className="main">
         <Navbar />
 
@@ -113,7 +114,6 @@ function AddRescuedAnimal() {
 
         <form className="form-box" onSubmit={handleSubmit}>
 
-          {/* DATE OF RESCUED */}
           <label>Date of Rescued <span style={{ color: "red" }}>*</span></label>
           <input
             type="date"
@@ -123,27 +123,15 @@ function AddRescuedAnimal() {
             required
           />
 
-          {/* SEX */}
           <label>Sex of the Cattle <span style={{ color: "red" }}>*</span></label>
-          <select
-            name="sex"
-            value={form.sex}
-            onChange={handleChange}
-            required
-          >
+          <select name="sex" value={form.sex} onChange={handleChange} required>
             <option value="">Select Sex</option>
             <option value="Cow">Cow</option>
             <option value="Bull">Bull</option>
           </select>
 
-          {/* BREED */}
           <label>Breed of the Rescued Cattle <span style={{ color: "red" }}>*</span></label>
-          <select
-            name="breed"
-            value={form.breed}
-            onChange={handleChange}
-            required
-          >
+          <select name="breed" value={form.breed} onChange={handleChange} required>
             <option value="">Select Breed</option>
             {breeds.length === 0 ? (
               <option disabled>Loading breeds...</option>
@@ -156,7 +144,6 @@ function AddRescuedAnimal() {
             )}
           </select>
 
-          {/* AGE */}
           <label>Age <span style={{ color: "red" }}>*</span></label>
           <input
             type="number"
@@ -168,7 +155,6 @@ function AddRescuedAnimal() {
             required
           />
 
-          {/* OWNER DETAILS */}
           <h3 style={{ marginTop: "16px" }}>Owner Details</h3>
 
           <label>Owner Name <span style={{ color: "red" }}>*</span></label>
@@ -216,7 +202,6 @@ function AddRescuedAnimal() {
             onChange={(e) => setAnimalPhoto(e.target.files[0])}
           />
 
-          {/* REASON OF ADOPTION */}
           <label>Reason of Adoption</label>
           <select
             name="reasonOfAdoption"
@@ -230,7 +215,6 @@ function AddRescuedAnimal() {
             <option value="Fracture">Fracture</option>
           </select>
 
-          {/* TAG NUMBER */}
           <label>New Tag Number (RFID) <span style={{ color: "red" }}>*</span></label>
           <input
             name="tagNumber"

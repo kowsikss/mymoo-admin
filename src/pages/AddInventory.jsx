@@ -1,55 +1,34 @@
-import { useState, useEffect } from "react";
-import { Navigate } from "react-router-dom";
-import Sidebar from "../components/Sidebar";
+import { useState } from "react";
+import { Navigate, useNavigate } from "react-router-dom";
+import RoleSidebar from "../components/RoleSidebar";
 import Navbar from "../components/Navbar";
 import axios from "axios";
 
 function AddInventory() {
+  const navigate = useNavigate();
   const [activeTab, setActiveTab] = useState("feed");
-  const [loading, setLoading] = useState(false);
+  const [loading,   setLoading]   = useState(false);
 
   const [feedForm, setFeedForm] = useState({
-    date: "",
-    feedType: "",
-    gunnyBags: "",
-    weightPerBag: "",
-    supplier: "",
-    notes: "",
+    date: "", feedType: "", gunnyBags: "", weightPerBag: "", supplier: "", notes: "",
   });
 
   const [medicineForm, setMedicineForm] = useState({
-    date: "",
-    medicineName: "",
-    drugName: "",
-    quantity: "",
-    unit: "",
-    expiryDate: "",
-    notes: "",
+    date: "", medicineName: "", drugName: "", quantity: "", unit: "", expiryDate: "", notes: "",
   });
 
   const [semenForm, setSemenForm] = useState({
-    date: "",
-    breedName: "",
-    strawCount: "",
-    batchNumber: "",
-    expiryDate: "",
-    notes: "",
+    date: "", breedName: "", strawCount: "", batchNumber: "", expiryDate: "", notes: "",
   });
 
-  useEffect(() => {}, []);
-
-  if (localStorage.getItem("role") !== "doctor") {
+  const role = localStorage.getItem("role");
+  if (role !== "doctor" && role !== "kosala-admin") {
     return <Navigate to="/" />;
   }
 
-  const handleFeedChange = (e) =>
-    setFeedForm({ ...feedForm, [e.target.name]: e.target.value });
-
-  const handleMedicineChange = (e) =>
-    setMedicineForm({ ...medicineForm, [e.target.name]: e.target.value });
-
-  const handleSemenChange = (e) =>
-    setSemenForm({ ...semenForm, [e.target.name]: e.target.value });
+  const handleFeedChange     = (e) => setFeedForm({ ...feedForm, [e.target.name]: e.target.value });
+  const handleMedicineChange = (e) => setMedicineForm({ ...medicineForm, [e.target.name]: e.target.value });
+  const handleSemenChange    = (e) => setSemenForm({ ...semenForm, [e.target.name]: e.target.value });
 
   const handleSubmit = async (e) => {
     e.preventDefault();
@@ -59,15 +38,14 @@ function AddInventory() {
     try {
       const payload =
         activeTab === "feed"
-          ? { kosalaId, type: "feed", ...feedForm }
+          ? { kosalaId, type: "feed",     ...feedForm }
           : activeTab === "medicine"
           ? { kosalaId, type: "medicine", ...medicineForm }
-          : { kosalaId, type: "semen", ...semenForm };
+          : { kosalaId, type: "semen",    ...semenForm };
 
       await axios.post("http://localhost:5000/api/inventory", payload);
       alert("Inventory record saved successfully!");
 
-      // Reset active form
       if (activeTab === "feed")
         setFeedForm({ date: "", feedType: "", gunnyBags: "", weightPerBag: "", supplier: "", notes: "" });
       else if (activeTab === "medicine")
@@ -83,9 +61,26 @@ function AddInventory() {
     }
   };
 
+  const tabBtn = (tab, label) => (
+    <button
+      key={tab}
+      type="button"
+      onClick={() => setActiveTab(tab)}
+      style={{
+        background:   activeTab === tab ? "var(--accent-green)" : "transparent",
+        color:        activeTab === tab ? "#0f1410" : "var(--text-secondary)",
+        border:       "1px solid var(--border)",
+        borderColor:  activeTab === tab ? "var(--accent-green)" : "var(--border)",
+        textTransform: "capitalize",
+      }}
+    >
+      {label}
+    </button>
+  );
+
   return (
     <div className="layout">
-      <Sidebar />
+      <RoleSidebar />
       <div className="main">
         <Navbar />
         <h2>INVENTORY MODULE</h2>
@@ -93,31 +88,15 @@ function AddInventory() {
           Enter daily inventory data
         </p>
 
-        {/* TABS */}
         <div style={{ display: "flex", gap: "10px", marginBottom: "28px" }}>
-          {["feed", "medicine", "semen"].map((tab) => (
-            <button
-              key={tab}
-              type="button"
-              onClick={() => setActiveTab(tab)}
-              style={{
-                background: activeTab === tab ? "var(--accent-green)" : "transparent",
-                color: activeTab === tab ? "#0f1410" : "var(--text-secondary)",
-                border: "1px solid var(--border)",
-                borderColor: activeTab === tab ? "var(--accent-green)" : "var(--border)",
-                textTransform: "capitalize",
-              }}
-            >
-              {tab === "feed" ? "🌾 Feed Purchase"
-               : tab === "medicine" ? "💊 Medicines"
-               : "🧪 Semen Straw"}
-            </button>
-          ))}
+          {tabBtn("feed",     "🌾 Feed Purchase")}
+          {tabBtn("medicine", "💊 Medicines")}
+          {tabBtn("semen",    "🧪 Semen Straw")}
         </div>
 
         <form className="form-box" onSubmit={handleSubmit}>
 
-          {/* ===== FEED FORM ===== */}
+          {/* FEED */}
           {activeTab === "feed" && (
             <>
               <label>Date <span style={{ color: "red" }}>*</span></label>
@@ -135,78 +114,40 @@ function AddInventory() {
               </select>
 
               <label>Number of Gunny Bags <span style={{ color: "red" }}>*</span></label>
-              <input
-                type="number"
-                name="gunnyBags"
-                value={feedForm.gunnyBags}
-                onChange={handleFeedChange}
-                placeholder="Enter number of gunny bags"
-                min="0"
-                required
-              />
+              <input type="number" name="gunnyBags" value={feedForm.gunnyBags}
+                onChange={handleFeedChange} placeholder="Enter number of gunny bags" min="0" required />
 
               <label>Weight Per Bag (kg)</label>
-              <input
-                type="number"
-                name="weightPerBag"
-                value={feedForm.weightPerBag}
-                onChange={handleFeedChange}
-                placeholder="Enter weight per bag in kg"
-                min="0"
-              />
+              <input type="number" name="weightPerBag" value={feedForm.weightPerBag}
+                onChange={handleFeedChange} placeholder="Enter weight per bag in kg" min="0" />
 
               <label>Supplier</label>
-              <input
-                name="supplier"
-                value={feedForm.supplier}
-                onChange={handleFeedChange}
-                placeholder="Enter supplier name"
-              />
+              <input name="supplier" value={feedForm.supplier}
+                onChange={handleFeedChange} placeholder="Enter supplier name" />
 
               <label>Notes</label>
-              <textarea
-                name="notes"
-                value={feedForm.notes}
-                onChange={handleFeedChange}
-                placeholder="Additional notes..."
-              />
+              <textarea name="notes" value={feedForm.notes}
+                onChange={handleFeedChange} placeholder="Additional notes..." />
             </>
           )}
 
-          {/* ===== MEDICINE FORM ===== */}
+          {/* MEDICINE */}
           {activeTab === "medicine" && (
             <>
               <label>Date <span style={{ color: "red" }}>*</span></label>
               <input type="date" name="date" value={medicineForm.date} onChange={handleMedicineChange} required />
 
               <label>Medicine Name <span style={{ color: "red" }}>*</span></label>
-              <input
-                name="medicineName"
-                value={medicineForm.medicineName}
-                onChange={handleMedicineChange}
-                placeholder="Enter medicine name"
-                required
-              />
+              <input name="medicineName" value={medicineForm.medicineName}
+                onChange={handleMedicineChange} placeholder="Enter medicine name" required />
 
               <label>Drug Name <span style={{ color: "red" }}>*</span></label>
-              <input
-                name="drugName"
-                value={medicineForm.drugName}
-                onChange={handleMedicineChange}
-                placeholder="Enter drug name"
-                required
-              />
+              <input name="drugName" value={medicineForm.drugName}
+                onChange={handleMedicineChange} placeholder="Enter drug name" required />
 
               <label>Quantity <span style={{ color: "red" }}>*</span></label>
-              <input
-                type="number"
-                name="quantity"
-                value={medicineForm.quantity}
-                onChange={handleMedicineChange}
-                placeholder="Enter available quantity"
-                min="0"
-                required
-              />
+              <input type="number" name="quantity" value={medicineForm.quantity}
+                onChange={handleMedicineChange} placeholder="Enter available quantity" min="0" required />
 
               <label>Unit</label>
               <select name="unit" value={medicineForm.unit} onChange={handleMedicineChange}>
@@ -221,78 +162,45 @@ function AddInventory() {
               </select>
 
               <label>Expiry Date</label>
-              <input
-                type="date"
-                name="expiryDate"
-                value={medicineForm.expiryDate}
-                onChange={handleMedicineChange}
-              />
+              <input type="date" name="expiryDate" value={medicineForm.expiryDate} onChange={handleMedicineChange} />
 
               <label>Notes</label>
-              <textarea
-                name="notes"
-                value={medicineForm.notes}
-                onChange={handleMedicineChange}
-                placeholder="Additional notes..."
-              />
+              <textarea name="notes" value={medicineForm.notes}
+                onChange={handleMedicineChange} placeholder="Additional notes..." />
             </>
           )}
 
-          {/* ===== SEMEN STRAW FORM ===== */}
+          {/* SEMEN */}
           {activeTab === "semen" && (
             <>
               <label>Date <span style={{ color: "red" }}>*</span></label>
               <input type="date" name="date" value={semenForm.date} onChange={handleSemenChange} required />
 
               <label>Breed Name <span style={{ color: "red" }}>*</span></label>
-              <input
-                name="breedName"
-                value={semenForm.breedName}
-                onChange={handleSemenChange}
-                placeholder="Enter breed name"
-                required
-              />
+              <input name="breedName" value={semenForm.breedName}
+                onChange={handleSemenChange} placeholder="Enter breed name" required />
 
               <label>Number of Straws <span style={{ color: "red" }}>*</span></label>
-              <input
-                type="number"
-                name="strawCount"
-                value={semenForm.strawCount}
-                onChange={handleSemenChange}
-                placeholder="Enter number of straws available"
-                min="0"
-                required
-              />
+              <input type="number" name="strawCount" value={semenForm.strawCount}
+                onChange={handleSemenChange} placeholder="Enter number of straws available" min="0" required />
 
               <label>Batch Number</label>
-              <input
-                name="batchNumber"
-                value={semenForm.batchNumber}
-                onChange={handleSemenChange}
-                placeholder="Enter batch number"
-              />
+              <input name="batchNumber" value={semenForm.batchNumber}
+                onChange={handleSemenChange} placeholder="Enter batch number" />
 
               <label>Expiry Date</label>
-              <input
-                type="date"
-                name="expiryDate"
-                value={semenForm.expiryDate}
-                onChange={handleSemenChange}
-              />
+              <input type="date" name="expiryDate" value={semenForm.expiryDate} onChange={handleSemenChange} />
 
               <label>Notes</label>
-              <textarea
-                name="notes"
-                value={semenForm.notes}
-                onChange={handleSemenChange}
-                placeholder="Additional notes..."
-              />
+              <textarea name="notes" value={semenForm.notes}
+                onChange={handleSemenChange} placeholder="Additional notes..." />
             </>
           )}
 
           <button type="submit" disabled={loading}>
             {loading ? "Saving..." : "Submit"}
           </button>
+
         </form>
       </div>
     </div>

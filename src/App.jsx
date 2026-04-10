@@ -6,6 +6,24 @@ import AdminLogin from "./pages/AdminLogin";
 import DoctorLogin from "./pages/DoctorLogin";
 import AddRescuedAnimal from "./pages/AddRescuedAnimal";
 
+import KosalaAdminLogin      from "./pages/KosalaAdminLogin";
+import KosalaAdminDashboard  from "./pages/KosalaAdminDashboard";
+import CowInfo               from "./pages/CowInfo";
+
+
+import MortalityDetails from "./pages/MortalityDetails";
+import BullCalfDetails  from "./pages/BullCalfDetails";
+import HeiferDetails    from "./pages/HeiferDetails";
+
+import KosalaAdminAddDoctor   from "./pages/KosalaAdminAddDoctor";
+import KosalaAdminDoctorsList from "./pages/KosalaAdminDoctorsList";
+
+import EditProfile from "./pages/EditProfile";
+import ChangePassword from "./pages/ChangePassword";
+
+import DoctorManageCow from "./pages/DoctorManageCow";
+
+
 import ManageCattleInfo from "./pages/ManageCattleInfo";
 import AddInventory from "./pages/AddInventory";
 import ManageInventory from "./pages/ManageInventory";
@@ -14,7 +32,7 @@ import GaushalasList from "./pages/GaushalasList";
 import GaushalaInfo from "./pages/GaushalaInfo";
 import DoctorsList from "./pages/DoctorsList";
 import DoctorInfo from "./pages/DoctorInfo";
-
+import ForgotPassword from "./pages/ForgotPassword";
 
 import ManageRescuedAnimal from "./pages/ManageRescuedAnimal";
 import RescuedAnimalDetail from "./pages/RescuedAnimalDetail";
@@ -27,6 +45,8 @@ import AdminKosalaDashboard from "./pages/AdminkosalaDashboard";
 import AdminAddCow from "./pages/AdminAddCow";
 import ManageCow from "./pages/ManageCow"; // ✅ was missing
 
+import ResetPassword from "./pages/ResetPassword";
+import HomePage from "./pages/HomePage";
 // DOCTOR
 import Dashboard from "./pages/Dashboard";
 import AddDeworming from "./pages/AddDeworming";
@@ -44,8 +64,66 @@ function App() {
     <BrowserRouter>
       <Routes>
 
+        <Route
+  path="/doctor-manage-cow"
+  element={<ProtectedRoute role="doctor"><DoctorManageCow /></ProtectedRoute>}
+/>
+
+        <Route path="/reset-password/:token" element={<ResetPassword />} />
+        <Route path="/mortality-details" element={<ProtectedRoute role="doctor"><MortalityDetails /></ProtectedRoute>} />
+<Route path="/bull-calf-details" element={<ProtectedRoute role="doctor"><BullCalfDetails /></ProtectedRoute>} />
+<Route path="/heifer-details"    element={<ProtectedRoute role="doctor"><HeiferDetails /></ProtectedRoute>} />
+
+
+        <Route
+  path="/kosala-admin/add-doctor"
+  element={
+    <ProtectedRoute role="kosala-admin">
+      <KosalaAdminAddDoctor />
+    </ProtectedRoute>
+  }
+/>
+<Route
+  path="/kosala-admin/doctors-list"
+  element={
+    <ProtectedRoute role="kosala-admin">
+      <KosalaAdminDoctorsList />
+    </ProtectedRoute>
+  }
+/>
+<Route path="/edit-profile" element={<EditProfile />} />
+<Route path="/change-password" element={<ChangePassword />} />
+
+
+
+        <Route path="/kosala-admin-login" element={<KosalaAdminLogin />} />
+
+<Route path="/kosala-admin-dashboard"
+  element={<ProtectedRoute role="kosala-admin"><KosalaAdminDashboard /></ProtectedRoute>} />
+
+<Route path="/kosala-admin/cow-info"
+  element={<ProtectedRoute role="kosala-admin"><CowInfo /></ProtectedRoute>} />
+
+<Route path="/kosala-admin/add-cow"
+  element={<ProtectedRoute role="kosala-admin"><AdminAddCow /></ProtectedRoute>} />
+
+<Route path="/kosala-admin/manage-cow"
+  element={<ProtectedRoute role="kosala-admin"><ManageCow /></ProtectedRoute>} />
+
+<Route path="/kosala-admin/rescued-animals"
+  element={<ProtectedRoute role="kosala-admin"><ManageRescuedAnimal /></ProtectedRoute>} />
+
+<Route path="/kosala-admin/add-inventory"
+  element={<ProtectedRoute role="kosala-admin"><AddInventory /></ProtectedRoute>} />
+<Route path="/kosala-admin/add-cattle-info"
+  element={<ProtectedRoute role="kosala-admin"><AddCattleInfo /></ProtectedRoute>} />
+
+<Route path="/kosala-admin/manage-cattle-info"
+  element={<ProtectedRoute role="kosala-admin"><ManageCattleInfo /></ProtectedRoute>} />
+
         {/* ================= LOGIN ================= */}
-        <Route path="/" element={<AdminLogin />} />
+        <Route path="/admin-login" element={<AdminLogin />} />
+        <Route path="/" element={<HomePage />} />
         <Route path="/doctor-login" element={<DoctorLogin />} />
 
         {/* ================= ADMIN ================= */}
@@ -71,6 +149,15 @@ function App() {
             </ProtectedRoute>
           }
         />
+        <Route
+  path="/kosala-admin/add-rescued-animal"
+  element={
+    <ProtectedRoute role="kosala-admin">
+      <AddRescuedAnimal />
+    </ProtectedRoute>
+  }
+/>
+        <Route path="/forgot-password" element={<ForgotPassword />} />
         <Route
   path="/manage-cattle-info"
   element={

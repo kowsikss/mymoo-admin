@@ -1,40 +1,38 @@
 import { useEffect, useState } from "react";
-import { Navigate, useNavigate } from "react-router-dom";
-import Sidebar from "../components/Sidebar";
+import { Navigate } from "react-router-dom";
+import RoleSidebar from "../components/RoleSidebar";
 import Navbar from "../components/Navbar";
 import axios from "axios";
 
 function ManageCattleInfo() {
-  const [records, setRecords] = useState([]);
-  const [cows, setCows] = useState([]);
+  const [records,    setRecords]    = useState([]);
+  const [cows,       setCows]       = useState([]);
   const [editRecord, setEditRecord] = useState(null);
-  const navigate = useNavigate();
 
   const API = "http://localhost:5000/api/cattle";
-
-  useEffect(() => {
-    fetchData();
-  }, []);
-
-  if (localStorage.getItem("role") !== "doctor") {
-    return <Navigate to="/" />;
-  }
 
   const fetchData = async () => {
     try {
       const kosalaId = localStorage.getItem("kosalaId");
-
       const cowsRes = await axios.get(
         `http://localhost:5000/api/cows/kosala/${kosalaId}`
       );
       setCows(cowsRes.data);
-
       const res = await axios.get(`${API}/kosala/${kosalaId}`);
       setRecords(res.data);
     } catch (err) {
       console.error("Error fetching cattle info:", err);
     }
   };
+
+  useEffect(() => {
+    fetchData();
+  }, []);
+
+  const role = localStorage.getItem("role");
+  if (role !== "doctor" && role !== "kosala-admin") {
+    return <Navigate to="/" />;
+  }
 
   const handleDelete = async (id) => {
     if (window.confirm("Delete this record?")) {
@@ -47,13 +45,8 @@ function ManageCattleInfo() {
     }
   };
 
-  const handleEdit = (rec) => {
-    setEditRecord({ ...rec });
-  };
-
-  const handleChange = (e) => {
-    setEditRecord({ ...editRecord, [e.target.name]: e.target.value });
-  };
+  const handleEdit   = (rec) => setEditRecord({ ...rec });
+  const handleChange = (e)   => setEditRecord({ ...editRecord, [e.target.name]: e.target.value });
 
   const handleUpdate = async () => {
     try {
@@ -67,7 +60,7 @@ function ManageCattleInfo() {
 
   return (
     <div className="layout">
-      <Sidebar />
+      <RoleSidebar />
       <div className="main">
         <Navbar />
 
@@ -129,21 +122,14 @@ function ManageCattleInfo() {
           </table>
         </div>
 
-        {/* EDIT PANEL */}
         {editRecord && (
           <div className="edit-panel">
             <h3>Edit Cattle Info</h3>
 
             <label>Cow ID</label>
-            <select
-              name="cowId"
-              value={editRecord.cowId}
-              onChange={handleChange}
-            >
+            <select name="cowId" value={editRecord.cowId} onChange={handleChange}>
               {cows.map((cow) => (
-                <option key={cow._id} value={cow.cowId}>
-                  {cow.cowId}
-                </option>
+                <option key={cow._id} value={cow.cowId}>{cow.cowId}</option>
               ))}
             </select>
 
@@ -160,8 +146,7 @@ function ManageCattleInfo() {
               value={editRecord.pregnancyDate || ""} onChange={handleChange} />
 
             <label>Pregnancy Status</label>
-            <select name="pregnancyStatus"
-              value={editRecord.pregnancyStatus || ""} onChange={handleChange}>
+            <select name="pregnancyStatus" value={editRecord.pregnancyStatus || ""} onChange={handleChange}>
               <option value="">-- Select --</option>
               <option value="Yes">Yes</option>
               <option value="No">No</option>
@@ -182,27 +167,24 @@ function ManageCattleInfo() {
 
             <label>Calving Time</label>
             <input name="calvingTime"
-              value={editRecord.calvingTime || ""} onChange={handleChange}
-              placeholder="e.g. Morning / 06:00" />
+              value={editRecord.calvingTime || ""} onChange={handleChange} />
 
             <label>Parturition Date</label>
             <input type="date" name="parturitionDate"
               value={editRecord.parturitionDate || ""} onChange={handleChange} />
 
             <label>Calf Status</label>
-            <select name="calfStatus"
-              value={editRecord.calfStatus || ""} onChange={handleChange}>
+            <select name="calfStatus" value={editRecord.calfStatus || ""} onChange={handleChange}>
               <option value="">-- Select --</option>
               <option value="Alive">Alive</option>
               <option value="Dead">Dead</option>
             </select>
 
             <label>Calf Sex</label>
-            <select name="calfSex"
-              value={editRecord.calfSex || ""} onChange={handleChange}>
+            <select name="calfSex" value={editRecord.calfSex || ""} onChange={handleChange}>
               <option value="">-- Select --</option>
-              <option value="Male">Male</option>
-              <option value="Female">Female</option>
+              <option value="Cow Heifer">Cow Heifer</option>
+              <option value="Bull Calf">Bull Calf</option>
             </select>
 
             <label>Milk Yield (Litres)</label>
@@ -210,12 +192,8 @@ function ManageCattleInfo() {
               value={editRecord.milkYield || ""} onChange={handleChange} />
 
             <div style={{ marginTop: "10px" }}>
-              <button className="update-btn" onClick={handleUpdate}>
-                Update
-              </button>
-              <button className="cancel-btn" onClick={() => setEditRecord(null)}>
-                Cancel
-              </button>
+              <button className="update-btn" onClick={handleUpdate}>Update</button>
+              <button className="cancel-btn" onClick={() => setEditRecord(null)}>Cancel</button>
             </div>
           </div>
         )}

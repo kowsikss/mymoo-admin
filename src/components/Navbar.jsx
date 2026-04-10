@@ -17,6 +17,9 @@ function Navbar() {
     } else if (role === "doctor") {
       const doctorName = localStorage.getItem("doctorName");
       setUsername(doctorName || "Doctor");
+    } else if (role === "kosala-admin") {                          // ✅ added
+      const kosalaAdminName = localStorage.getItem("kosalaAdminName");
+      setUsername(kosalaAdminName || "Kosala Admin");
     }
   }, []);
 
@@ -27,18 +30,24 @@ function Navbar() {
         setOpen(false);
       }
     };
-
     document.addEventListener("mousedown", handleClickOutside);
-
-    return () => {
-      document.removeEventListener("mousedown", handleClickOutside);
-    };
+    return () => document.removeEventListener("mousedown", handleClickOutside);
   }, []);
 
   /* ================= LOGOUT ================= */
   const handleLogout = () => {
-    localStorage.clear(); // ✅ clears everything
-    navigate("/");
+    const role = localStorage.getItem("role");                     // ✅ read before clearing
+
+    localStorage.clear();
+
+    // ✅ redirect each role to their own login page
+    if (role === "kosala-admin") {
+      navigate("/kosala-admin-login");
+    } else if (role === "doctor") {
+      navigate("/doctor-login");
+    } else {
+      navigate("/");
+    }
   };
 
   return (
@@ -52,19 +61,9 @@ function Navbar() {
 
         {open && (
           <div className="dropdown">
-
-            <p onClick={() => navigate("/edit-profile")}>
-              My Profile
-            </p>
-
-            <p onClick={() => navigate("/change-password")}>
-              Change Password
-            </p>
-
-            <p onClick={handleLogout}>
-              Log Out
-            </p>
-
+            <p onClick={() => navigate("/edit-profile")}>My Profile</p>
+            <p onClick={() => navigate("/change-password")}>Change Password</p>
+            <p onClick={handleLogout}>Log Out</p>
           </div>
         )}
       </div>
