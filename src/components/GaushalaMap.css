@@ -1,0 +1,99 @@
+/* GaushalaMap.css */
+/* Place in: src/components/GaushalaMap.css  (imported inside GaushalaMap.jsx if needed) */
+/* OR just paste these rules into your AdminDashboard.css                                 */
+
+.gaushala-map-wrapper {
+  background: var(--bg-card, #1e1e2e);
+  border: 1px solid var(--border, #2e2e3e);
+  border-radius: 16px;
+  overflow: hidden;
+  margin: 28px 0;
+  box-shadow: 0 4px 24px rgba(0, 0, 0, 0.18);
+}
+
+/* ── Header bar ─────────────────────────────────────────────── */
+.map-header {
+  display: flex;
+  align-items: center;
+  justify-content: space-between;
+  padding: 16px 22px;
+  background: var(--bg-card, #1e1e2e);
+  border-bottom: 1px solid var(--border, #2e2e3e);
+  flex-wrap: wrap;
+  gap: 12px;
+}
+
+.map-title {
+  display: flex;
+  align-items: center;
+  gap: 12px;
+}
+
+.map-icon {
+  font-size: 26px;
+}
+
+.map-title h3 {
+  margin: 0;
+  font-size: 16px;
+  font-weight: 700;
+  color: var(--text-primary, #f1f1f1);
+}
+
+.map-title p {
+  margin: 2px 0 0;
+  font-size: 12px;
+  color: var(--text-secondary, #9ca3af);
+}
+
+/* ── Legend ─────────────────────────────────────────────────── */
+.map-legend {
+  display: flex;
+  align-items: center;
+  gap: 16px;
+  flex-wrap: wrap;
+}
+
+.legend-item {
+  display: flex;
+  align-items: center;
+  gap: 6px;
+  font-size: 12px;
+  color: var(--text-secondary, #9ca3af);
+}
+
+.legend-dot {
+  width: 11px;
+  height: 11px;
+  border-radius: 50%;
+  display: inline-block;
+  border: 2px solid rgba(255, 255, 255, 0.25);
+  flex-shrink: 0;
+}
+
+/* ── Warning banner ─────────────────────────────────────────── */
+.map-warning {
+  margin: 0;
+  padding: 10px 22px;
+  font-size: 12px;
+  color: #f59e0b;
+  background: rgba(245, 158, 11, 0.08);
+  border-top: 1px solid rgba(245, 158, 11, 0.2);
+}
+
+.map-warning code {
+  font-family: monospace;
+  background: rgba(245, 158, 11, 0.15);
+  padding: 1px 5px;
+  border-radius: 4px;
+}
+
+/* ── Leaflet popup tweak ─────────────────────────────────────── */
+.leaflet-popup-content-wrapper {
+  border-radius: 10px !important;
+  box-shadow: 0 4px 16px rgba(0, 0, 0, 0.2) !important;
+}
+
+.leaflet-popup-tip {
+  background: white !important;
+}

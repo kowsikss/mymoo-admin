@@ -58,11 +58,15 @@ import ManageImmunization from "./pages/ManageImmunization";
 import AddReproduction from "./pages/AddReproduction";
 import ManageReproduction from "./pages/ManageReproduction"; // ✅ was missing
 import AddCattleInfo from "./pages/AddCattleInfo";
+import ApplyGaushala       from "./pages/ApplyGaushala";
+import DonationPage        from "./pages/DonationPage";
 
 function App() {
   return (
     <BrowserRouter>
       <Routes>
+        <Route path="/apply-gaushala" element={<ApplyGaushala />} />
+<Route path="/donate"         element={<DonationPage />} />
 
         <Route
   path="/doctor-manage-cow"
@@ -73,6 +77,7 @@ function App() {
         <Route path="/mortality-details" element={<ProtectedRoute role="doctor"><MortalityDetails /></ProtectedRoute>} />
 <Route path="/bull-calf-details" element={<ProtectedRoute role="doctor"><BullCalfDetails /></ProtectedRoute>} />
 <Route path="/heifer-details"    element={<ProtectedRoute role="doctor"><HeiferDetails /></ProtectedRoute>} />
+
 
 
         <Route

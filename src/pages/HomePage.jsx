@@ -586,6 +586,88 @@ export default function HomePage() {
             ))}
           </div>
         </section>
+        {/* ── APPLY GAUSHALA SECTION ── */}
+<section style={{
+  background: "linear-gradient(135deg, #1a4731, #2d6a4f)",
+  padding: "4rem 3rem",
+  maxWidth: "100%",
+}}>
+  <div style={{ maxWidth: "1200px", margin: "0 auto", display: "grid", gridTemplateColumns: "1fr 1fr", gap: "3rem", alignItems: "center" }}>
+    <div>
+      <p style={{ fontSize: "0.72rem", color: "#a8d5b5", letterSpacing: "0.1em", marginBottom: "1rem", textTransform: "uppercase" }}>
+        Join the Network
+      </p>
+      <h2 style={{ fontFamily: "'Playfair Display', serif", fontSize: "2.2rem", color: "white", fontWeight: "700", lineHeight: "1.2", marginBottom: "1rem" }}>
+        Register Your<br />Gaushala with Us
+      </h2>
+      <p style={{ color: "#a8d5b5", fontSize: "14px", lineHeight: "1.8", marginBottom: "2rem" }}>
+        Is your Gaushala not yet on the platform? Apply now. Fill in basic details and our Super Admin will review and approve your registration — giving you full access to manage cattle, health records, and more.
+      </p>
+      <div style={{ display: "flex", flexDirection: "column", gap: "10px", marginBottom: "2rem" }}>
+        {["Submit basic Gaushala details", "Super Admin reviews and approves", "Get your Kosala Admin login instantly", "Start managing cattle & operations"].map((step, i) => (
+          <div key={i} style={{ display: "flex", alignItems: "center", gap: "12px" }}>
+            <span style={{ width: "24px", height: "24px", background: "#7b4f2e", borderRadius: "50%", display: "flex", alignItems: "center", justifyContent: "center", fontSize: "11px", fontWeight: "700", color: "white", flexShrink: 0 }}>{i + 1}</span>
+            <span style={{ color: "white", fontSize: "13px" }}>{step}</span>
+          </div>
+        ))}
+      </div>
+      <button
+        onClick={() => navigate("/apply-gaushala")}
+        style={{ padding: "14px 32px", background: "#7b4f2e", color: "white", border: "none", borderRadius: "12px", fontSize: "15px", fontWeight: "600", cursor: "pointer", fontFamily: "inherit" }}
+      >
+        Apply Now — It's Free 🏛️
+      </button>
+    </div>
+    <div style={{ background: "rgba(255,255,255,0.07)", borderRadius: "20px", padding: "32px", border: "1px solid rgba(255,255,255,0.12)" }}>
+      <h3 style={{ fontFamily: "'Playfair Display', serif", color: "white", fontSize: "1.1rem", marginBottom: "20px" }}>What you'll need:</h3>
+      {[
+        { icon: "🏛️", label: "Gaushala Name" },
+        { icon: "📍", label: "Location & Pincode" },
+        { icon: "📧", label: "Email Address" },
+        { icon: "👤", label: "Admin Name & Password" },
+      ].map(f => (
+        <div key={f.label} style={{ display: "flex", alignItems: "center", gap: "12px", padding: "12px 0", borderBottom: "1px solid rgba(255,255,255,0.08)" }}>
+          <span style={{ fontSize: "22px" }}>{f.icon}</span>
+          <span style={{ color: "white", fontSize: "13px", fontWeight: "500" }}>{f.label}</span>
+        </div>
+      ))}
+    </div>
+  </div>
+</section>
+
+{/* ── DONATION SECTION ── */}
+<section style={{ background: "#fef9f0", padding: "4rem 3rem" }}>
+  <div style={{ maxWidth: "1200px", margin: "0 auto", textAlign: "center" }}>
+    <p style={{ fontSize: "0.72rem", color: "#92400e", letterSpacing: "0.1em", marginBottom: "1rem", textTransform: "uppercase" }}>
+      Support Sacred Lives
+    </p>
+    <h2 style={{ fontFamily: "'Playfair Display', serif", fontSize: "2.2rem", color: "#1c1917", fontWeight: "700", marginBottom: "1rem" }}>
+      Donate to a <span style={{ color: "#b45309" }}>Gaushala</span>
+    </h2>
+    <p style={{ color: "#78716c", fontSize: "14px", maxWidth: "560px", margin: "0 auto 2.5rem", lineHeight: "1.8" }}>
+      Your donation provides food, medicine, and shelter to rescued and resident cattle. Choose a Gaushala near you and contribute directly.
+    </p>
+    <div style={{ display: "grid", gridTemplateColumns: "repeat(3, 1fr)", gap: "16px", marginBottom: "2.5rem" }}>
+      {[
+        { icon: "🌾", label: "₹100", desc: "Feeds a cow for a day" },
+        { icon: "💊", label: "₹501", desc: "Medicine for a sick animal" },
+        { icon: "🏥", label: "₹1001", desc: "Sponsors rescue care" },
+      ].map(d => (
+        <div key={d.label} style={{ background: "white", borderRadius: "16px", padding: "24px", border: "1px solid #e7e5e4" }}>
+          <span style={{ fontSize: "2rem", display: "block", marginBottom: "8px" }}>{d.icon}</span>
+          <p style={{ fontFamily: "'Playfair Display', serif", fontSize: "1.3rem", fontWeight: "700", color: "#b45309", margin: "0 0 4px" }}>{d.label}</p>
+          <p style={{ color: "#78716c", fontSize: "12px", margin: 0 }}>{d.desc}</p>
+        </div>
+      ))}
+    </div>
+    <button
+      onClick={() => navigate("/donate")}
+      style={{ padding: "14px 40px", background: "#b45309", color: "white", border: "none", borderRadius: "12px", fontSize: "15px", fontWeight: "600", cursor: "pointer", fontFamily: "inherit" }}
+    >
+      Donate Now 🐄
+    </button>
+  </div>
+</section>
 
         {/* FOOTER */}
         <footer className="hp-footer">
