@@ -20,8 +20,8 @@
 
 //   const fetchCows = async () => {
 //     try {
-//       const res = await axios.get(
-//         `http://localhost:5000/api/cows/kosala/${kosalaId}`
+//       const res = await apiClient.get(
+//         `/api/cows/kosala/${kosalaId}`
 //       );
 //       setCows(res.data);
 //     } catch (err) {
@@ -46,7 +46,7 @@
 
 //     try {
 //       setLoading(true);
-//       await axios.post("http://localhost:5000/api/cattle", { ...form, kosalaId });
+//       await apiClient.post("/api/cattle", { ...form, kosalaId });
 //       alert("Cattle Info Saved Successfully!");
 //       if (role === "kosala-admin") navigate("/kosala-admin-dashboard");
 //       else navigate("/doctor-dashboard");
@@ -161,7 +161,7 @@ import { useEffect, useState } from "react";
 import { Navigate, useNavigate } from "react-router-dom";
 import RoleSidebar from "../components/RoleSidebar";
 import Navbar from "../components/Navbar";
-import axios from "axios";
+import apiClient from "../api/client";
 
 function AddCattleInfo() {
   const navigate = useNavigate();
@@ -179,7 +179,7 @@ function AddCattleInfo() {
 
   const fetchCows = async () => {
     try {
-      const res = await axios.get(`http://localhost:5000/api/cows/kosala/${kosalaId}`);
+      const res = await apiClient.get(`/api/cows/kosala/${kosalaId}`);
       setCows(res.data);
     } catch (err) {
       console.error("Error fetching cows:", err);
@@ -210,7 +210,7 @@ function AddCattleInfo() {
 
     try {
       setLoading(true);
-      await axios.post("http://localhost:5000/api/cattle", { ...form, kosalaId });
+      await apiClient.post("/api/cattle", { ...form, kosalaId });
       alert("Cattle Info Saved Successfully!");
       if (role === "kosala-admin") navigate("/kosala-admin-dashboard");
       else navigate("/doctor-dashboard");

@@ -2,7 +2,7 @@ import { useEffect, useState } from "react";
 import { useNavigate } from "react-router-dom";
 import Sidebar from "../components/Sidebar";
 import Navbar from "../components/Navbar";
-import axios from "axios";
+import apiClient from "../api/client";
 import {
   BarChart, Bar, XAxis, YAxis, Tooltip, ResponsiveContainer,
   CartesianGrid, Cell,
@@ -25,9 +25,9 @@ function MortalityDetails() {
   const fetchData = async () => {
     try {
       const [cowsRes, cattleRes, breedsRes] = await Promise.all([
-        axios.get(`http://localhost:5000/api/cows/kosala/${kosalaId}`),
-        axios.get(`http://localhost:5000/api/cattle/kosala/${kosalaId}`), // ✅ cattle info
-        axios.get("http://localhost:5000/api/breeds"),
+        apiClient.get(`/api/cows/kosala/${kosalaId}`),
+        apiClient.get(`/api/cattle/kosala/${kosalaId}`), // ✅ cattle info
+        apiClient.get("/api/breeds"),
       ]);
 
       const breedMap = {};

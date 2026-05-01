@@ -38,7 +38,7 @@
 //   // ✅ fetchBreeds BEFORE useEffect
 //   const fetchBreeds = async () => {
 //     try {
-//       const res = await axios.get("http://localhost:5000/api/breeds");
+//       const res = await apiClient.get("/api/breeds");
 //       setBreeds(res.data);
 //     } catch (err) {
 //       console.error("Error fetching breeds:", err);
@@ -81,7 +81,7 @@
 //       if (images.back)   formData.append("back",          images.back);
 //       if (insuranceCert) formData.append("insuranceCert", insuranceCert);
 
-//       await axios.post("http://localhost:5000/api/cows", formData, {
+//       await apiClient.post("/api/cows", formData, {
 //         headers: { "Content-Type": "multipart/form-data" },
 //       });
 
@@ -350,7 +350,8 @@ import { useEffect, useState } from "react";
 import { useParams, useNavigate, Navigate } from "react-router-dom";
 import RoleSidebar from "../components/RoleSidebar";
 import Navbar from "../components/Navbar";
-import axios from "axios";
+import apiClient from "../api/client";
+import { API_BASE_URL } from "../api/client";
 
 function AdminAddCow() {
   const { id } = useParams();
@@ -385,7 +386,7 @@ function AdminAddCow() {
 
   const fetchBreeds = async () => {
     try {
-      const res = await axios.get("http://localhost:5000/api/breeds");
+      const res = await apiClient.get("/api/breeds");
       setBreeds(res.data);
     } catch (err) {
       console.error("Error fetching breeds:", err);
@@ -426,7 +427,7 @@ function AdminAddCow() {
       if (images.back)   formData.append("back",          images.back);
       if (insuranceCert) formData.append("insuranceCert", insuranceCert);
 
-      await axios.post("http://localhost:5000/api/cows", formData, {
+      await apiClient.post("/api/cows", formData, {
         headers: { "Content-Type": "multipart/form-data" },
       });
 

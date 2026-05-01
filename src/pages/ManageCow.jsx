@@ -9,12 +9,12 @@
 //   const [cows,       setCows]       = useState([]);
 //   const [editingCow, setEditingCow] = useState(null);
 
-//   const API = "http://localhost:5000/api/cows";
+//   const API = "/api/cows";
 
 //   const fetchCows = async () => {
 //     try {
 //       const kosalaId = localStorage.getItem("kosalaId");
-//       const res = await axios.get(`${API}/kosala/${kosalaId}`);
+//       const res = await apiClient.get(`${API}/kosala/${kosalaId}`);
 //       setCows(res.data);
 //     } catch (err) {
 //       console.error("Error fetching cows:", err);
@@ -33,7 +33,7 @@
 //   const handleDelete = async (id) => {
 //     if (window.confirm("Delete this cow?")) {
 //       try {
-//         await axios.delete(`${API}/${id}`);
+//         await apiClient.delete(`${API}/${id}`);
 //         fetchCows();
 //       } catch (err) {
 //         console.error("Error deleting cow:", err);
@@ -49,7 +49,7 @@
 
 //   const handleUpdate = async () => {
 //     try {
-//       await axios.put(`${API}/${editingCow._id}`, editingCow);
+//       await apiClient.put(`${API}/${editingCow._id}`, editingCow);
 //       setEditingCow(null);
 //       fetchCows();
 //     } catch (err) {
@@ -113,12 +113,12 @@
 //                     <td>
 //                       {cow.frontImage || cow.image ? (
 //                         <img
-//                           src={`http://localhost:5000/uploads/${cow.frontImage || cow.image}`}
+//                           src={`${API_BASE_URL}/uploads/${cow.frontImage || cow.image}`}
 //                           alt="cow"
 //                           className="cow-thumb"
 //                           onClick={() =>
 //                             window.open(
-//                               `http://localhost:5000/uploads/${cow.frontImage || cow.image}`,
+//                               `${API_BASE_URL}/uploads/${cow.frontImage || cow.image}`,
 //                               "_blank"
 //                             )
 //                           }
@@ -210,18 +210,19 @@ import { Navigate } from "react-router-dom";
 import RoleSidebar from "../components/RoleSidebar";
 import Navbar from "../components/Navbar";
 import "../styles/dashboard.css";
-import axios from "axios";
+import apiClient from "../api/client";
+import { API_BASE_URL } from "../api/client";
 
 function ManageCow() {
   const [cows,       setCows]       = useState([]);
   const [editingCow, setEditingCow] = useState(null);
 
-  const API = "http://localhost:5000/api/cows";
+  const API = "/api/cows";
 
   const fetchCows = async () => {
     try {
       const kosalaId = localStorage.getItem("kosalaId");
-      const res = await axios.get(`${API}/kosala/${kosalaId}`);
+      const res = await apiClient.get(`${API}/kosala/${kosalaId}`);
       setCows(res.data);
     } catch (err) {
       console.error("Error fetching cows:", err);
@@ -240,7 +241,7 @@ function ManageCow() {
   const handleDelete = async (id) => {
     if (window.confirm("Delete this cow?")) {
       try {
-        await axios.delete(`${API}/${id}`);
+        await apiClient.delete(`${API}/${id}`);
         fetchCows();
       } catch (err) {
         console.error("Error deleting cow:", err);
@@ -270,7 +271,7 @@ function ManageCow() {
       return;
     }
     try {
-      await axios.put(`${API}/${editingCow._id}`, editingCow);
+      await apiClient.put(`${API}/${editingCow._id}`, editingCow);
       setEditingCow(null);
       fetchCows();
     } catch (err) {
@@ -342,12 +343,12 @@ function ManageCow() {
                     <td>
                       {cow.frontImage || cow.image ? (
                         <img
-                          src={`http://localhost:5000/uploads/${cow.frontImage || cow.image}`}
+                          src={`${API_BASE_URL}/uploads/${cow.frontImage || cow.image}`}
                           alt="cow"
                           className="cow-thumb"
                           onClick={() =>
                             window.open(
-                              `http://localhost:5000/uploads/${cow.frontImage || cow.image}`,
+                              `${API_BASE_URL}/uploads/${cow.frontImage || cow.image}`,
                               "_blank"
                             )
                           }

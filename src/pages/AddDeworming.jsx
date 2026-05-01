@@ -1,6 +1,6 @@
 import Sidebar from "../components/Sidebar";
 import Navbar from "../components/Navbar";
-import axios from "axios";
+import apiClient from "../api/client";
 import { useEffect, useState } from "react";
 import { useNavigate } from "react-router-dom";
 
@@ -15,7 +15,7 @@ function AddDeworming() {
 
   const fetchCows = async () => {
     const kosalaId = localStorage.getItem("kosalaId");
-    const res = await axios.get(`http://localhost:5000/api/cows/kosala/${kosalaId}`);
+    const res = await apiClient.get(`/api/cows/kosala/${kosalaId}`);
     setCows(res.data);
   };
 
@@ -26,7 +26,7 @@ function AddDeworming() {
   const handleSubmit = async (e) => {
     e.preventDefault();
     const kosalaId = localStorage.getItem("kosalaId");
-    await axios.post("http://localhost:5000/api/deworming", { ...form, kosalaId });
+    await apiClient.post("/api/deworming", { ...form, kosalaId });
     alert("Deworming Added");
     navigate("/doctor-dashboard");
   };

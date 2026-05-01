@@ -2,7 +2,7 @@ import { useState } from "react";
 import { Navigate, useNavigate } from "react-router-dom";
 import RoleSidebar from "../components/RoleSidebar";
 import Navbar from "../components/Navbar";
-import axios from "axios";
+import apiClient from "../api/client";
 
 function AddInventory() {
   const navigate = useNavigate();
@@ -43,7 +43,7 @@ function AddInventory() {
           ? { kosalaId, type: "medicine", ...medicineForm }
           : { kosalaId, type: "semen",    ...semenForm };
 
-      await axios.post("http://localhost:5000/api/inventory", payload);
+      await apiClient.post("/api/inventory", payload);
       alert("Inventory record saved successfully!");
 
       if (activeTab === "feed")

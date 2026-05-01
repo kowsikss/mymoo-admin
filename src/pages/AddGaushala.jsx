@@ -2,7 +2,7 @@ import { useState } from "react";
 import { Navigate, useNavigate } from "react-router-dom";
 import Sidebar from "../components/Sidebar";
 import Navbar from "../components/Navbar";
-import axios from "axios";
+import apiClient from "../api/client";
 
 function AddGaushala() {
   const navigate = useNavigate();
@@ -61,8 +61,8 @@ function AddGaushala() {
       );
       if (certificate) formData.append("certificate", certificate);
 
-      const gaushalaRes = await axios.post(
-        "http://localhost:5000/api/kosala",
+      const gaushalaRes = await apiClient.post(
+        "/api/kosala",
         formData,
         { headers: { "Content-Type": "multipart/form-data" } }
       );
@@ -70,7 +70,7 @@ function AddGaushala() {
       const kosalaId = gaushalaRes.data._id;
 
       // Step 2: Create Kosala Admin
-      await axios.post("http://localhost:5000/api/kosala-admin", {
+      await apiClient.post("/api/kosala-admin", {
         name:     adminForm.name,
         password: adminForm.password,
         kosalaId: kosalaId.toString(),

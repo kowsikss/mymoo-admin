@@ -2,7 +2,8 @@ import { useEffect, useState } from "react";
 import { Navigate, useNavigate } from "react-router-dom";
 import RoleSidebar from "../components/RoleSidebar";
 import Navbar from "../components/Navbar";
-import axios from "axios";
+import apiClient from "../api/client";
+import { API_BASE_URL } from "../api/client";
 
 function ManageRescuedAnimal() {
   const [records, setRecords] = useState([]);
@@ -20,8 +21,8 @@ function ManageRescuedAnimal() {
   const fetchRecords = async () => {
     try {
       const kosalaId = localStorage.getItem("kosalaId");
-      const res = await axios.get(
-        `http://localhost:5000/api/rescued/kosala/${kosalaId}`
+      const res = await apiClient.get(
+        `/api/rescued/kosala/${kosalaId}`
       );
       setRecords(res.data);
     } catch (err) {
@@ -32,7 +33,7 @@ function ManageRescuedAnimal() {
   const handleDelete = async (id) => {
     if (window.confirm("Delete this record?")) {
       try {
-        await axios.delete(`http://localhost:5000/api/rescued/${id}`);
+        await apiClient.delete(`/api/rescued/${id}`);
         fetchRecords();
       } catch (err) {
         console.error("Error deleting record:", err);
@@ -78,13 +79,13 @@ function ManageRescuedAnimal() {
                     <td>
                       {rec.animalPhoto ? (
                         <img
-                          src={`http://localhost:5000/uploads/${rec.animalPhoto}`}
+                          src={`${API_BASE_URL}/uploads/${rec.animalPhoto}`}
                           alt="animal"
                           className="cow-thumb"
                           style={{ width: "50px", height: "50px", objectFit: "cover", cursor: "pointer" }}
                           onClick={() =>
                             window.open(
-                              `http://localhost:5000/uploads/${rec.animalPhoto}`,
+                              `${API_BASE_URL}/uploads/${rec.animalPhoto}`,
                               "_blank"
                             )
                           }

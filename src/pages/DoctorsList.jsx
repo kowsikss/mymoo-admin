@@ -2,7 +2,7 @@ import { useEffect, useState } from "react";
 import { Navigate, useNavigate } from "react-router-dom";
 import Sidebar from "../components/Sidebar";
 import Navbar from "../components/Navbar";
-import axios from "axios";
+import apiClient from "../api/client";
 
 function DoctorsList() {
   const [doctors, setDoctors] = useState([]);
@@ -19,7 +19,7 @@ function DoctorsList() {
 
   const fetchDoctors = async () => {
     try {
-      const res = await axios.get("http://localhost:5000/api/doctors");
+      const res = await apiClient.get("/api/doctors");
       setDoctors(res.data);
     } catch (err) {
       console.error("Error fetching doctors:", err);
@@ -31,7 +31,7 @@ function DoctorsList() {
   const handleDelete = async (id) => {
     if (window.confirm("Delete this doctor?")) {
       try {
-        await axios.delete(`http://localhost:5000/api/doctors/${id}`);
+        await apiClient.delete(`/api/doctors/${id}`);
         fetchDoctors();
       } catch (err) {
         console.error("Error deleting doctor:", err);

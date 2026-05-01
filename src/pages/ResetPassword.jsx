@@ -1,6 +1,6 @@
 import { useState } from "react";
 import { useNavigate, useParams } from "react-router-dom";
-import axios from "axios";
+import apiClient from "../api/client";
 
 function ResetPassword() {
   const { token }             = useParams();
@@ -27,7 +27,7 @@ function ResetPassword() {
 
     try {
       setLoading(true);
-      await axios.post(`http://localhost:5000/api/doctor-auth/reset-password/${token}`, { password });
+      await apiClient.post(`/api/doctor-auth/reset-password/${token}`, { password });
       setSuccess(true);
     } catch (err) {
       setError(err.response?.data?.message || "Link is invalid or expired. Please request a new one.");

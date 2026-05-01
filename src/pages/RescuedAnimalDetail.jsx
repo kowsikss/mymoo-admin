@@ -2,7 +2,8 @@ import { useEffect, useState } from "react";
 import { Navigate, useParams, useNavigate } from "react-router-dom";
 import Sidebar from "../components/Sidebar";
 import Navbar from "../components/Navbar";
-import axios from "axios";
+import apiClient from "../api/client";
+import { API_BASE_URL } from "../api/client";
 
 function RescuedAnimalDetail() {
   const { id } = useParams();
@@ -20,7 +21,7 @@ function RescuedAnimalDetail() {
 
   const fetchRecord = async () => {
     try {
-      const res = await axios.get(`http://localhost:5000/api/rescued/${id}`);
+      const res = await apiClient.get(`/api/rescued/${id}`);
       setRecord(res.data);
     } catch (err) {
       console.error("Error fetching record:", err);
@@ -46,7 +47,7 @@ function RescuedAnimalDetail() {
           {record.animalPhoto && (
             <div style={{ textAlign: "center", marginBottom: "20px" }}>
               <img
-                src={`http://localhost:5000/uploads/${record.animalPhoto}`}
+                src={`${API_BASE_URL}/uploads/${record.animalPhoto}`}
                 alt="animal"
                 style={{
                   width: "200px",

@@ -1,6 +1,6 @@
 import Sidebar from "../components/Sidebar";
 import Navbar from "../components/Navbar";
-import axios from "axios";
+import apiClient from "../api/client";
 import { useState, useEffect } from "react";
 import { useNavigate } from "react-router-dom";
 
@@ -17,8 +17,8 @@ function AddReproduction() {
   }, []);
 
   const fetchCows = async () => {
-    const res = await axios.get(
-      `http://localhost:5000/api/cows/kosala/${kosalaId}`
+    const res = await apiClient.get(
+      `/api/cows/kosala/${kosalaId}`
     );
     setCows(res.data);
   };
@@ -26,8 +26,8 @@ function AddReproduction() {
   const handleSubmit = async (e) => {
     e.preventDefault();
 
-    await axios.post(
-      "http://localhost:5000/api/reproduction",
+    await apiClient.post(
+      "/api/reproduction",
       { ...form, kosalaId }
     );
 

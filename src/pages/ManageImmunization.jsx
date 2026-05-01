@@ -2,14 +2,14 @@ import { useEffect, useState } from "react";
 import { Navigate } from "react-router-dom";
 import Sidebar from "../components/Sidebar";
 import Navbar from "../components/Navbar";
-import axios from "axios";
+import apiClient from "../api/client";
 
 function ManageImmunization() {
   const [records, setRecords] = useState([]);
   const [cows, setCows] = useState([]);
   const [editRecord, setEditRecord] = useState(null);
 
-  const API = "http://localhost:5000/api/immunization";
+  const API = "/api/immunization";
 
   useEffect(() => {
     fetchData();
@@ -24,8 +24,8 @@ function ManageImmunization() {
       const kosalaId = localStorage.getItem("kosalaId");
 
       // Step 1: Get all cows for this kosala
-      const cowsRes = await axios.get(
-        `http://localhost:5000/api/cows/kosala/${kosalaId}`
+      const cowsRes = await apiClient.get(
+        `/api/cows/kosala/${kosalaId}`
       );
       const cowData = cowsRes.data;
       setCows(cowData);
@@ -35,7 +35,7 @@ function ManageImmunization() {
       const myCowCustomIds = cowData.map((cow) => cow.cowId);
 
       // Step 3: Get all immunization records
-      const res = await axios.get(API);
+      const res = await apiClient.get(API);
 
       // Step 4: Filter by matching cowId in either format
       const filtered = res.data.filter(
@@ -57,7 +57,7 @@ function ManageImmunization() {
   const handleDelete = async (id) => {
     if (window.confirm("Delete this record?")) {
       try {
-        await axios.delete(`${API}/${id}`);
+        await apiClient.delete(`${API}/${id}`);
         fetchData();
       } catch (err) {
         console.error("Error deleting record:", err);
@@ -75,7 +75,7 @@ function ManageImmunization() {
 
   const handleUpdate = async () => {
     try {
-      await axios.put(`${API}/${editRecord._id}`, editRecord);
+      await apiClient.put(`${API}/${editRecord._id}`, editRecord);
       setEditRecord(null);
       fetchData();
     } catch (err) {

@@ -2,23 +2,23 @@ import { useEffect, useState } from "react";
 import { Navigate } from "react-router-dom";
 import RoleSidebar from "../components/RoleSidebar";
 import Navbar from "../components/Navbar";
-import axios from "axios";
+import apiClient from "../api/client";
 
 function ManageCattleInfo() {
   const [records,    setRecords]    = useState([]);
   const [cows,       setCows]       = useState([]);
   const [editRecord, setEditRecord] = useState(null);
 
-  const API = "http://localhost:5000/api/cattle";
+  const API = "/api/cattle";
 
   const fetchData = async () => {
     try {
       const kosalaId = localStorage.getItem("kosalaId");
-      const cowsRes = await axios.get(
-        `http://localhost:5000/api/cows/kosala/${kosalaId}`
+      const cowsRes = await apiClient.get(
+        `/api/cows/kosala/${kosalaId}`
       );
       setCows(cowsRes.data);
-      const res = await axios.get(`${API}/kosala/${kosalaId}`);
+      const res = await apiClient.get(`${API}/kosala/${kosalaId}`);
       setRecords(res.data);
     } catch (err) {
       console.error("Error fetching cattle info:", err);
@@ -37,7 +37,7 @@ function ManageCattleInfo() {
   const handleDelete = async (id) => {
     if (window.confirm("Delete this record?")) {
       try {
-        await axios.delete(`${API}/${id}`);
+        await apiClient.delete(`${API}/${id}`);
         fetchData();
       } catch (err) {
         console.error("Error deleting:", err);
@@ -50,7 +50,7 @@ function ManageCattleInfo() {
 
   const handleUpdate = async () => {
     try {
-      await axios.put(`${API}/${editRecord._id}`, editRecord);
+      await apiClient.put(`${API}/${editRecord._id}`, editRecord);
       setEditRecord(null);
       fetchData();
     } catch (err) {

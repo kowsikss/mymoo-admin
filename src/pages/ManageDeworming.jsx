@@ -2,14 +2,14 @@ import { useEffect, useState } from "react";
 import { Navigate } from "react-router-dom";
 import Sidebar from "../components/Sidebar";
 import Navbar from "../components/Navbar";
-import axios from "axios";
+import apiClient from "../api/client";
 
 function ManageDeworming() {
   const [records, setRecords] = useState([]);
   const [cows, setCows] = useState([]);
   const [editing, setEditing] = useState(null);
 
-  const API = "http://localhost:5000/api/deworming";
+  const API = "/api/deworming";
 
   useEffect(() => {
     fetchRecords();
@@ -24,8 +24,8 @@ function ManageDeworming() {
       const kosalaId = localStorage.getItem("kosalaId");
 
       // Step 1: Get all cows for this kosala
-      const cowsRes = await axios.get(
-        `http://localhost:5000/api/cows/kosala/${kosalaId}`
+      const cowsRes = await apiClient.get(
+        `/api/cows/kosala/${kosalaId}`
       );
       const cowData = cowsRes.data;
       setCows(cowData);
@@ -35,7 +35,7 @@ function ManageDeworming() {
       const myCowCustomIds = cowData.map((cow) => cow.cowId);
 
       // Step 3: Get all deworming records
-      const dewormRes = await axios.get(API);
+      const dewormRes = await apiClient.get(API);
 
       // Step 4: Filter by matching cowId in either format
       const filtered = dewormRes.data.filter(
@@ -57,7 +57,7 @@ function ManageDeworming() {
   const handleDelete = async (id) => {
     if (window.confirm("Delete this record?")) {
       try {
-        await axios.delete(`${API}/${id}`);
+        await apiClient.delete(`${API}/${id}`);
         fetchRecords();
       } catch (err) {
         console.error("Error deleting record:", err);
@@ -78,7 +78,7 @@ function ManageDeworming() {
 
   const handleUpdate = async () => {
     try {
-      await axios.put(`${API}/${editing._id}`, editing);
+      await apiClient.put(`${API}/${editing._id}`, editing);
       setEditing(null);
       fetchRecords();
     } catch (err) {

@@ -2,7 +2,7 @@ import { useEffect, useState } from "react";
 import { Navigate, useNavigate } from "react-router-dom";
 import Sidebar from "../components/Sidebar";
 import Navbar from "../components/Navbar";
-import axios from "axios";
+import apiClient from "../api/client";
 
 function GaushalasList() {
   const [gaushalas, setGaushalas] = useState([]);
@@ -19,7 +19,7 @@ function GaushalasList() {
 
   const fetchGaushalas = async () => {
     try {
-      const res = await axios.get("http://localhost:5000/api/kosala/full");
+      const res = await apiClient.get("/api/kosala/full");
       setGaushalas(res.data);
     } catch (err) {
       console.error("Error fetching gaushalas:", err);

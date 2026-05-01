@@ -19,7 +19,7 @@
 
 //   const fetchGaushalas = async () => {
 //     try {
-//       const res = await axios.get("http://localhost:5000/api/kosala");
+//       const res = await apiClient.get("/api/kosala");
 //       setGaushalas(res.data);
 //     } catch (err) {
 //       console.error("Error fetching gaushalas:", err);
@@ -135,7 +135,7 @@
 // export default DoctorLogin;
 import { useState, useEffect } from "react";
 import { useNavigate } from "react-router-dom";
-import axios from "axios";
+import apiClient from "../api/client";
 // In your component file
 import './styles/login.css';
 
@@ -156,7 +156,7 @@ function DoctorLogin() {
 
   const fetchGaushalas = async () => {
     try {
-      const res = await axios.get("http://localhost:5000/api/kosala");
+      const res = await apiClient.get("/api/kosala");
       setGaushalas(res.data);
     } catch (err) {
       console.error("Error fetching gaushalas:", err);
@@ -177,8 +177,8 @@ function DoctorLogin() {
 
     try {
       setLoading(true);
-      const res = await axios.post(
-        "http://localhost:5000/api/doctor-auth/login",
+      const res = await apiClient.post(
+        "/api/doctor-auth/login",
         form
       );
 

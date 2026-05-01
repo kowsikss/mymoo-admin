@@ -1,6 +1,6 @@
 import { useState, useEffect } from "react";
 import { useNavigate } from "react-router-dom";
-import axios from "axios";
+import apiClient from "../api/client";
 
 function KosalaAdminLogin() {
   const [form, setForm] = useState({ name: "", password: "", kosalaId: "" });
@@ -14,7 +14,7 @@ function KosalaAdminLogin() {
 
   const fetchGaushalas = async () => {
     try {
-      const res = await axios.get("http://localhost:5000/api/kosala");
+      const res = await apiClient.get("/api/kosala");
       setGaushalas(res.data);
     } catch (err) {
       console.error("Error fetching gaushalas:", err);
@@ -31,8 +31,8 @@ function KosalaAdminLogin() {
 
     try {
       setLoading(true);
-      const res = await axios.post(
-        "http://localhost:5000/api/kosala-admin/login",
+      const res = await apiClient.post(
+        "/api/kosala-admin/login",
         form
       );
       localStorage.setItem("role",          "kosala-admin");

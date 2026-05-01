@@ -2,7 +2,7 @@ import { useEffect, useState } from "react";
 import { Navigate, useNavigate } from "react-router-dom";
 import KosalaAdminSidebar from "../components/KosalaAdminSidebar";
 import Navbar from "../components/Navbar";
-import axios from "axios";
+import apiClient from "../api/client";
 
 function CowInfo() {
   const navigate = useNavigate();
@@ -25,8 +25,8 @@ function CowInfo() {
 
   const fetchCows = async () => {
     try {
-      const res = await axios.get(
-        `http://localhost:5000/api/cows/kosala/${kosalaId}`
+      const res = await apiClient.get(
+        `/api/cows/kosala/${kosalaId}`
       );
       setCows(res.data);
     } catch (err) {
@@ -39,11 +39,11 @@ function CowInfo() {
     setLoading(true);
     try {
       const [dew, vac, imm, repro, cattle] = await Promise.all([
-        axios.get("http://localhost:5000/api/deworming"),
-        axios.get("http://localhost:5000/api/vaccination"),
-        axios.get("http://localhost:5000/api/immunization"),
-        axios.get("http://localhost:5000/api/reproduction"),
-        axios.get("http://localhost:5000/api/cattle"),
+        apiClient.get("/api/deworming"),
+        apiClient.get("/api/vaccination"),
+        apiClient.get("/api/immunization"),
+        apiClient.get("/api/reproduction"),
+        apiClient.get("/api/cattle"),
       ]);
 
       setRecords({
