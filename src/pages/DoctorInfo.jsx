@@ -2,7 +2,8 @@ import { useEffect, useState } from "react";
 import { Navigate, useParams, useNavigate } from "react-router-dom";
 import Sidebar from "../components/Sidebar";
 import Navbar from "../components/Navbar";
-import axios from "axios";
+import apiClient from "../api/client";
+import { API_BASE_URL } from "../api/client";
 
 function DoctorInfo() {
   const { id } = useParams();
@@ -20,7 +21,7 @@ function DoctorInfo() {
 
   const fetchDoctor = async () => {
     try {
-      const res = await axios.get(`http://localhost:5000/api/doctors/${id}`);
+      const res = await apiClient.get(`/api/doctors/${id}`);
       setDoctor(res.data);
     } catch (err) {
       console.error("Error fetching doctor:", err);
@@ -96,7 +97,7 @@ function DoctorInfo() {
           >
             {doctor.photo ? (
               <img
-                src={`http://localhost:5000/uploads/${doctor.photo}`}
+                src={`${API_BASE_URL}/uploads/${doctor.photo}`}
                 alt="doctor"
                 style={{
                   width: "140px",

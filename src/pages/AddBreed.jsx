@@ -1,6 +1,6 @@
 import Sidebar from "../components/Sidebar";
 import Navbar from "../components/Navbar";
-import axios from "axios";
+import apiClient from "../api/client";
 import { useState } from "react";
 
 function AddBreed() {
@@ -8,7 +8,7 @@ function AddBreed() {
 
   const handleSubmit = async (e) => {
     e.preventDefault();
-    await axios.post("http://localhost:5000/api/breeds", form);
+    await apiClient.post("/api/breeds", form);
     alert("Breed Added");
   };
 

@@ -2,7 +2,8 @@ import { useEffect, useState } from "react";
 import { Navigate } from "react-router-dom";
 import Sidebar from "../components/Sidebar";
 import Navbar from "../components/Navbar";
-import axios from "axios";
+import apiClient from "../api/client";
+import { API_BASE_URL } from "../api/client";
 
 function DoctorManageCow() {
   const [cows,       setCows]       = useState([]);
@@ -10,7 +11,7 @@ function DoctorManageCow() {
   const [loading,    setLoading]    = useState(true);
   const [search,     setSearch]     = useState("");
 
-  const API = "http://localhost:5000/api/cows";
+  const API = "/api/cows";
 
   const role = localStorage.getItem("role");
   if (role !== "doctor") return <Navigate to="/" />;
@@ -18,7 +19,7 @@ function DoctorManageCow() {
   const fetchCows = async () => {
     try {
       const kosalaId = localStorage.getItem("kosalaId");
-      const res = await axios.get(`${API}/kosala/${kosalaId}`);
+      const res = await apiClient.get(`${API}/kosala/${kosalaId}`);
       setCows(res.data);
     } catch (err) {
       console.error("Error fetching cows:", err);
@@ -51,7 +52,7 @@ function DoctorManageCow() {
     }
     try {
       // ✅ Only send fields doctors are allowed to update
-      await axios.put(`${API}/${editingCow._id}`, {
+      await apiClient.put(`${API}/${editingCow._id}`, {
         healthStatus:       editingCow.healthStatus,
         dateOfDeath:        editingCow.dateOfDeath,
         causeOfDeath:       editingCow.causeOfDeath,
@@ -171,12 +172,12 @@ function DoctorManageCow() {
                       <td>
                         {cow.frontImage || cow.image ? (
                           <img
-                            src={`http://localhost:5000/uploads/${cow.frontImage || cow.image}`}
+                            src={`${API_BASE_URL}/uploads/${cow.frontImage || cow.image}`}
                             alt="cow"
                             className="cow-thumb"
                             onClick={() =>
                               window.open(
-                                `http://localhost:5000/uploads/${cow.frontImage || cow.image}`,
+                                `${API_BASE_URL}/uploads/${cow.frontImage || cow.image}`,
                                 "_blank"
                               )
                             }

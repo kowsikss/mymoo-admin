@@ -2,7 +2,7 @@ import { useState } from "react";
 import { Navigate, useNavigate } from "react-router-dom";
 import KosalaAdminSidebar from "../components/KosalaAdminSidebar";
 import Navbar from "../components/Navbar";
-import axios from "axios";
+import apiClient from "../api/client";
 
 function KosalaAdminAddDoctor() {
   const navigate = useNavigate();
@@ -32,7 +32,7 @@ function KosalaAdminAddDoctor() {
 
     try {
       setLoading(true);
-      await axios.post("http://localhost:5000/api/doctors", {
+      await apiClient.post("/api/doctors", {
         ...form,
         kosalaId, // ✅ automatically assign to this kosala
       });

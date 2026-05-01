@@ -3,7 +3,7 @@ import { Navigate, useNavigate } from "react-router-dom";
 import Sidebar from "../components/Sidebar";
 import KosalaAdminSidebar from "../components/KosalaAdminSidebar";
 import Navbar from "../components/Navbar";
-import axios from "axios";
+import apiClient from "../api/client";
 
 function AddRescuedAnimal() {
   const [breeds, setBreeds] = useState([]);
@@ -27,7 +27,7 @@ function AddRescuedAnimal() {
   // ✅ FIX 1: Define fetchBreeds BEFORE useEffect
   const fetchBreeds = async () => {
     try {
-      const res = await axios.get("http://localhost:5000/api/breeds");
+      const res = await apiClient.get("/api/breeds");
       setBreeds(res.data);
     } catch (err) {
       console.error("Error fetching breeds:", err);
@@ -76,7 +76,7 @@ function AddRescuedAnimal() {
 
       if (animalPhoto) formData.append("animalPhoto", animalPhoto);
 
-      await axios.post("http://localhost:5000/api/rescued", formData, {
+      await apiClient.post("/api/rescued", formData, {
         headers: { "Content-Type": "multipart/form-data" },
       });
 

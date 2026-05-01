@@ -2,7 +2,7 @@ import { useEffect, useState } from "react";
 import { Navigate, useNavigate } from "react-router-dom";
 import KosalaAdminSidebar from "../components/KosalaAdminSidebar";
 import Navbar from "../components/Navbar";
-import axios from "axios";
+import apiClient from "../api/client";
 import {
   BarChart, Bar, XAxis, YAxis, Tooltip, ResponsiveContainer,
   PieChart, Pie, Cell, Legend, CartesianGrid,
@@ -56,11 +56,11 @@ function KosalaAdminDashboard() {
     try {
       const [cowsRes, rescuedRes, inventoryRes, cattleRes, breedsRes] =
         await Promise.all([
-          axios.get(`http://localhost:5000/api/cows/kosala/${kosalaId}`),
-          axios.get(`http://localhost:5000/api/rescued/kosala/${kosalaId}`),
-          axios.get(`http://localhost:5000/api/inventory/kosala/${kosalaId}`),
-          axios.get(`http://localhost:5000/api/cattle/kosala/${kosalaId}`),
-          axios.get("http://localhost:5000/api/breeds"),
+          apiClient.get(`/api/cows/kosala/${kosalaId}`),
+          apiClient.get(`/api/rescued/kosala/${kosalaId}`),
+          apiClient.get(`/api/inventory/kosala/${kosalaId}`),
+          apiClient.get(`/api/cattle/kosala/${kosalaId}`),
+          apiClient.get("/api/breeds"),
         ]);
 
       const cows = cowsRes.data;
@@ -113,7 +113,7 @@ function KosalaAdminDashboard() {
 
     // Alerts
     try {
-      const res = await axios.get(`http://localhost:5000/api/alerts/kosala/${kosalaId}`);
+      const res = await apiClient.get(`/api/alerts/kosala/${kosalaId}`);
       setAlerts(res.data);
     } catch (err) {
       console.error("Error fetching alerts:", err);

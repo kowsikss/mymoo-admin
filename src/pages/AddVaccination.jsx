@@ -1,6 +1,6 @@
 import Sidebar from "../components/Sidebar";
 import Navbar from "../components/Navbar";
-import axios from "axios";
+import apiClient from "../api/client";
 import { useEffect, useState } from "react";
 import { useNavigate } from "react-router-dom";
 
@@ -18,7 +18,7 @@ function AddVaccination() {
 
   const fetchCows = async () => {
     const kosalaId = localStorage.getItem("kosalaId");
-    const res = await axios.get(`http://localhost:5000/api/cows/kosala/${kosalaId}`);
+    const res = await apiClient.get(`/api/cows/kosala/${kosalaId}`);
     setCows(res.data);
   };
 
@@ -29,7 +29,7 @@ function AddVaccination() {
   const handleSubmit = async (e) => {
     e.preventDefault();
     const kosalaId = localStorage.getItem("kosalaId");
-    await axios.post("http://localhost:5000/api/vaccination", { ...form, kosalaId });
+    await apiClient.post("/api/vaccination", { ...form, kosalaId });
     alert("Vaccination Added");
     navigate("/doctor-dashboard");
   };

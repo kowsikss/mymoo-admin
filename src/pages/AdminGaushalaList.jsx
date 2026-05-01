@@ -1,5 +1,5 @@
 import { useEffect, useState } from "react";
-import axios from "axios";
+import apiClient from "../api/client";
 import { useNavigate } from "react-router-dom";
 
 function AdminGaushalaList() {
@@ -11,7 +11,7 @@ function AdminGaushalaList() {
   }, []);
 
   const fetchData = async () => {
-    const res = await axios.get("http://localhost:5000/api/kosala/full");
+    const res = await apiClient.get("/api/kosala/full");
     setData(res.data);
   };
 

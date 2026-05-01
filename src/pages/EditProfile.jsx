@@ -1,6 +1,6 @@
 import { useState, useEffect } from "react";
 import { useNavigate } from "react-router-dom";
-import axios from "axios";
+import apiClient from "../api/client";
 import Sidebar from "../components/Sidebar";
 import KosalaAdminSidebar from "../components/KosalaAdminSidebar";
 import Navbar from "../components/Navbar";
@@ -20,7 +20,7 @@ function EditProfile() {
 
   const fetchProfile = async () => {
     try {
-      const res = await axios.get("http://localhost:5000/api/profile", {
+      const res = await apiClient.get("/api/profile", {
         params: { role, id }, // ✅ pass role + id as query params
       });
       setForm({
@@ -51,7 +51,7 @@ function EditProfile() {
 
     try {
       setLoading(true);
-      await axios.put("http://localhost:5000/api/profile", {
+      await apiClient.put("/api/profile", {
         role,
         id,
         ...form, // name, email, mobile

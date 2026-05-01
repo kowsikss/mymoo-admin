@@ -2,7 +2,7 @@ import { useEffect, useState } from "react";
 import { useNavigate } from "react-router-dom";
 import Sidebar from "../components/Sidebar";
 import Navbar from "../components/Navbar";
-import axios from "axios";
+import apiClient from "../api/client";
 
 function BullCalfDetails() {
   const navigate = useNavigate();
@@ -16,8 +16,8 @@ function BullCalfDetails() {
   const fetchData = async () => {
     try {
       const [cowsRes, breedsRes] = await Promise.all([
-        axios.get(`http://localhost:5000/api/cows/kosala/${kosalaId}`),
-        axios.get("http://localhost:5000/api/breeds"),
+        apiClient.get(`/api/cows/kosala/${kosalaId}`),
+        apiClient.get("/api/breeds"),
       ]);
       const breedMap = {};
       breedsRes.data.forEach((b) => { breedMap[b._id] = b.name; });

@@ -2,7 +2,7 @@ import { useEffect, useState } from "react";
 import { Navigate, useNavigate } from "react-router-dom";
 import Sidebar from "../components/Sidebar";
 import Navbar from "../components/Navbar";
-import axios from "axios";
+import apiClient from "../api/client";
 
 function AddDoctor() {
   const navigate = useNavigate();
@@ -31,7 +31,7 @@ function AddDoctor() {
 
   const fetchGaushalas = async () => {
     try {
-      const res = await axios.get("http://localhost:5000/api/kosala");
+      const res = await apiClient.get("/api/kosala");
       setGaushalas(res.data);
     } catch (err) {
       console.error("Error fetching gaushalas:", err);
@@ -52,7 +52,7 @@ function AddDoctor() {
 
     try {
       setLoading(true);
-      await axios.post("http://localhost:5000/api/doctors", form);
+      await apiClient.post("/api/doctors", form);
       alert("Doctor Added Successfully!");
       navigate("/admin-dashboard");
     } catch (err) {

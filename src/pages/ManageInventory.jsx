@@ -2,7 +2,7 @@ import { useEffect, useState } from "react";
 import { Navigate } from "react-router-dom";
 import RoleSidebar from "../components/RoleSidebar";
 import Navbar from "../components/Navbar";
-import axios from "axios";
+import apiClient from "../api/client";
 
 function ManageInventory() {
   const [records,   setRecords]   = useState([]);
@@ -20,8 +20,8 @@ function ManageInventory() {
   const fetchRecords = async () => {
     try {
       const kosalaId = localStorage.getItem("kosalaId");
-      const res = await axios.get(
-        `http://localhost:5000/api/inventory/kosala/${kosalaId}`
+      const res = await apiClient.get(
+        `/api/inventory/kosala/${kosalaId}`
       );
       setRecords(res.data);
     } catch (err) {
@@ -32,7 +32,7 @@ function ManageInventory() {
   const handleDelete = async (id) => {
     if (window.confirm("Delete this record?")) {
       try {
-        await axios.delete(`http://localhost:5000/api/inventory/${id}`);
+        await apiClient.delete(`/api/inventory/${id}`);
         fetchRecords();
       } catch (err) {
         console.error("Error deleting:", err);

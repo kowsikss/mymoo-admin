@@ -2,7 +2,7 @@ import { useEffect, useState } from "react";
 import { Navigate, useNavigate, useLocation } from "react-router-dom";
 import Sidebar from "../components/Sidebar";
 import Navbar from "../components/Navbar";
-import axios from "axios";
+import apiClient from "../api/client";
 import "./AdminDashboard.css";
 
 function AdminDashboard() {
@@ -40,18 +40,18 @@ function AdminDashboard() {
   };
 
   const fetchGaushalas = async () => {
-    const res = await axios.get("http://localhost:5000/api/kosala/full");
+    const res = await apiClient.get("/api/kosala/full");
     setGaushalas(res.data);
   };
 
   const fetchDoctorCount = async () => {
-    const res = await axios.get("http://localhost:5000/api/doctors");
+    const res = await apiClient.get("/api/doctors");
     setDoctorCount(res.data.length);
   };
 
   const fetchKosalaAdmins = async () => {
     try {
-      const res = await axios.get("http://localhost:5000/api/kosala-admins");
+      const res = await apiClient.get("/api/kosala-admins");
 
       let adminsData = [];
       if (Array.isArray(res.data)) adminsData = res.data;

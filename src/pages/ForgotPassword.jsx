@@ -1,6 +1,6 @@
 import { useState } from "react";
 import { useNavigate } from "react-router-dom";
-import axios from "axios";
+import apiClient from "../api/client";
 
 function ForgotPassword() {
   const navigate = useNavigate();
@@ -20,7 +20,7 @@ function ForgotPassword() {
 
     try {
       setLoading(true);
-      await axios.post("http://localhost:5000/api/doctor-auth/forgot-password", { email });
+      await apiClient.post("/api/doctor-auth/forgot-password", { email });
       setSent(true); // show success message regardless
     } catch (err) {
       setError("Something went wrong. Please try again.");

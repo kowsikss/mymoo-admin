@@ -2,7 +2,8 @@ import { useEffect, useState } from "react";
 import { Navigate, useParams, useNavigate } from "react-router-dom";
 import Sidebar from "../components/Sidebar";
 import Navbar from "../components/Navbar";
-import axios from "axios";
+import apiClient from "../api/client";
+import { API_BASE_URL } from "../api/client";
 
 function AdminKosalaDashboard() {
   const { id } = useParams();
@@ -24,8 +25,8 @@ function AdminKosalaDashboard() {
   const fetchData = async () => {
     try {
       const [cowsRes, kosalaRes] = await Promise.all([
-        axios.get(`http://localhost:5000/api/cows/kosala/${id}`),
-        axios.get(`http://localhost:5000/api/kosala/${id}`),
+        apiClient.get(`/api/cows/kosala/${id}`),
+        apiClient.get(`/api/kosala/${id}`),
       ]);
       setCows(cowsRes.data);
       setKosala(kosalaRes.data);
@@ -39,7 +40,7 @@ function AdminKosalaDashboard() {
   const handleDelete = async (cowId) => {
     if (window.confirm("Delete this cow?")) {
       try {
-        await axios.delete(`http://localhost:5000/api/cows/${cowId}`);
+        await apiClient.delete(`/api/cows/${cowId}`);
         fetchData();
       } catch (err) {
         console.error("Error deleting cow:", err);
@@ -57,8 +58,8 @@ function AdminKosalaDashboard() {
 
   const handleUpdate = async () => {
     try {
-      await axios.put(
-        `http://localhost:5000/api/cows/${editingCow._id}`,
+      await apiClient.put(
+        `/api/cows/${editingCow._id}`,
         editingCow
       );
       setEditingCow(null);
@@ -161,14 +162,14 @@ function AdminKosalaDashboard() {
                       <td>
                         {cow.frontImage || cow.image ? (
                           <img
-                            src={`http://localhost:5000/uploads/${
+                            src={`${API_BASE_URL}/uploads/${
                               cow.frontImage || cow.image
                             }`}
                             alt="cow"
                             className="cow-thumb"
                             onClick={() =>
                               window.open(
-                                `http://localhost:5000/uploads/${
+                                `${API_BASE_URL}/uploads/${
                                   cow.frontImage || cow.image
                                 }`,
                                 "_blank"

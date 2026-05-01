@@ -2,7 +2,8 @@ import { useEffect, useState } from "react";
 import { Navigate, useParams, useNavigate } from "react-router-dom";
 import Sidebar from "../components/Sidebar";
 import Navbar from "../components/Navbar";
-import axios from "axios";
+import apiClient from "../api/client";
+import { API_BASE_URL } from "../api/client";
 
 function GaushalaInfo() {
   const { id } = useParams();
@@ -24,9 +25,9 @@ function GaushalaInfo() {
   const fetchData = async () => {
     try {
       const [gaushalaRes, cowsRes, doctorsRes] = await Promise.all([
-        axios.get(`http://localhost:5000/api/kosala/${id}`),
-        axios.get(`http://localhost:5000/api/cows/kosala/${id}`),
-        axios.get("http://localhost:5000/api/doctors"),
+        apiClient.get(`/api/kosala/${id}`),
+        apiClient.get(`/api/cows/kosala/${id}`),
+        apiClient.get("/api/doctors"),
       ]);
 
       setGaushala(gaushalaRes.data);
@@ -45,7 +46,7 @@ function GaushalaInfo() {
 
   const openCertificate = () => {
     window.open(
-      `http://localhost:5000/uploads/${gaushala.certificateFile}`,
+      `${API_BASE_URL}/uploads/${gaushala.certificateFile}`,
       "_blank"
     );
   };

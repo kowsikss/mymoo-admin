@@ -1,6 +1,6 @@
 import { useState } from "react";
 import { useNavigate } from "react-router-dom";
-import axios from "axios";
+import apiClient from "../api/client";
 import Sidebar from "../components/Sidebar";
 import KosalaAdminSidebar from "../components/KosalaAdminSidebar";
 import Navbar from "../components/Navbar";
@@ -39,8 +39,8 @@ function ChangePassword() {
     try {
       setLoading(true);
       const token = localStorage.getItem("token");
-      await axios.put(
-        "http://localhost:5000/api/change-password",
+      await apiClient.put(
+        "/api/change-password",
         {
           currentPassword: form.currentPassword,
           newPassword: form.newPassword,

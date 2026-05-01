@@ -2,7 +2,7 @@ import { useEffect, useState } from "react";
 import { Navigate, useNavigate } from "react-router-dom";
 import KosalaAdminSidebar from "../components/KosalaAdminSidebar";
 import Navbar from "../components/Navbar";
-import axios from "axios";
+import apiClient from "../api/client";
 
 function KosalaAdminDoctorsList() {
   const navigate = useNavigate();
@@ -20,7 +20,7 @@ function KosalaAdminDoctorsList() {
 
   const fetchDoctors = async () => {
     try {
-      const res = await axios.get("http://localhost:5000/api/doctors");
+      const res = await apiClient.get("/api/doctors");
       // Filter only doctors belonging to this kosala
       const filtered = res.data.filter(
         (d) => d.kosalaId?.toString() === kosalaId?.toString()
@@ -36,7 +36,7 @@ function KosalaAdminDoctorsList() {
   const handleDelete = async (id) => {
     if (window.confirm("Delete this doctor?")) {
       try {
-        await axios.delete(`http://localhost:5000/api/doctors/${id}`);
+        await apiClient.delete(`/api/doctors/${id}`);
         fetchDoctors();
       } catch (err) {
         console.error("Error deleting doctor:", err);

@@ -120,7 +120,7 @@
 //   const fetchAlerts = async () => {
 //     try {
 //       const kosalaId = localStorage.getItem("kosalaId");
-//       const res = await axios.get(`http://localhost:5000/api/alerts/kosala/${kosalaId}`);
+//       const res = await apiClient.get(`/api/alerts/kosala/${kosalaId}`);
 //       setAlerts(res.data);
 //     } catch (err) { console.error("Error fetching alerts:", err); }
 //   };
@@ -576,7 +576,7 @@
 import Sidebar from "../components/Sidebar";
 import Navbar from "../components/Navbar";
 import "../styles/dashboard.css";
-import axios from "axios";
+import apiClient from "../api/client";
 import { useEffect, useState } from "react";
 import { useNavigate } from "react-router-dom";
 import {
@@ -665,14 +665,14 @@ function Dashboard() {
     try {
       const [cowsRes, dew, vac, imm, rescued, inventory, repro, cattle] =
         await Promise.all([
-          axios.get(`http://localhost:5000/api/cows/kosala/${kosalaId}`),
-          axios.get("http://localhost:5000/api/deworming"),
-          axios.get("http://localhost:5000/api/vaccination"),
-          axios.get("http://localhost:5000/api/immunization"),
-          axios.get(`http://localhost:5000/api/rescued/kosala/${kosalaId}`),
-          axios.get(`http://localhost:5000/api/inventory/kosala/${kosalaId}`),
-          axios.get(`http://localhost:5000/api/reproduction/kosala/${kosalaId}`),
-          axios.get(`http://localhost:5000/api/cattle/kosala/${kosalaId}`),
+          apiClient.get(`/api/cows/kosala/${kosalaId}`),
+          apiClient.get("/api/deworming"),
+          apiClient.get("/api/vaccination"),
+          apiClient.get("/api/immunization"),
+          apiClient.get(`/api/rescued/kosala/${kosalaId}`),
+          apiClient.get(`/api/inventory/kosala/${kosalaId}`),
+          apiClient.get(`/api/reproduction/kosala/${kosalaId}`),
+          apiClient.get(`/api/cattle/kosala/${kosalaId}`),
         ]);
 
       const cowIds    = new Set(cowsRes.data.map((c) => c.cowId || c._id));
@@ -716,7 +716,7 @@ function Dashboard() {
   const fetchAlerts = async () => {
     try {
       const kosalaId = localStorage.getItem("kosalaId");
-      const res = await axios.get(`http://localhost:5000/api/alerts/kosala/${kosalaId}`);
+      const res = await apiClient.get(`/api/alerts/kosala/${kosalaId}`);
       setAlerts(res.data);
     } catch (err) {
       console.error("Error fetching alerts:", err);
@@ -727,7 +727,7 @@ function Dashboard() {
   const fetchInventoryCharts = async () => {
     const kosalaId = localStorage.getItem("kosalaId");
     try {
-      const res     = await axios.get(`http://localhost:5000/api/inventory/kosala/${kosalaId}`);
+      const res     = await apiClient.get(`/api/inventory/kosala/${kosalaId}`);
       const records = res.data;
 
       const groupByMonth = (items, valueKey) => {
@@ -754,9 +754,9 @@ function Dashboard() {
 
     try {
       const [cattleRes, cowsRes, breedsRes] = await Promise.all([
-        axios.get(`http://localhost:5000/api/cattle/kosala/${kosalaId}`),
-        axios.get(`http://localhost:5000/api/cows/kosala/${kosalaId}`),
-        axios.get("http://localhost:5000/api/breeds"),
+        apiClient.get(`/api/cattle/kosala/${kosalaId}`),
+        apiClient.get(`/api/cows/kosala/${kosalaId}`),
+        apiClient.get("/api/breeds"),
       ]);
 
       const cattleRecords = cattleRes.data;
@@ -834,8 +834,8 @@ function Dashboard() {
     // Rescued charts
     try {
       const [rescuedRes, breedsRes] = await Promise.all([
-        axios.get(`http://localhost:5000/api/rescued/kosala/${localStorage.getItem("kosalaId")}`),
-        axios.get("http://localhost:5000/api/breeds"),
+        apiClient.get(`/api/rescued/kosala/${localStorage.getItem("kosalaId")}`),
+        apiClient.get("/api/breeds"),
       ]);
 
       const rescued  = rescuedRes.data;
@@ -873,8 +873,8 @@ function Dashboard() {
     const kosalaId = localStorage.getItem("kosalaId");
     try {
       const [cowsRes, res] = await Promise.all([
-        axios.get(`http://localhost:5000/api/cows/kosala/${kosalaId}`),
-        axios.get("http://localhost:5000/api/livedata"),
+        apiClient.get(`/api/cows/kosala/${kosalaId}`),
+        apiClient.get("/api/livedata"),
       ]);
       const cowIds   = new Set(cowsRes.data.map((c) => c.cowId || c._id));
       const filtered = res.data.filter((i) => cowIds.has(i.cowId));
