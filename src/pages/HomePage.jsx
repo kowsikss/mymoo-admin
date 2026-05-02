@@ -477,7 +477,7 @@ export default function HomePage() {
         <nav className="hp-nav">
           <div className="hp-logo">
             <div className="hp-logo-icon">🐄</div>
-            <span className="hp-logo-name">Kosala</span>
+            <span className="hp-logo-name">Gaushala</span>
           </div>
           <span className="hp-nav-tag">GAUSHALA MANAGEMENT SYSTEM</span>
         </nav>
