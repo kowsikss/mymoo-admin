@@ -4,6 +4,7 @@ import Sidebar from "../components/Sidebar";
 import Navbar from "../components/Navbar";
 import apiClient from "../api/client";
 import GaushalaMap from "../components/GaushalaMap";
+import "./AdminDashboard-Modal.css";
 
 import "./AdminDashboard.css";
 import "../components/GaushalaMap.css";
@@ -19,6 +20,7 @@ function AdminDashboard() {
   const [pendingCount, setPendingCount] = useState(0);
   const [selectedGaushala, setSelectedGaushala] = useState(null);
   const [showInfoModal, setShowInfoModal] = useState(false);
+  const [showDetailModal, setShowDetailModal] = useState(false);
 
   const navigate = useNavigate();
   const location = useLocation();
@@ -116,22 +118,31 @@ function AdminDashboard() {
 
     setSelectedGaushala({
       ...gaushala,
-      adminName: gaushala.admin?.name || admin?.name || "Not Assigned"
+      adminName: gaushala.admin?.name || admin?.name || "Not Assigned",
+      adminContact: gaushala.admin?.contact || admin?.contact || "N/A",
+      adminEmail: gaushala.admin?.email || admin?.email || "N/A"
     });
     setShowInfoModal(true);
   };
 
   const handleOpen = (gaushalaId) => {
-    // Option 1: Navigate to gaushala-admin page if that route exists
-    navigate(`/gaushala-admin/${gaushalaId}`);
-    
-    // Option 2: If you want to open in a new tab or show details, uncomment below:
-    // const gaushala = gaushalas.find(g => g._id === gaushalaId);
-    // handleInfo(gaushala);
+    const gaushala = gaushalas.find(g => g._id === gaushalaId);
+    const admin = admins.find(
+      (a) => String(a.kosalaId?._id || a.kosalaId) === String(gaushala._id)
+    );
+
+    setSelectedGaushala({
+      ...gaushala,
+      adminName: gaushala.admin?.name || admin?.name || "Not Assigned",
+      adminContact: gaushala.admin?.contact || admin?.contact || "N/A",
+      adminEmail: gaushala.admin?.email || admin?.email || "N/A"
+    });
+    setShowDetailModal(true);
   };
 
   const closeModal = () => {
     setShowInfoModal(false);
+    setShowDetailModal(false);
     setSelectedGaushala(null);
   };
 
@@ -316,19 +327,110 @@ function AdminDashboard() {
                   <strong>Location:</strong>
                   <span>{selectedGaushala.location || "N/A"}</span>
                 </div>
-                
-                <div className="info-row">
-                  <strong>Contact:</strong>
-                  <span>{selectedGaushala.contact || selectedGaushala.admin?.contact || "N/A"}</span>
-                </div>
-                
-                <div className="info-row">
-                  <strong>Address:</strong>
-                  <span>{selectedGaushala.address || "N/A"}</span>
-                </div>
               </div>
               
               <div className="modal-footer">
+                <button className="btn-close" onClick={closeModal}>Close</button>
+              </div>
+            </div>
+          </div>
+        )}
+
+        {/* =======================
+            DETAILED MODAL (Open Button)
+        ======================= */}
+        {showDetailModal && selectedGaushala && (
+          <div className="modal-overlay" onClick={closeModal}>
+            <div className="modal-content modal-large" onClick={(e) => e.stopPropagation()}>
+              <div className="modal-header">
+                <h3>📋 Complete Gaushala Details</h3>
+                <button className="modal-close" onClick={closeModal}>×</button>
+              </div>
+              
+              <div className="modal-body">
+                <div className="detail-section">
+                  <h4>🏢 Basic Information</h4>
+                  <div className="info-row">
+                    <strong>Name:</strong>
+                    <span>{selectedGaushala.name}</span>
+                  </div>
+                  <div className="info-row">
+                    <strong>ID:</strong>
+                    <span>{selectedGaushala._id}</span>
+                  </div>
+                  <div className="info-row">
+                    <strong>Location:</strong>
+                    <span>{selectedGaushala.location || "N/A"}</span>
+                  </div>
+                  <div className="info-row">
+                    <strong>Address:</strong>
+                    <span>{selectedGaushala.address || "N/A"}</span>
+                  </div>
+                  <div className="info-row">
+                    <strong>Contact:</strong>
+                    <span>{selectedGaushala.contact || "N/A"}</span>
+                  </div>
+                </div>
+
+                <div className="detail-section">
+                  <h4>👨‍💼 Admin Information</h4>
+                  <div className="info-row">
+                    <strong>Admin Name:</strong>
+                    <span>{selectedGaushala.adminName}</span>
+                  </div>
+                  <div className="info-row">
+                    <strong>Admin Contact:</strong>
+                    <span>{selectedGaushala.adminContact}</span>
+                  </div>
+                  <div className="info-row">
+                    <strong>Admin Email:</strong>
+                    <span>{selectedGaushala.adminEmail}</span>
+                  </div>
+                </div>
+
+                <div className="detail-section">
+                  <h4>👨‍⚕️ Doctor Information</h4>
+                  <div className="info-row">
+                    <strong>Doctor Name:</strong>
+                    <span>{selectedGaushala.doctor?.name || "Not Assigned"}</span>
+                  </div>
+                  <div className="info-row">
+                    <strong>Doctor Contact:</strong>
+                    <span>{selectedGaushala.doctor?.contact || "N/A"}</span>
+                  </div>
+                  <div className="info-row">
+                    <strong>Doctor Email:</strong>
+                    <span>{selectedGaushala.doctor?.email || "N/A"}</span>
+                  </div>
+                </div>
+
+                <div className="detail-section">
+                  <h4>🐄 Cattle Information</h4>
+                  <div className="info-row">
+                    <strong>Total Cows:</strong>
+                    <span className="highlight">{selectedGaushala.totalCows || 0}</span>
+                  </div>
+                  <div className="info-row">
+                    <strong>Capacity:</strong>
+                    <span>{selectedGaushala.capacity || "N/A"}</span>
+                  </div>
+                </div>
+
+                {selectedGaushala.description && (
+                  <div className="detail-section">
+                    <h4>📝 Description</h4>
+                    <p className="description-text">{selectedGaushala.description}</p>
+                  </div>
+                )}
+              </div>
+              
+              <div className="modal-footer">
+                <button className="btn-edit" onClick={() => {
+                  closeModal();
+                  navigate(`/edit-gaushala/${selectedGaushala._id}`);
+                }}>
+                  Edit Gaushala
+                </button>
                 <button className="btn-close" onClick={closeModal}>Close</button>
               </div>
             </div>
