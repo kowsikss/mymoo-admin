@@ -7,6 +7,7 @@ import GaushalaMap from "../components/GaushalaMap";
 
 import "./AdminDashboard.css";
 import "../components/GaushalaMap.css";
+import "./AdminDashboard-Modal.css";
 
 function AdminDashboard() {
   const [gaushalas, setGaushalas] = useState([]);
@@ -16,6 +17,8 @@ function AdminDashboard() {
   const [pendingRequests, setPendingRequests] = useState([]);
   const [showRequests, setShowRequests] = useState(false);
   const [pendingCount, setPendingCount] = useState(0);
+  const [selectedGaushala, setSelectedGaushala] = useState(null);
+  const [showInfoModal, setShowInfoModal] = useState(false);
 
   const navigate = useNavigate();
   const location = useLocation();
@@ -111,20 +114,25 @@ function AdminDashboard() {
       (a) => String(a.kosalaId?._id || a.kosalaId) === String(gaushala._id)
     );
 
-    alert(`
-Gaushala Information:
-━━━━━━━━━━━━━━━━━━━━
-Name: ${gaushala.name}
-Admin: ${gaushala.admin?.name || admin?.name || "Not Assigned"}
-Doctor: ${gaushala.doctor?.name || "Not Assigned"}
-Total Cows: ${gaushala.totalCows || 0}
-Location: ${gaushala.location || "N/A"}
-Contact: ${gaushala.contact || "N/A"}
-    `);
+    setSelectedGaushala({
+      ...gaushala,
+      adminName: gaushala.admin?.name || admin?.name || "Not Assigned"
+    });
+    setShowInfoModal(true);
   };
 
   const handleOpen = (gaushalaId) => {
-    navigate(`/gaushala/${gaushalaId}`);
+    // Option 1: Navigate to gaushala-admin page if that route exists
+    navigate(`/gaushala-admin/${gaushalaId}`);
+    
+    // Option 2: If you want to open in a new tab or show details, uncomment below:
+    // const gaushala = gaushalas.find(g => g._id === gaushalaId);
+    // handleInfo(gaushala);
+  };
+
+  const closeModal = () => {
+    setShowInfoModal(false);
+    setSelectedGaushala(null);
   };
 
   /* ==============================
@@ -255,29 +263,12 @@ Contact: ${gaushala.contact || "N/A"}
                       <button 
                         className="btn-info"
                         onClick={() => handleInfo(g)}
-                        style={{
-                          backgroundColor: "#28a745",
-                          color: "white",
-                          padding: "5px 15px",
-                          border: "none",
-                          borderRadius: "4px",
-                          marginRight: "5px",
-                          cursor: "pointer"
-                        }}
                       >
                         Info
                       </button>
                       <button 
                         className="btn-open"
                         onClick={() => handleOpen(g._id)}
-                        style={{
-                          backgroundColor: "#ff9800",
-                          color: "white",
-                          padding: "5px 15px",
-                          border: "none",
-                          borderRadius: "4px",
-                          cursor: "pointer"
-                        }}
                       >
                         Open
                       </button>
@@ -288,6 +279,61 @@ Contact: ${gaushala.contact || "N/A"}
             </tbody>
           </table>
         </div>
+
+        {/* =======================
+            INFO MODAL
+        ======================= */}
+        {showInfoModal && selectedGaushala && (
+          <div className="modal-overlay" onClick={closeModal}>
+            <div className="modal-content" onClick={(e) => e.stopPropagation()}>
+              <div className="modal-header">
+                <h3>Gaushala Information</h3>
+                <button className="modal-close" onClick={closeModal}>×</button>
+              </div>
+              
+              <div className="modal-body">
+                <div className="info-row">
+                  <strong>Name:</strong>
+                  <span>{selectedGaushala.name}</span>
+                </div>
+                
+                <div className="info-row">
+                  <strong>Admin:</strong>
+                  <span>{selectedGaushala.adminName}</span>
+                </div>
+                
+                <div className="info-row">
+                  <strong>Doctor:</strong>
+                  <span>{selectedGaushala.doctor?.name || "Not Assigned"}</span>
+                </div>
+                
+                <div className="info-row">
+                  <strong>Total Cows:</strong>
+                  <span>{selectedGaushala.totalCows || 0}</span>
+                </div>
+                
+                <div className="info-row">
+                  <strong>Location:</strong>
+                  <span>{selectedGaushala.location || "N/A"}</span>
+                </div>
+                
+                <div className="info-row">
+                  <strong>Contact:</strong>
+                  <span>{selectedGaushala.contact || selectedGaushala.admin?.contact || "N/A"}</span>
+                </div>
+                
+                <div className="info-row">
+                  <strong>Address:</strong>
+                  <span>{selectedGaushala.address || "N/A"}</span>
+                </div>
+              </div>
+              
+              <div className="modal-footer">
+                <button className="btn-close" onClick={closeModal}>Close</button>
+              </div>
+            </div>
+          </div>
+        )}
 
         <button className="logout" onClick={logout}>
           Logout
