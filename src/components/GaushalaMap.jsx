@@ -8,30 +8,52 @@ import {
   Tooltip,
   useMap,
 } from "react-leaflet";
+
+import L from "leaflet";
 import "leaflet/dist/leaflet.css";
+
+// ✅ FIX: Leaflet icon issue in production
+delete L.Icon.Default.prototype._getIconUrl;
+
+L.Icon.Default.mergeOptions({
+  iconRetinaUrl: new URL(
+    "leaflet/dist/images/marker-icon-2x.png",
+    import.meta.url
+  ).toString(),
+  iconUrl: new URL(
+    "leaflet/dist/images/marker-icon.png",
+    import.meta.url
+  ).toString(),
+  shadowUrl: new URL(
+    "leaflet/dist/images/marker-shadow.png",
+    import.meta.url
+  ).toString(),
+});
 
 function FitBounds({ gaushalas }) {
   const map = useMap();
+
   useEffect(() => {
     const valid = gaushalas.filter((g) => g.lat && g.lon);
     if (valid.length === 0) return;
+
     const bounds = valid.map((g) => [g.lat, g.lon]);
     map.fitBounds(bounds, { padding: [40, 40], maxZoom: 10 });
   }, [gaushalas, map]);
+
   return null;
 }
 
 function getDotColor(cows) {
   if (!cows || cows === 0) return "#94a3b8";
-  if (cows < 50)           return "#f97316";
-  if (cows < 150)          return "#eab308";
+  if (cows < 50) return "#f97316";
+  if (cows < 150) return "#eab308";
   return "#22c55e";
 }
 
 export default function GaushalaMap({ gaushalas = [] }) {
-  // ✅ Uses g.lat and g.lon — matching your Gaushala/Kosala schema
   const validGaushalas = gaushalas.filter((g) => g.lat && g.lon);
-  const missingCoords  = gaushalas.length - validGaushalas.length;
+  const missingCoords = gaushalas.length - validGaushalas.length;
 
   return (
     <div className="gaushala-map-wrapper">
@@ -40,7 +62,9 @@ export default function GaushalaMap({ gaushalas = [] }) {
           <span className="map-icon">🗺️</span>
           <div>
             <h3>Gaushala Network — India</h3>
-            <p>{validGaushalas.length} of {gaushalas.length} locations mapped</p>
+            <p>
+              {validGaushalas.length} of {gaushalas.length} locations mapped
+            </p>
           </div>
         </div>
 
@@ -62,7 +86,11 @@ export default function GaushalaMap({ gaushalas = [] }) {
       <MapContainer
         center={[20.5937, 78.9629]}
         zoom={5}
-        style={{ height: "460px", width: "100%", borderRadius: "0 0 16px 16px" }}
+        style={{
+          height: "460px",
+          width: "100%",
+          borderRadius: "0 0 16px 16px",
+        }}
         scrollWheelZoom={true}
       >
         <TileLayer
@@ -85,17 +113,35 @@ export default function GaushalaMap({ gaushalas = [] }) {
             }}
           >
             <Tooltip direction="top" offset={[0, -6]} opacity={1}>
-              <strong>{g.name}</strong><br />
-              🐄 {g.totalCows || 0} cows
+              <strong>{g.name}</strong>
+              <br />🐄 {g.totalCows || 0} cows
             </Tooltip>
 
             <Popup>
               <div style={{ minWidth: 180 }}>
-                <p style={{ margin: "0 0 4px", fontWeight: 700, fontSize: 14 }}>🏛️ {g.name}</p>
-                <p style={{ margin: "2px 0", fontSize: 12, color: "#555" }}>👨‍💼 Admin: {g.admin?.name || "Not Assigned"}</p>
-                <p style={{ margin: "2px 0", fontSize: 12, color: "#555" }}>🩺 Doctor: {g.doctor?.name || "Not Assigned"}</p>
-                <p style={{ margin: "2px 0", fontSize: 12, color: "#555" }}>🐄 Total Cows: {g.totalCows || 0}</p>
-                {g.address && <p style={{ margin: "2px 0", fontSize: 12, color: "#555" }}>📍 {g.address}</p>}
+                <p
+                  style={{
+                    margin: "0 0 4px",
+                    fontWeight: 700,
+                    fontSize: 14,
+                  }}
+                >
+                  🏛️ {g.name}
+                </p>
+                <p style={{ margin: "2px 0", fontSize: 12 }}>
+                  👨‍💼 Admin: {g.admin?.name || "Not Assigned"}
+                </p>
+                <p style={{ margin: "2px 0", fontSize: 12 }}>
+                  🩺 Doctor: {g.doctor?.name || "Not Assigned"}
+                </p>
+                <p style={{ margin: "2px 0", fontSize: 12 }}>
+                  🐄 Total Cows: {g.totalCows || 0}
+                </p>
+                {g.address && (
+                  <p style={{ margin: "2px 0", fontSize: 12 }}>
+                    📍 {g.address}
+                  </p>
+                )}
               </div>
             </Popup>
           </CircleMarker>
@@ -104,8 +150,9 @@ export default function GaushalaMap({ gaushalas = [] }) {
 
       {missingCoords > 0 && (
         <p className="map-warning">
-          ⚠️ {missingCoords} gaushala{missingCoords > 1 ? "s" : ""} not shown — missing <code>lat</code> / <code>lon</code> in database.
-          New gaushalas registered via the Apply form will appear automatically.
+          ⚠️ {missingCoords} gaushala
+          {missingCoords > 1 ? "s" : ""} not shown — missing{" "}
+          <code>lat</code> / <code>lon</code>.
         </p>
       )}
     </div>
