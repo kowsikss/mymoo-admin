@@ -25,21 +25,27 @@ function AdminDashboard() {
     fetchPendingRequests();
   }, [location.key]);
 
+  // 🔒 Protect route
   if (localStorage.getItem("role") !== "admin") {
     return <Navigate to="/" />;
   }
 
-  // ✅ FIXED: use apiClient (NOT localhost)
+  /* ==============================
+     FETCH PENDING REQUESTS
+  ============================== */
   const fetchPendingRequests = async () => {
     try {
       const res = await apiClient.get("/api/gaushala-requests?status=pending");
       setPendingRequests(res.data);
       setPendingCount(res.data.length);
     } catch (err) {
-      console.error(err);
+      console.error("Pending request error:", err);
     }
   };
 
+  /* ==============================
+     APPROVE / REJECT
+  ============================== */
   const handleApprove = async (id) => {
     if (!window.confirm("Approve this Gaushala application?")) return;
 
@@ -64,20 +70,23 @@ function AdminDashboard() {
     }
   };
 
+  /* ==============================
+     FETCH DASHBOARD DATA
+  ============================== */
   const fetchAllData = async () => {
     setLoading(true);
     try {
       const [gaushalaRes, doctorRes, adminRes] = await Promise.all([
         apiClient.get("/api/kosala/full"),
         apiClient.get("/api/doctors"),
-        apiClient.get("/api/kosala-admins"),
+        apiClient.get("/api/kosala-admin"), // ✅ FIXED ROUTE
       ]);
 
       setGaushalas(gaushalaRes.data);
       setDoctorCount(doctorRes.data.length);
 
       const data = adminRes.data;
-      setAdmins(Array.isArray(data) ? data : data.admins || data.data || []);
+      setAdmins(Array.isArray(data) ? data : []);
 
     } catch (err) {
       console.error("Dashboard error:", err);
@@ -86,10 +95,28 @@ function AdminDashboard() {
     }
   };
 
+  /* ==============================
+     LOGOUT
+  ============================== */
   const logout = () => {
     localStorage.clear();
     navigate("/");
   };
+
+  /* ==============================
+     LOADING SCREEN
+  ============================== */
+  if (loading && gaushalas.length === 0) {
+    return (
+      <div className="layout">
+        <Sidebar />
+        <div className="main">
+          <Navbar />
+          <h3>Loading...</h3>
+        </div>
+      </div>
+    );
+  }
 
   return (
     <div className="layout">
@@ -97,7 +124,8 @@ function AdminDashboard() {
       <div className="main">
         <Navbar />
 
-        <div style={{ display: "flex", justifyContent: "space-between" }}>
+        {/* HEADER */}
+        <div style={{ display: "flex", justifyContent: "space-between", marginBottom: "20px" }}>
           <h2 className="title">Admin Panel</h2>
 
           <button onClick={() => setShowRequests(!showRequests)}>
@@ -105,7 +133,9 @@ function AdminDashboard() {
           </button>
         </div>
 
-        {/* REQUESTS */}
+        {/* =======================
+            PENDING REQUESTS
+        ======================= */}
         {showRequests && (
           <div className="table-wrapper">
             <h3>Pending Requests</h3>
@@ -138,7 +168,18 @@ function AdminDashboard() {
           </div>
         )}
 
-        {/* STATS */}
+        {/* =======================
+            ACTION BUTTONS
+        ======================= */}
+        <div className="actions">
+          <button onClick={() => navigate("/add-gaushala")}>+ Add Gaushala</button>
+          <button onClick={() => navigate("/add-doctor")}>+ Add Doctor</button>
+          <button onClick={fetchAllData}>Refresh</button>
+        </div>
+
+        {/* =======================
+            STATS
+        ======================= */}
         <div className="stats">
           <div className="mini-card">
             <h4>Gaushalas</h4>
@@ -151,10 +192,14 @@ function AdminDashboard() {
           </div>
         </div>
 
-        {/* MAP */}
+        {/* =======================
+            MAP
+        ======================= */}
         <GaushalaMap gaushalas={gaushalas} />
 
-        {/* TABLE */}
+        {/* =======================
+            TABLE
+        ======================= */}
         <h3>Registered Gaushalas</h3>
 
         <div className="table-wrapper">
@@ -186,7 +231,9 @@ function AdminDashboard() {
           </table>
         </div>
 
-        <button className="logout" onClick={logout}>Logout</button>
+        <button className="logout" onClick={logout}>
+          Logout
+        </button>
       </div>
     </div>
   );
