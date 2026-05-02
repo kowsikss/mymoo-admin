@@ -104,6 +104,30 @@ function AdminDashboard() {
   };
 
   /* ==============================
+     ACTION HANDLERS
+  ============================== */
+  const handleInfo = (gaushala) => {
+    const admin = admins.find(
+      (a) => String(a.kosalaId?._id || a.kosalaId) === String(gaushala._id)
+    );
+
+    alert(`
+Gaushala Information:
+━━━━━━━━━━━━━━━━━━━━
+Name: ${gaushala.name}
+Admin: ${gaushala.admin?.name || admin?.name || "Not Assigned"}
+Doctor: ${gaushala.doctor?.name || "Not Assigned"}
+Total Cows: ${gaushala.totalCows || 0}
+Location: ${gaushala.location || "N/A"}
+Contact: ${gaushala.contact || "N/A"}
+    `);
+  };
+
+  const handleOpen = (gaushalaId) => {
+    navigate(`/gaushala/${gaushalaId}`);
+  };
+
+  /* ==============================
      LOADING SCREEN
   ============================== */
   if (loading && gaushalas.length === 0) {
@@ -206,24 +230,58 @@ function AdminDashboard() {
           <table className="table">
             <thead>
               <tr>
+                <th>#</th>
                 <th>Name</th>
                 <th>Admin</th>
                 <th>Doctor</th>
                 <th>Cows</th>
+                <th>Action</th>
               </tr>
             </thead>
             <tbody>
-              {gaushalas.map((g) => {
+              {gaushalas.map((g, index) => {
                 const admin = admins.find(
                   (a) => String(a.kosalaId?._id || a.kosalaId) === String(g._id)
                 );
 
                 return (
                   <tr key={g._id}>
+                    <td>{index + 1}</td>
                     <td>{g.name}</td>
-                    <td>{g.admin?.name || admin?.name || "N/A"}</td>
-                    <td>{g.doctor?.name || "N/A"}</td>
+                    <td>{g.admin?.name || admin?.name || "Not Assigned"}</td>
+                    <td>{g.doctor?.name || "Not Assigned"}</td>
                     <td>{g.totalCows || 0}</td>
+                    <td>
+                      <button 
+                        className="btn-info"
+                        onClick={() => handleInfo(g)}
+                        style={{
+                          backgroundColor: "#28a745",
+                          color: "white",
+                          padding: "5px 15px",
+                          border: "none",
+                          borderRadius: "4px",
+                          marginRight: "5px",
+                          cursor: "pointer"
+                        }}
+                      >
+                        Info
+                      </button>
+                      <button 
+                        className="btn-open"
+                        onClick={() => handleOpen(g._id)}
+                        style={{
+                          backgroundColor: "#ff9800",
+                          color: "white",
+                          padding: "5px 15px",
+                          border: "none",
+                          borderRadius: "4px",
+                          cursor: "pointer"
+                        }}
+                      >
+                        Open
+                      </button>
+                    </td>
                   </tr>
                 );
               })}
