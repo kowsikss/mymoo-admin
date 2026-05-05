@@ -95,7 +95,7 @@ function AdminLogin() {
         
         <div className="kosala-link">
           <a onClick={() => navigate("/kosala-admin-login")}>
-            Login as Kosala Admin
+            Login as Gaushala Admin
           </a>
         </div>
       </form>

@@ -19,7 +19,7 @@ const roles = [
     border: "rgba(180,83,9,0.25)",
   },
   {
-    title: "Kosala Admin",
+    title: "Gaushala Admin",
     subtitle: "Gaushala Operations",
     description: "Manage your Gaushala's cattle, rescued animals, inventory, and medical staff with ease.",
     icon: (
@@ -604,7 +604,7 @@ export default function HomePage() {
         Is your Gaushala not yet on the platform? Apply now. Fill in basic details and our Super Admin will review and approve your registration — giving you full access to manage cattle, health records, and more.
       </p>
       <div style={{ display: "flex", flexDirection: "column", gap: "10px", marginBottom: "2rem" }}>
-        {["Submit basic Gaushala details", "Super Admin reviews and approves", "Get your Kosala Admin login instantly", "Start managing cattle & operations"].map((step, i) => (
+        {["Submit basic Gaushala details", "Super Admin reviews and approves", "Get your Gaushala Admin login instantly", "Start managing cattle & operations"].map((step, i) => (
           <div key={i} style={{ display: "flex", alignItems: "center", gap: "12px" }}>
             <span style={{ width: "24px", height: "24px", background: "#7b4f2e", borderRadius: "50%", display: "flex", alignItems: "center", justifyContent: "center", fontSize: "11px", fontWeight: "700", color: "white", flexShrink: 0 }}>{i + 1}</span>
             <span style={{ color: "white", fontSize: "13px" }}>{step}</span>
@@ -671,8 +671,8 @@ export default function HomePage() {
 
         {/* FOOTER */}
         <footer className="hp-footer">
-          <span className="hp-footer-copy">© 2025 Kosala. All rights reserved.</span>
-          <span className="hp-footer-brand">Kosala — Gaushala Management</span>
+          <span className="hp-footer-copy">© 2025 Gaushala. All rights reserved.</span>
+          <span className="hp-footer-brand"> Gaushala Management</span>
         </footer>
       </div>
     </>
