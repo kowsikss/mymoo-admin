@@ -151,7 +151,7 @@ function App() {
 <Route path="/gaushala-info/:id" element={<ProtectedRoute role="admin"><GaushalaInfo /></ProtectedRoute>} />
 
 {/* ✅ ADDED: Missing edit-gaushala route */}
-<Route path="/edit-gaushala/:id" element={<ProtectedRoute role="admin"><EditGaushala /></ProtectedRoute>} />
+
 
 <Route path="/doctors-list" element={<ProtectedRoute role="admin"><DoctorsList /></ProtectedRoute>} />
 <Route path="/doctor-info/:id" element={<ProtectedRoute role="admin"><DoctorInfo /></ProtectedRoute>} />
