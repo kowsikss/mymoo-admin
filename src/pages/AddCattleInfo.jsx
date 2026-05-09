@@ -305,6 +305,9 @@ function AddCattleInfo() {
             <option value="Dead">Dead</option>
           </select>
 
+          <label>Birth Date <span style={{ color: "red" }}>*</span></label>
+          <input type="date" name="birthDate" value={form.birthDate} onChange={handleChange} required />
+
           {form.calfStatus === "Alive" && (
             <>
               <label>Sex of the Calf <span style={{ color: "red" }}>*</span></label>
@@ -313,9 +316,6 @@ function AddCattleInfo() {
                 <option value="Cow Heifer">Cow Heifer</option>
                 <option value="Bull Calf">Bull Calf</option>
               </select>
-
-              <label>Birth Date <span style={{ color: "red" }}>*</span></label>
-              <input type="date" name="birthDate" value={form.birthDate} onChange={handleChange} required />
             </>
           )}
 
