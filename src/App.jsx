@@ -40,7 +40,7 @@ import RescuedAnimalDetail from "./pages/RescuedAnimalDetail";
 // ADMIN
 import AdminDashboard from "./pages/AdminDashboard";
 import AddGaushala from "./pages/AddGaushala";
-import EditGaushala from "./pages/EditGaushala";
+//import EditGaushala from "./pages/EditGaushala";
 import AddDoctor from "./pages/AddDoctor";
 import AdminKosalaDashboard from "./pages/AdminkosalaDashboard";
 import AdminAddCow from "./pages/AdminAddCow";
