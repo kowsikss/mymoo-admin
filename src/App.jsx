@@ -40,6 +40,7 @@ import RescuedAnimalDetail from "./pages/RescuedAnimalDetail";
 // ADMIN
 import AdminDashboard from "./pages/AdminDashboard";
 import AddGaushala from "./pages/AddGaushala";
+import EditGaushala from "./pages/EditGaushala";
 import AddDoctor from "./pages/AddDoctor";
 import AdminKosalaDashboard from "./pages/AdminkosalaDashboard";
 import AdminAddCow from "./pages/AdminAddCow";
@@ -120,6 +121,11 @@ function App() {
 
 <Route path="/kosala-admin/add-inventory"
   element={<ProtectedRoute role="kosala-admin"><AddInventory /></ProtectedRoute>} />
+
+{/* ✅ ADDED: Missing manage-inventory route for kosala-admin */}
+<Route path="/kosala-admin/manage-inventory"
+  element={<ProtectedRoute role="kosala-admin"><ManageInventory /></ProtectedRoute>} />
+
 <Route path="/kosala-admin/add-cattle-info"
   element={<ProtectedRoute role="kosala-admin"><AddCattleInfo /></ProtectedRoute>} />
 
@@ -143,6 +149,10 @@ function App() {
 
         <Route path="/gaushalas-list" element={<ProtectedRoute role="admin"><GaushalasList /></ProtectedRoute>} />
 <Route path="/gaushala-info/:id" element={<ProtectedRoute role="admin"><GaushalaInfo /></ProtectedRoute>} />
+
+{/* ✅ ADDED: Missing edit-gaushala route */}
+<Route path="/edit-gaushala/:id" element={<ProtectedRoute role="admin"><EditGaushala /></ProtectedRoute>} />
+
 <Route path="/doctors-list" element={<ProtectedRoute role="admin"><DoctorsList /></ProtectedRoute>} />
 <Route path="/doctor-info/:id" element={<ProtectedRoute role="admin"><DoctorInfo /></ProtectedRoute>} />
 

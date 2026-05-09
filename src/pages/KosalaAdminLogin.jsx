@@ -50,7 +50,7 @@ function KosalaAdminLogin() {
   return (
     <div className="login-container">
       <div className="login-box">
-        <h2>Kosala Admin Login</h2>
+        <h2>Gaushala Admin Login</h2>
 
         <form onSubmit={handleSubmit}>
           <label>Admin Name</label>
