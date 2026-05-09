@@ -160,7 +160,7 @@ function EditGaushala() {
             onChange={(e) => setCertificate(e.target.files[0])}
           />
           {certificate && (
-            <p style={{ fontSize: "12px", color: "var(--accent-green)", marginTop: "4px" }}>
+            <p style={{ fontSize : "12px", color: "var(--accent-green)", marginTop: "4px" }}>
               ✓ New certificate selected: {certificate.name}
             </p>
           )}
