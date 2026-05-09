@@ -40,7 +40,7 @@ import RescuedAnimalDetail from "./pages/RescuedAnimalDetail";
 // ADMIN
 import AdminDashboard from "./pages/AdminDashboard";
 import AddGaushala from "./pages/AddGaushala";
-import EditGaushala from "../pages/EditGaushala";
+import EditGaushala from "./pages/EditGaushala";
 import AddDoctor from "./pages/AddDoctor";
 import AdminKosalaDashboard from "./pages/AdminkosalaDashboard";
 import AdminAddCow from "./pages/AdminAddCow";
@@ -63,7 +63,7 @@ import ApplyGaushala       from "./pages/ApplyGaushala";
 import DonationPage        from "./pages/DonationPage";
 
 function App() {
-  return (
+  return ( 
     <BrowserRouter>
       <Routes>
         <Route path="/apply-gaushala" element={<ApplyGaushala />} />
