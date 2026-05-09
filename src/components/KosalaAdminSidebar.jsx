@@ -11,7 +11,7 @@ function KosalaAdminSidebar() {
 
   return (
     <div className="sidebar">
-      <h2>🐄 Kosala Admin</h2>
+      <h2>🐄 Gaushala Admin</h2>
       <p style={{ color: "var(--accent-green)", fontSize: "13px", marginBottom: "20px" }}>
         {name}
       </p>
