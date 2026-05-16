@@ -596,6 +596,48 @@ body {
   resize: vertical;
 }
 
+.checkbox-grid {
+  display: grid;
+  grid-template-columns: repeat(auto-fit, minmax(150px, 1fr));
+  gap: 10px;
+  margin-bottom: 16px;
+}
+
+.checkbox-pill {
+  display: flex;
+  align-items: center;
+  gap: 10px;
+  padding: 12px 14px;
+  border-radius: 999px;
+  border: 1px solid rgba(0, 0, 0, 0.12);
+  background: var(--bg-base);
+  cursor: pointer;
+  transition: background 0.2s ease, border-color 0.2s ease, transform 0.2s ease;
+  font-size: 13px;
+  color: var(--text-primary);
+  user-select: none;
+}
+
+.checkbox-pill input {
+  width: 18px;
+  height: 18px;
+  accent-color: var(--accent-green);
+}
+
+.checkbox-pill:hover {
+  border-color: rgba(90, 140, 60, 0.45);
+  background: rgba(217, 242, 221, 0.55);
+}
+
+.checkbox-pill input:checked + span {
+  font-weight: 700;
+}
+
+.checkbox-pill span {
+  display: inline-block;
+  line-height: 1.2;
+}
+
 .form-box input[type="file"] {
   padding: 10px;
   cursor: pointer;

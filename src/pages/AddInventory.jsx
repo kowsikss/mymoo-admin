@@ -139,7 +139,7 @@ function AddInventory() {
               <input type="date" name="date" value={feedForm.date} onChange={handleFeedChange} required />
 
               <label>Feed Type(s) <span style={{ color: "red" }}>*</span></label>
-              <div style={{ display: "grid", gridTemplateColumns: "repeat(3, minmax(120px, 1fr))", gap: "10px", marginBottom: "16px" }}>
+              <div className="checkbox-grid">
                 {[
                   "Hay",
                   "Silage",
@@ -148,7 +148,7 @@ function AddInventory() {
                   "Dry Fodder",
                   "Other",
                 ].map((type) => (
-                  <label key={type} style={{ display: "flex", alignItems: "center", gap: "8px" }}>
+                  <label key={type} className="checkbox-pill">
                     <input
                       type="checkbox"
                       name="feedTypes"
@@ -156,20 +156,20 @@ function AddInventory() {
                       checked={feedForm.feedTypes.includes(type)}
                       onChange={handleFeedTypeChange}
                     />
-                    {type}
+                    <span>{type}</span>
                   </label>
                 ))}
               </div>
 
               <label>Feed Time(s) <span style={{ color: "red" }}>*</span></label>
-              <div style={{ display: "grid", gridTemplateColumns: "repeat(4, minmax(120px, 1fr))", gap: "10px", marginBottom: "16px" }}>
+              <div className="checkbox-grid">
                 {[
                   "Morning",
                   "Afternoon",
                   "Evening",
                   "Night",
                 ].map((time) => (
-                  <label key={time} style={{ display: "flex", alignItems: "center", gap: "8px" }}>
+                  <label key={time} className="checkbox-pill">
                     <input
                       type="checkbox"
                       name="feedTimes"
@@ -177,7 +177,7 @@ function AddInventory() {
                       checked={feedForm.feedTimes.includes(time)}
                       onChange={handleFeedTimeChange}
                     />
-                    {time}
+                    <span>{time}</span>
                   </label>
                 ))}
               </div>
