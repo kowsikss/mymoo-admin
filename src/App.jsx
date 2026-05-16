@@ -42,6 +42,7 @@ import AdminDashboard from "./pages/AdminDashboard";
 import AddGaushala from "./pages/AddGaushala";
 //import EditGaushala from "./pages/EditGaushala";
 import AddDoctor from "./pages/AddDoctor";
+import AddBreed from "./pages/AddBreed";
 import AdminKosalaDashboard from "./pages/AdminkosalaDashboard";
 import AdminAddCow from "./pages/AdminAddCow";
 import ManageCow from "./pages/ManageCow"; // ✅ was missing
@@ -190,7 +191,14 @@ function App() {
             </ProtectedRoute>
           }
         />
-        
+        <Route
+          path="/add-breed"
+          element={
+            <ProtectedRoute role="admin">
+              <AddBreed />
+            </ProtectedRoute>
+          }
+        />
 
         {/* ADMIN → KOSALA DASHBOARD */}
         <Route

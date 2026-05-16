@@ -15,6 +15,7 @@ function Sidebar() {
             <li><Link to="/admin-dashboard">Dashboard</Link></li>
             <li><Link to="/add-gaushala">Add Gaushala</Link></li>
             <li><Link to="/add-doctor">Add Doctor</Link></li>
+            <li><Link to="/add-breed">Add Breed</Link></li>
           </>
         )}
 

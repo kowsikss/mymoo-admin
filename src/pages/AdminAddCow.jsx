@@ -347,7 +347,7 @@
 
 // export default AdminAddCow;
 import { useEffect, useState } from "react";
-import { useParams, useNavigate, Navigate } from "react-router-dom";
+import { useParams, useNavigate, Navigate, Link } from "react-router-dom";
 import RoleSidebar from "../components/RoleSidebar";
 import Navbar from "../components/Navbar";
 import apiClient from "../api/client";
@@ -506,6 +506,9 @@ function AdminAddCow() {
               ))
             )}
           </select>
+          <div style={{ fontSize: "0.9rem", marginTop: "8px", marginBottom: "14px" }}>
+            Don&apos;t see your breed? <Link to="/add-breed">Add it here</Link>.
+          </div>
 
           <label>Cattle Age <span style={{ color: "red" }}>*</span></label>
           <div style={{ display: "flex", gap: "10px" }}>
