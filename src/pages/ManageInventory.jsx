@@ -78,7 +78,7 @@ function ManageInventory() {
             <table className="table">
               <thead>
                 <tr>
-                  <th>#</th><th>Date</th><th>Feed Type</th><th>Feed Time</th><th>Gunny Bags</th>
+                  <th>#</th><th>Date</th><th>Feed Types</th><th>Feed Time</th><th>Gunny Bags</th>
                   <th>Weight/Bag (kg)</th><th>Supplier</th><th>Notes</th><th>Action</th>
                 </tr>
               </thead>

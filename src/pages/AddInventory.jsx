@@ -10,7 +10,7 @@ function AddInventory() {
   const [loading,   setLoading]   = useState(false);
 
   const [feedForm, setFeedForm] = useState({
-    date: "", feedType: "", feedTimes: [], gunnyBags: "", weightPerBag: "", supplier: "", notes: "",
+    date: "", feedTypes: [], feedTimes: [], gunnyBags: "", weightPerBag: "", supplier: "", notes: "",
   });
 
   const [medicineForm, setMedicineForm] = useState({
@@ -27,6 +27,15 @@ function AddInventory() {
   }
 
   const handleFeedChange     = (e) => setFeedForm({ ...feedForm, [e.target.name]: e.target.value });
+  const handleFeedTypeChange = (e) => {
+    const value = e.target.value;
+    setFeedForm((prev) => ({
+      ...prev,
+      feedTypes: prev.feedTypes.includes(value)
+        ? prev.feedTypes.filter((type) => type !== value)
+        : [...prev.feedTypes, value],
+    }));
+  };
   const handleFeedTimeChange = (e) => {
     const value = e.target.value;
     setFeedForm((prev) => ({
@@ -42,9 +51,15 @@ function AddInventory() {
   const handleSubmit = async (e) => {
     e.preventDefault();
 
-    if (activeTab === "feed" && feedForm.feedTimes.length === 0) {
-      alert("Please select at least one feed time.");
-      return;
+    if (activeTab === "feed") {
+      if (feedForm.feedTypes.length === 0) {
+        alert("Please select at least one feed type.");
+        return;
+      }
+      if (feedForm.feedTimes.length === 0) {
+        alert("Please select at least one feed time.");
+        return;
+      }
     }
 
     setLoading(true);
@@ -53,7 +68,13 @@ function AddInventory() {
     try {
       const payload =
         activeTab === "feed"
-          ? { kosalaId, type: "feed",     ...feedForm, feedTime: feedForm.feedTimes.join(", ") }
+          ? {
+              kosalaId,
+              type: "feed",
+              ...feedForm,
+              feedType: feedForm.feedTypes.join(", "),
+              feedTime: feedForm.feedTimes.join(", ")
+            }
           : activeTab === "medicine"
           ? { kosalaId, type: "medicine", ...medicineForm }
           : { kosalaId, type: "semen",    ...semenForm };
@@ -62,7 +83,7 @@ function AddInventory() {
       alert("Inventory record saved successfully!");
 
       if (activeTab === "feed")
-        setFeedForm({ date: "", feedType: "", feedTimes: [], gunnyBags: "", weightPerBag: "", supplier: "", notes: "" });
+        setFeedForm({ date: "", feedTypes: [], feedTimes: [], gunnyBags: "", weightPerBag: "", supplier: "", notes: "" });
       else if (activeTab === "medicine")
         setMedicineForm({ date: "", medicineName: "", drugName: "", quantity: "", unit: "", expiryDate: "", notes: "" });
       else
@@ -117,16 +138,28 @@ function AddInventory() {
               <label>Date <span style={{ color: "red" }}>*</span></label>
               <input type="date" name="date" value={feedForm.date} onChange={handleFeedChange} required />
 
-              <label>Feed Type <span style={{ color: "red" }}>*</span></label>
-              <select name="feedType" value={feedForm.feedType} onChange={handleFeedChange} required>
-                <option value="">Select Feed Type</option>
-                <option value="Hay">Hay</option>
-                <option value="Silage">Silage</option>
-                <option value="Concentrate">Concentrate</option>
-                <option value="Green Fodder">Green Fodder</option>
-                <option value="Dry Fodder">Dry Fodder</option>
-                <option value="Other">Other</option>
-              </select>
+              <label>Feed Type(s) <span style={{ color: "red" }}>*</span></label>
+              <div style={{ display: "grid", gridTemplateColumns: "repeat(3, minmax(120px, 1fr))", gap: "10px", marginBottom: "16px" }}>
+                {[
+                  "Hay",
+                  "Silage",
+                  "Concentrate",
+                  "Green Fodder",
+                  "Dry Fodder",
+                  "Other",
+                ].map((type) => (
+                  <label key={type} style={{ display: "flex", alignItems: "center", gap: "8px" }}>
+                    <input
+                      type="checkbox"
+                      name="feedTypes"
+                      value={type}
+                      checked={feedForm.feedTypes.includes(type)}
+                      onChange={handleFeedTypeChange}
+                    />
+                    {type}
+                  </label>
+                ))}
+              </div>
 
               <label>Feed Time(s) <span style={{ color: "red" }}>*</span></label>
               <div style={{ display: "grid", gridTemplateColumns: "repeat(4, minmax(120px, 1fr))", gap: "10px", marginBottom: "16px" }}>
