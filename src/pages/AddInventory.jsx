@@ -10,7 +10,7 @@ function AddInventory() {
   const [loading,   setLoading]   = useState(false);
 
   const [feedForm, setFeedForm] = useState({
-    date: "", feedType: "", gunnyBags: "", weightPerBag: "", supplier: "", notes: "",
+    date: "", feedType: "", feedTimes: [], gunnyBags: "", weightPerBag: "", supplier: "", notes: "",
   });
 
   const [medicineForm, setMedicineForm] = useState({
@@ -27,18 +27,33 @@ function AddInventory() {
   }
 
   const handleFeedChange     = (e) => setFeedForm({ ...feedForm, [e.target.name]: e.target.value });
+  const handleFeedTimeChange = (e) => {
+    const value = e.target.value;
+    setFeedForm((prev) => ({
+      ...prev,
+      feedTimes: prev.feedTimes.includes(value)
+        ? prev.feedTimes.filter((time) => time !== value)
+        : [...prev.feedTimes, value],
+    }));
+  };
   const handleMedicineChange = (e) => setMedicineForm({ ...medicineForm, [e.target.name]: e.target.value });
   const handleSemenChange    = (e) => setSemenForm({ ...semenForm, [e.target.name]: e.target.value });
 
   const handleSubmit = async (e) => {
     e.preventDefault();
+
+    if (activeTab === "feed" && feedForm.feedTimes.length === 0) {
+      alert("Please select at least one feed time.");
+      return;
+    }
+
     setLoading(true);
     const kosalaId = localStorage.getItem("kosalaId");
 
     try {
       const payload =
         activeTab === "feed"
-          ? { kosalaId, type: "feed",     ...feedForm }
+          ? { kosalaId, type: "feed",     ...feedForm, feedTime: feedForm.feedTimes.join(", ") }
           : activeTab === "medicine"
           ? { kosalaId, type: "medicine", ...medicineForm }
           : { kosalaId, type: "semen",    ...semenForm };
@@ -47,7 +62,7 @@ function AddInventory() {
       alert("Inventory record saved successfully!");
 
       if (activeTab === "feed")
-        setFeedForm({ date: "", feedType: "", gunnyBags: "", weightPerBag: "", supplier: "", notes: "" });
+        setFeedForm({ date: "", feedType: "", feedTimes: [], gunnyBags: "", weightPerBag: "", supplier: "", notes: "" });
       else if (activeTab === "medicine")
         setMedicineForm({ date: "", medicineName: "", drugName: "", quantity: "", unit: "", expiryDate: "", notes: "" });
       else
@@ -112,6 +127,27 @@ function AddInventory() {
                 <option value="Dry Fodder">Dry Fodder</option>
                 <option value="Other">Other</option>
               </select>
+
+              <label>Feed Time(s) <span style={{ color: "red" }}>*</span></label>
+              <div style={{ display: "grid", gridTemplateColumns: "repeat(4, minmax(120px, 1fr))", gap: "10px", marginBottom: "16px" }}>
+                {[
+                  "Morning",
+                  "Afternoon",
+                  "Evening",
+                  "Night",
+                ].map((time) => (
+                  <label key={time} style={{ display: "flex", alignItems: "center", gap: "8px" }}>
+                    <input
+                      type="checkbox"
+                      name="feedTimes"
+                      value={time}
+                      checked={feedForm.feedTimes.includes(time)}
+                      onChange={handleFeedTimeChange}
+                    />
+                    {time}
+                  </label>
+                ))}
+              </div>
 
               <label>Number of Gunny Bags <span style={{ color: "red" }}>*</span></label>
               <input type="number" name="gunnyBags" value={feedForm.gunnyBags}
