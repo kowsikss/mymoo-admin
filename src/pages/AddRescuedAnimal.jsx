@@ -9,63 +9,64 @@ import apiClient from "../api/client";
 
 function AddRescuedAnimal() {
 
-  const [breeds, setBreeds] =
-    useState([]);
+  const [breeds, setBreeds] = useState([]);
 
-  const [form, setForm] =
-    useState({
+  const [form, setForm] = useState({
 
-      dateOfRescued: "",
-      sex: "",
-      breed: "",
-      age: "",
-      ownerName: "",
-      ownerAddress: "",
-      ownerMobile: "",
-      ownerAadhar: "",
-      reasonOfAdoption: "",
-      tagNumber: "",
+    dateOfRescued: "",
+    sex: "",
+    breed: "",
+    age: "",
+    ownerName: "",
+    ownerAddress: "",
+    ownerMobile: "",
+    ownerAadhar: "",
+    reasonOfAdoption: "",
+    tagNumber: "",
 
-    });
+  });
 
-  const [animalPhoto,
-    setAnimalPhoto] =
+  const [animalPhoto, setAnimalPhoto] =
     useState(null);
 
-  const [loading,
-    setLoading] =
+  const [preview, setPreview] =
+    useState("");
+
+  const [loading, setLoading] =
     useState(false);
 
   const role =
-    localStorage.getItem(
-      "role"
-    );
+    localStorage.getItem("role");
 
   // FETCH BREEDS
 
-  const fetchBreeds =
-    async () => {
+  const fetchBreeds = async () => {
 
-      try {
+    try {
 
-        const res =
-          await apiClient.get(
-            "/api/breeds"
-          );
+      const res =
+        await apiClient.get(
+          "/api/breeds"
+        );
 
-        setBreeds(res.data);
+      setBreeds(res.data);
 
-      } catch (err) {
+    } catch (err) {
 
-        console.error(err);
+      console.error(
+        "Error fetching breeds:",
+        err
+      );
 
-      }
+    }
 
-    };
+  };
 
   useEffect(() => {
     fetchBreeds();
   }, []);
+
+  // ROLE CHECK
 
   if (
     role !== "doctor" &&
@@ -76,7 +77,7 @@ function AddRescuedAnimal() {
 
   }
 
-  // CHANGE
+  // FORM CHANGE
 
   const handleChange = (e) => {
 
@@ -91,140 +92,171 @@ function AddRescuedAnimal() {
 
   };
 
-  // =========================
-  // R2 IMAGE UPLOAD
-  // =========================
+  // IMAGE CHANGE
 
-  const uploadImageToR2 =
-    async (file) => {
+  const handleImageChange = (e) => {
 
-      try {
+    const file =
+      e.target.files[0];
 
-        const response =
+    if (!file) return;
+
+    setAnimalPhoto(file);
+
+    setPreview(
+      URL.createObjectURL(file)
+    );
+
+  };
+
+  // SUBMIT
+
+  const handleSubmit = async (e) => {
+
+    e.preventDefault();
+
+    if (
+      !form.dateOfRescued ||
+      !form.sex ||
+      !form.breed ||
+      !form.age ||
+      !form.ownerName ||
+      !form.ownerAddress ||
+      !form.ownerMobile ||
+      !form.ownerAadhar ||
+      !form.tagNumber
+    ) {
+
+      alert(
+        "Please fill all mandatory fields"
+      );
+
+      return;
+
+    }
+
+    try {
+
+      setLoading(true);
+
+      const kosalaId =
+        localStorage.getItem(
+          "kosalaId"
+        );
+
+      // FINAL IMAGE URL
+
+      let uploadedImageUrl = "";
+
+      // ======================
+      // R2 IMAGE UPLOAD
+      // ======================
+
+      if (animalPhoto) {
+
+        // GET PRESIGNED URL
+
+        const presignedRes =
           await apiClient.get(
-            "/api/upload/presigned-url",
-            {
-              params: {
-                fileType:
-                  file.type,
-              },
-            }
+            `/api/upload/presigned-url?fileType=${animalPhoto.type}`
           );
 
         const {
           uploadUrl,
           fileUrl,
-        } = response.data;
+        } = presignedRes.data;
 
-        const uploadResponse =
-          await fetch(
-            uploadUrl,
-            {
+        // UPLOAD TO R2
 
-              method: "PUT",
+        await fetch(uploadUrl, {
 
-              headers: {
-                "Content-Type":
-                  file.type,
-              },
+          method: "PUT",
 
-              body: file,
+          headers: {
+            "Content-Type":
+              animalPhoto.type,
+          },
 
-            }
-          );
+          body: animalPhoto,
 
-        if (
-          !uploadResponse.ok
-        ) {
+        });
 
-          throw new Error(
-            "Failed to upload image to R2"
-          );
+        // SAVE FINAL URL
 
-        }
-
-        return fileUrl;
-
-      } catch (error) {
-
-        console.error(
-          error
-        );
-
-        throw error;
+        uploadedImageUrl =
+          fileUrl;
 
       }
 
-    };
+      // ======================
+      // SAVE TO DATABASE
+      // ======================
 
-  // SUBMIT
+      const payload = {
 
-  const handleSubmit =
-    async (e) => {
+        ...form,
 
-      e.preventDefault();
+        kosalaId,
 
-      try {
+        animalPhoto:
+          uploadedImageUrl,
 
-        setLoading(true);
+      };
 
-        const kosalaId =
-          localStorage.getItem(
-            "kosalaId"
-          );
+      await apiClient.post(
+        "/api/rescued",
+        payload
+      );
 
-        let uploadedImageUrl =
-          "";
+      alert(
+        "Rescued Animal Record Added Successfully!"
+      );
 
-        if (animalPhoto) {
+      // RESET
 
-          uploadedImageUrl =
-            await uploadImageToR2(
-              animalPhoto
-            );
+      setForm({
 
-        }
+        dateOfRescued: "",
+        sex: "",
+        breed: "",
+        age: "",
+        ownerName: "",
+        ownerAddress: "",
+        ownerMobile: "",
+        ownerAadhar: "",
+        reasonOfAdoption: "",
+        tagNumber: "",
 
-        const payload = {
+      });
 
-          ...form,
+      setAnimalPhoto(null);
 
-          kosalaId,
+      setPreview("");
 
-          animalPhoto:
-            uploadedImageUrl,
+    } catch (err) {
 
-        };
+      console.error(
+        "Error saving record:",
+        err
+      );
 
-        await apiClient.post(
-          "/api/rescued",
-          payload
-        );
+      alert(
+        "Error saving record"
+      );
 
-        alert(
-          "Rescued Animal Added Successfully!"
-        );
+    } finally {
 
-      } catch (err) {
+      setLoading(false);
 
-        console.error(err);
+    }
 
-        alert(
-          err.message ||
-            "Error saving record"
-        );
-
-      } finally {
-
-        setLoading(false);
-
-      }
-
-    };
+  };
 
   return (
 
     <div className="layout">
+
+      {/* SIDEBAR */}
 
       {role ===
       "kosala-admin" ? (
@@ -246,8 +278,17 @@ function AddRescuedAnimal() {
           onSubmit={handleSubmit}
         >
 
+          {/* DATE */}
+
           <label>
             Date of Rescued
+            <span
+              style={{
+                color: "red",
+              }}
+            >
+              *
+            </span>
           </label>
 
           <input
@@ -262,7 +303,18 @@ function AddRescuedAnimal() {
             required
           />
 
-          <label>Sex</label>
+          {/* SEX */}
+
+          <label>
+            Sex of the Cattle
+            <span
+              style={{
+                color: "red",
+              }}
+            >
+              *
+            </span>
+          </label>
 
           <select
             name="sex"
@@ -274,7 +326,7 @@ function AddRescuedAnimal() {
           >
 
             <option value="">
-              Select
+              Select Sex
             </option>
 
             <option value="Cow">
@@ -287,7 +339,18 @@ function AddRescuedAnimal() {
 
           </select>
 
-          <label>Breed</label>
+          {/* BREED */}
+
+          <label>
+            Breed of the Rescued Cattle
+            <span
+              style={{
+                color: "red",
+              }}
+            >
+              *
+            </span>
+          </label>
 
           <select
             name="breed"
@@ -302,32 +365,257 @@ function AddRescuedAnimal() {
               Select Breed
             </option>
 
-            {breeds.map((b) => (
+            {breeds.length ===
+            0 ? (
 
-              <option
-                key={b._id}
-                value={b._id}
-              >
-                {b.name}
+              <option disabled>
+                Loading breeds...
               </option>
 
-            ))}
+            ) : (
+
+              breeds.map((b) => (
+
+                <option
+                  key={b._id}
+                  value={b._id}
+                >
+                  {b.name}
+                </option>
+
+              ))
+
+            )}
 
           </select>
 
+          {/* AGE */}
+
           <label>
-            Animal Photo
+            Age
+            <span
+              style={{
+                color: "red",
+              }}
+            >
+              *
+            </span>
+          </label>
+
+          <input
+            type="number"
+            name="age"
+            value={form.age}
+            onChange={
+              handleChange
+            }
+            placeholder="Enter age"
+            min="0"
+            required
+          />
+
+          {/* OWNER DETAILS */}
+
+          <h3
+            style={{
+              marginTop: "16px",
+            }}
+          >
+            Owner Details
+          </h3>
+
+          <label>
+            Owner Name
+            <span
+              style={{
+                color: "red",
+              }}
+            >
+              *
+            </span>
+          </label>
+
+          <input
+            name="ownerName"
+            value={
+              form.ownerName
+            }
+            onChange={
+              handleChange
+            }
+            placeholder="Enter owner name"
+            required
+          />
+
+          <label>
+            Owner Address
+            <span
+              style={{
+                color: "red",
+              }}
+            >
+              *
+            </span>
+          </label>
+
+          <textarea
+            name="ownerAddress"
+            value={
+              form.ownerAddress
+            }
+            onChange={
+              handleChange
+            }
+            placeholder="Enter owner address"
+            required
+          />
+
+          <label>
+            Mobile Number
+            <span
+              style={{
+                color: "red",
+              }}
+            >
+              *
+            </span>
+          </label>
+
+          <input
+            name="ownerMobile"
+            value={
+              form.ownerMobile
+            }
+            onChange={
+              handleChange
+            }
+            placeholder="Enter mobile number"
+            maxLength={10}
+            required
+          />
+
+          <label>
+            Aadhar Number
+            <span
+              style={{
+                color: "red",
+              }}
+            >
+              *
+            </span>
+          </label>
+
+          <input
+            name="ownerAadhar"
+            value={
+              form.ownerAadhar
+            }
+            onChange={
+              handleChange
+            }
+            placeholder="Enter Aadhar number"
+            maxLength={12}
+            required
+          />
+
+          {/* IMAGE */}
+
+          <label>
+            Animal Photograph
           </label>
 
           <input
             type="file"
             accept="image/*"
-            onChange={(e) =>
-              setAnimalPhoto(
-                e.target.files[0]
-              )
+            onChange={
+              handleImageChange
             }
           />
+
+          {/* PREVIEW */}
+
+          {preview && (
+
+            <img
+              src={preview}
+              alt="preview"
+              style={{
+                width: "150px",
+                height: "150px",
+                objectFit: "cover",
+                borderRadius: "12px",
+                marginTop: "10px",
+              }}
+            />
+
+          )}
+
+          {/* REASON */}
+
+          <label>
+            Reason of Adoption
+          </label>
+
+          <select
+            name="reasonOfAdoption"
+            value={
+              form.reasonOfAdoption
+            }
+            onChange={
+              handleChange
+            }
+          >
+
+            <option value="">
+              Select Reason
+            </option>
+
+            <option value="Abandoned">
+              Abandoned
+            </option>
+
+            <option value="Illness">
+              Illness
+            </option>
+
+            <option value="Donation">
+              Donation
+            </option>
+
+            <option value="Fracture">
+              Fracture
+            </option>
+
+          </select>
+
+          {/* TAG */}
+
+          <label>
+            New Tag Number (RFID)
+
+            <span
+              style={{
+                color: "red",
+              }}
+            >
+              *
+            </span>
+
+          </label>
+
+          <input
+            name="tagNumber"
+            value={
+              form.tagNumber
+            }
+            onChange={
+              handleChange
+            }
+            placeholder="Enter RFID tag number"
+            required
+          />
+
+          {/* BUTTON */}
 
           <button
             type="submit"
@@ -335,7 +623,7 @@ function AddRescuedAnimal() {
           >
 
             {loading
-              ? "Uploading..."
+              ? "Saving..."
               : "Submit"}
 
           </button>
