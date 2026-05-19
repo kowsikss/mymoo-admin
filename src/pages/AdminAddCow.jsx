@@ -559,12 +559,21 @@ function AdminAddCow() {
         <Navbar />
 
         <div
-          style={{
-            display: "flex",
-            alignItems: "center",
-            gap: "12px",
-            marginBottom: "24px",
-          }}
+         style={{
+  display: "flex",
+  alignItems: "flex-start",
+  gap: "12px",
+  padding: "10px 12px",
+  borderRadius: "10px",
+  background: "#ffffff",
+  border: "1px solid #ececec",
+  cursor: "pointer",
+  transition: "0.2s",
+  lineHeight: "1.5",
+  fontSize: "14px",
+  fontWeight: "500",
+  color: "#556b4f",
+}}
         >
           <button
             className="cancel-btn"
@@ -1028,7 +1037,15 @@ function AdminAddCow() {
         >
 
           <input
-            type="checkbox"
+  type="checkbox"
+  style={{
+    marginTop: "3px",
+    width: "18px",
+    height: "18px",
+    cursor: "pointer",
+    accentColor: "#6b7d52",
+    flexShrink: 0,
+  }}
             value={disease}
             checked={
               form.diseaseName
