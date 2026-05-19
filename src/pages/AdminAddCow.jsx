@@ -432,13 +432,17 @@ function AdminAddCow() {
       const { uploadUrl, fileUrl } = response.data;
 
       // STEP 2 → Upload directly to R2
-      await fetch(uploadUrl, {
-        method: "PUT",
-        headers: {
-          "Content-Type": file.type,
-        },
-        body: file,
-      });
+    const uploadResponse = await fetch(uploadUrl, {
+
+  method: "PUT",
+
+  headers: {
+    "Content-Type": file.type,
+  },
+
+  body: file,
+
+});
 
       // STEP 3 → Return public image URL
       return fileUrl;

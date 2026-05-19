@@ -168,19 +168,25 @@ function AddRescuedAnimal() {
 
         // UPLOAD TO R2
 
-        await fetch(uploadUrl, {
+        const uploadResponse = await fetch(uploadUrl, {
 
-          method: "PUT",
+  method: "PUT",
 
-          headers: {
-            "Content-Type":
-              animalPhoto.type,
-          },
+  headers: {
+    "Content-Type": animalPhoto.type,
+  },
 
-          body: animalPhoto,
+  body: animalPhoto,
 
-        });
+});
 
+if (!uploadResponse.ok) {
+
+  throw new Error(
+    "Failed to upload image to R2"
+  );
+
+}
         // SAVE FINAL URL
 
         uploadedImageUrl =
