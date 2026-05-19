@@ -1032,7 +1032,7 @@ function AdminAddCow() {
             display: "flex",
             alignItems: "center",
             gap: "8px",
-            fontSize: "14px",
+            fontSize: " 14px",
           }}
         >
 
