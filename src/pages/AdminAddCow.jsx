@@ -517,7 +517,10 @@ return fileUrl;
 
         insuranceCert: insuranceCertUrl,
       };
-      console.log("FINAL PAYLOAD:", payload);
+      console.log(
+  "FINAL PAYLOAD:",
+  JSON.stringify(payload, null, 2)
+);
       await apiClient.post("/api/cows", payload);
 
       alert("Cow Added Successfully!");
