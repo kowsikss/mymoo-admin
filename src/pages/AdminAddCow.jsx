@@ -430,6 +430,8 @@ function AdminAddCow() {
       );
 
       const { uploadUrl, fileUrl } = response.data;
+      console.log("UPLOAD URL:", uploadUrl);
+console.log("FILE URL:", fileUrl);
 
       // STEP 2 → Upload directly to R2
     const uploadResponse = await fetch(uploadUrl, {
@@ -445,6 +447,7 @@ function AdminAddCow() {
 });
 
       // STEP 3 → Return public image URL
+      console.log("UPLOAD SUCCESS");
       return fileUrl;
 
     } catch (error) {
@@ -476,6 +479,7 @@ function AdminAddCow() {
 
       if (images.front) {
         frontImageUrl = await uploadImageToR2(images.front);
+        console.log("FRONT IMAGE URL:", frontImageUrl);
       }
 
       if (images.side) {
@@ -503,7 +507,7 @@ function AdminAddCow() {
 
         insuranceCert: insuranceCertUrl,
       };
-
+      console.log("FINAL PAYLOAD:", payload);
       await apiClient.post("/api/cows", payload);
 
       alert("Cow Added Successfully!");
