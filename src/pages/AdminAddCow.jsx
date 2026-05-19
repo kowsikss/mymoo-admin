@@ -900,27 +900,202 @@ function AdminAddCow() {
             <option value="No">No</option>
           </select>
 
-          {form.hasDisease === "Yes" && (
-            <>
-              <label>Disease Name</label>
+         {form.hasDisease === "Yes" && (
+  <>
 
-              <input
-                name="diseaseName"
-                value={form.diseaseName}
-                onChange={handleChange}
-                placeholder="Enter disease name"
-              />
+    <label>
+      Select Diseases
+    </label>
 
-              <label>Date of Disease</label>
+    <div
+      style={{
+        display: "grid",
+        gridTemplateColumns:
+          "repeat(auto-fit, minmax(280px, 1fr))",
+        gap: "10px",
+        marginBottom: "20px",
+        padding: "15px",
+        border: "1px solid #ddd",
+        borderRadius: "10px",
+        background: "#fafafa",
+        maxHeight: "350px",
+        overflowY: "auto",
+      }}
+    >
 
-              <input
-                type="date"
-                name="diseaseDate"
-                value={form.diseaseDate}
-                onChange={handleChange}
-              />
-            </>
-          )}
+      {[
+        "Actinobacillosis",
+        "Actinomycosis",
+        "Anaplasmosis",
+        "Anthrax",
+        "Aujeszky’s disease",
+
+        "Babesiosis",
+        "Besnoitiosis",
+        "Blackleg",
+        "Bluetongue",
+        "Botulism",
+        "Bovine Ephemeral Fever",
+        "Bovine Genital Campylobacteriosis",
+        "Bovine Leukosis",
+        "Bovine Papular Stomatitis",
+        "Bovine Respiratory Syncytial Virus",
+        "Bovine Spongiform Encephalopathy",
+        "Bovine Viral Diarrhea",
+        "Brucellosis",
+
+        "Calf Diphtheria",
+        "Calf Scours",
+        "Coccidiosis",
+        "Contagious Bovine Pleuropneumonia",
+        "Cowpox",
+        "Cryptosporidiosis",
+
+        "Dermatophilosis",
+        "Downer Cow Syndrome",
+
+        "East Coast Fever",
+        "Enzootic Bovine Leukosis",
+        "Enterotoxemia",
+        "Ephemeral Fever",
+
+        "Foot and Mouth Disease",
+        "Foot Rot",
+
+        "Haemorrhagic Septicemia",
+        "Hardware Disease",
+        "Hypomagnesemia",
+
+        "Infectious Bovine Keratoconjunctivitis",
+        "Infectious Bovine Rhinotracheitis",
+        "Infectious Pustular Vulvovaginitis",
+
+        "Johne’s Disease",
+
+        "Ketosis",
+
+        "Lantana Poisoning",
+        "Leptospirosis",
+        "Listeriosis",
+        "Lumpy Skin Disease",
+        "Lungworm",
+
+        "Malignant Catarrhal Fever",
+        "Mastitis",
+        "Milk Fever",
+
+        "Neosporosis",
+        "Nitrate Poisoning",
+
+        "Papillomatosis",
+        "Parainfluenza-3",
+        "Photosensitization",
+        "Pneumonia",
+
+        "Rabies",
+        "Rift Valley Fever",
+        "Ringworm",
+        "Rinderpest",
+
+        "Salmonellosis",
+        "Schistosomiasis",
+        "Sweet Clover Poisoning",
+
+        "Tetanus",
+        "Theileriosis",
+        "Tick Fever",
+        "Trichomoniasis",
+        "Trypanosomiasis",
+        "Tuberculosis",
+        "Tympany/Bloat",
+
+        "Urea Poisoning",
+
+        "Vesicular Stomatitis",
+        "Vibriosis",
+
+        "Wart Virus",
+      ].map((disease) => (
+
+        <label
+          key={disease}
+          style={{
+            display: "flex",
+            alignItems: "center",
+            gap: "8px",
+            fontSize: "14px",
+          }}
+        >
+
+          <input
+            type="checkbox"
+            value={disease}
+            checked={
+              form.diseaseName
+                ?.split(",")
+                ?.includes(disease)
+            }
+            onChange={(e) => {
+
+              const selectedDiseases =
+                form.diseaseName
+                  ? form.diseaseName.split(",")
+                  : [];
+
+              if (e.target.checked) {
+
+                selectedDiseases.push(
+                  disease
+                );
+
+              } else {
+
+                const index =
+                  selectedDiseases.indexOf(
+                    disease
+                  );
+
+                if (index > -1) {
+
+                  selectedDiseases.splice(
+                    index,
+                    1
+                  );
+
+                }
+
+              }
+
+              setForm({
+                ...form,
+                diseaseName:
+                  selectedDiseases.join(","),
+              });
+
+            }}
+          />
+
+          {disease}
+
+        </label>
+
+      ))}
+
+    </div>
+
+    <label>
+      Date of Disease
+    </label>
+
+    <input
+      type="date"
+      name="diseaseDate"
+      value={form.diseaseDate}
+      onChange={handleChange}
+    />
+
+  </>
+)}
 
           {/* INSURANCE */}
 
