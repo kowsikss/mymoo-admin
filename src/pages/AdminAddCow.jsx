@@ -434,17 +434,27 @@ function AdminAddCow() {
 console.log("FILE URL:", fileUrl);
 
       // STEP 2 → Upload directly to R2
-    const uploadResponse = await fetch(uploadUrl, {
-
+   const uploadResponse = await fetch(uploadUrl, {
   method: "PUT",
-
   headers: {
     "Content-Type": file.type,
   },
-
   body: file,
-
 });
+
+if (!uploadResponse.ok) {
+
+  const errorText = await uploadResponse.text();
+
+  console.error("R2 Upload Failed:", errorText);
+
+  throw new Error("R2 Upload Failed");
+
+}
+
+console.log("UPLOAD SUCCESS");
+
+return fileUrl;
 
       // STEP 3 → Return public image URL
       console.log("UPLOAD SUCCESS");
