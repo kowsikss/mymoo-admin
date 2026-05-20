@@ -717,7 +717,7 @@ function ManageCow() {
             />
 
             <label>
-              Health Status
+              Health Status 
             </label>
 
             <select
