@@ -1195,39 +1195,89 @@ return fileUrl;
             Feed Type (Monthly)
           </label>
 
-          <select
-            name="feedType"
-            value={form.feedType}
-            onChange={handleChange}
-          >
-            <option value="">
-              -- Select Feed Type --
-            </option>
+          <div
+  style={{
+    display: "grid",
+    gridTemplateColumns:
+      "repeat(auto-fit, minmax(220px, 1fr))",
+    gap: "10px",
+    marginBottom: "20px",
+    padding: "15px",
+    border: "1px solid #ddd",
+    borderRadius: "10px",
+    background: "#fafafa",
+  }}
+>
+  {[
+    "Green Fodder",
+    "Dry Fodder",
+    "Silage",
+    "Concentrate",
+    "Hay",
+    "Other",
+  ].map((feed) => (
+    <label
+      key={feed}
+      style={{
+        display: "flex",
+        alignItems: "center",
+        gap: "10px",
+        padding: "10px",
+        border: "1px solid #ddd",
+        borderRadius: "8px",
+        cursor: "pointer",
+        background: "#fff",
+      }}
+    >
+      <input
+        type="checkbox"
+        value={feed}
+        checked={
+          form.feedType
+            ?.split(",")
+            ?.includes(feed)
+        }
+        onChange={(e) => {
 
-            <option value="Green Fodder">
-              Green Fodder
-            </option>
+          const selectedFeeds =
+            form.feedType
+              ? form.feedType.split(",")
+              : [];
 
-            <option value="Dry Fodder">
-              Dry Fodder
-            </option>
+          if (e.target.checked) {
 
-            <option value="Silage">
-              Silage
-            </option>
+            selectedFeeds.push(feed);
 
-            <option value="Concentrate">
-              Concentrate
-            </option>
+          } else {
 
-            <option value="Hay">
-              Hay
-            </option>
+            const index =
+              selectedFeeds.indexOf(feed);
 
-            <option value="Other">
-              Other
-            </option>
-          </select>
+            if (index > -1) {
+              selectedFeeds.splice(index, 1);
+            }
+
+          }
+
+          setForm({
+            ...form,
+            feedType:
+              selectedFeeds.join(","),
+          });
+
+        }}
+        style={{
+          width: "18px",
+          height: "18px",
+          cursor: "pointer",
+          accentColor: "#6b7d52",
+        }}
+      />
+
+      {feed}
+    </label>
+  ))}
+</div>
 
           <label>
             Monthly Feed Amount (Kg)
