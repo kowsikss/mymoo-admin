@@ -509,8 +509,8 @@ function ManageCow() {
                     </td>
 
                     <td>
-                      {cow.breed || "-"}
-                    </td>
+  {cow.breed?.name || "-"}
+</td>
 
                     <td>
                       {cow.age
