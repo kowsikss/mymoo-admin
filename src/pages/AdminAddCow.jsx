@@ -551,12 +551,16 @@ return fileUrl;
   };
 
   const calfOptions =
-    form.type === "bull"
-      ? [{ val: "Bull Calf", label: "Bull Calf" }]
-      : [
-          { val: "Bull Calf", label: "Bull Calf" },
-          { val: "Heifer", label: "Heifer" },
-        ];
+  form.type === "bull"
+    ? [
+        { val: "Bull Calf", label: "Bull Calf" },
+        { val: "No", label: "No" },
+      ]
+    : [
+        { val: "Bull Calf", label: "Bull Calf" },
+        { val: "Heifer", label: "Heifer" },
+        { val: "No", label: "No" },
+      ];
 
   const healthOptions =
     form.type === "bull"
