@@ -22,6 +22,8 @@ function KosalaAdminSidebar() {
         <li><Link to="/kosala-admin/add-cow">➕ Add Cow</Link></li>
         <li><Link to="/kosala-admin/manage-cow">🐄 Manage Cows</Link></li>
         <li><Link to="/kosala-admin/cow-info">📋 Cow Info</Link></li>
+        <li><Link to="/kosala-admin/add-money">💰 Add Money</Link></li>
+<li><Link to="/kosala-admin/manage-money">📈 Manage Money</Link></li>
 
         {/* DOCTORS */}
         <li><Link to="/kosala-admin/add-doctor">👨‍⚕️ Add Doctor</Link></li>

@@ -31,8 +31,7 @@ function Sidebar() {
             <li><Link to="/add-vaccination">Add Vaccination</Link></li>
             <li><Link to="/manage-vaccination">Manage Vaccination</Link></li>
 
-            <li><Link to="/kosala-admin/add-money">💰 Add Money</Link></li>
-<li><Link to="/kosala-admin/manage-money">📈 Manage Money</Link></li>
+            
 
             <li><Link to="/add-immunization">Add Immunization</Link></li>
             <li><Link to="/manage-immunization">Manage Immunization</Link></li>
