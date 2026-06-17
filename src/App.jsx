@@ -10,6 +10,9 @@ import KosalaAdminLogin      from "./pages/KosalaAdminLogin";
 import KosalaAdminDashboard  from "./pages/KosalaAdminDashboard";
 import CowInfo               from "./pages/CowInfo";
 
+import AddMoney from "./pages/AddMoney";
+import ManageMoney from "./pages/ManageMoney";
+
 
 import MortalityDetails from "./pages/MortalityDetails";
 import BullCalfDetails  from "./pages/BullCalfDetails";
@@ -73,6 +76,16 @@ function App() {
         <Route
   path="/doctor-manage-cow"
   element={<ProtectedRoute role="doctor"><DoctorManageCow /></ProtectedRoute>}
+/>
+
+<Route
+  path="/kosala-admin/add-money"
+  element={<AddMoney />}
+/>
+
+<Route
+  path="/kosala-admin/manage-money"
+  element={<ManageMoney />}
 />
 
         <Route path="/reset-password/:token" element={<ResetPassword />} />
