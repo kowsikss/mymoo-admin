@@ -2,6 +2,7 @@ import React, { useState } from "react";
 import axios from "axios";
 import { useNavigate } from "react-router-dom";
 import KosalaAdminSidebar from "./KosalaAdminSidebar";
+import "./styles/MoneyManagement.css";
 
 function AddMoney() {
   const navigate = useNavigate();
@@ -60,46 +61,28 @@ function AddMoney() {
           overflowY: "auto",
         }}
       >
-        <div
-          style={{
-            background: "#fff",
-            borderRadius: "12px",
-            padding: "30px",
-            boxShadow: "0 2px 10px rgba(0,0,0,0.08)",
-            maxWidth: "700px",
-          }}
+        <button
+          onClick={() => navigate(-1)}
+          className="back-btn"
         >
-          <button
-            onClick={() => navigate(-1)}
-            style={{
-              marginBottom: "20px",
-              padding: "10px 15px",
-              border: "none",
-              borderRadius: "8px",
-              cursor: "pointer",
-            }}
-          >
-            ← Back
-          </button>
+          ← Back
+        </button>
 
+        <div className="add-money-form-container">
           <h2
             style={{
               marginBottom: "25px",
               color: "#2d3748",
+              fontSize: "24px",
+              fontWeight: "700",
             }}
           >
             💰 Add Money Entry
           </h2>
 
           <form onSubmit={handleSubmit}>
-            <div style={{ marginBottom: "20px" }}>
-              <label
-                style={{
-                  display: "block",
-                  marginBottom: "8px",
-                  fontWeight: "600",
-                }}
-              >
+            <div className="form-group">
+              <label className="form-label">
                 Date
               </label>
 
@@ -109,23 +92,12 @@ function AddMoney() {
                 value={form.date}
                 onChange={handleChange}
                 required
-                style={{
-                  width: "100%",
-                  padding: "12px",
-                  border: "1px solid #ddd",
-                  borderRadius: "8px",
-                }}
+                className="form-input"
               />
             </div>
 
-            <div style={{ marginBottom: "20px" }}>
-              <label
-                style={{
-                  display: "block",
-                  marginBottom: "8px",
-                  fontWeight: "600",
-                }}
-              >
+            <div className="form-group">
+              <label className="form-label">
                 Milk Yield (Litres)
               </label>
 
@@ -136,23 +108,12 @@ function AddMoney() {
                 onChange={handleChange}
                 placeholder="Enter milk yield"
                 required
-                style={{
-                  width: "100%",
-                  padding: "12px",
-                  border: "1px solid #ddd",
-                  borderRadius: "8px",
-                }}
+                className="form-input"
               />
             </div>
 
-            <div style={{ marginBottom: "20px" }}>
-              <label
-                style={{
-                  display: "block",
-                  marginBottom: "8px",
-                  fontWeight: "600",
-                }}
-              >
+            <div className="form-group">
+              <label className="form-label">
                 Amount Per Litre (₹)
               </label>
 
@@ -163,41 +124,24 @@ function AddMoney() {
                 onChange={handleChange}
                 placeholder="Enter amount per litre"
                 required
-                style={{
-                  width: "100%",
-                  padding: "12px",
-                  border: "1px solid #ddd",
-                  borderRadius: "8px",
-                }}
+                className="form-input"
               />
             </div>
 
-            <div
-              style={{
-                background: "#f8f9fa",
-                padding: "15px",
-                borderRadius: "8px",
-                marginBottom: "20px",
-                fontSize: "20px",
-                fontWeight: "bold",
-              }}
-            >
-              Total Amount : ₹{totalAmount}
+            <div className="total-amount-box">
+              <span className="total-amount-label">
+                Total Amount
+              </span>
+              <span className="total-amount-value">
+                ₹{totalAmount}
+              </span>
             </div>
 
             <button
               type="submit"
-              style={{
-                background: "#28a745",
-                color: "#fff",
-                border: "none",
-                padding: "12px 25px",
-                borderRadius: "8px",
-                cursor: "pointer",
-                fontWeight: "600",
-              }}
+              className="submit-btn"
             >
-              Save Entry
+              💾 Save Entry
             </button>
           </form>
         </div>

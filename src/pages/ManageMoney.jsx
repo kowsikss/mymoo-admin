@@ -3,39 +3,44 @@ import axios from "axios";
 import { useNavigate } from "react-router-dom";
 
 import {
+  ResponsiveContainer,
   BarChart,
   Bar,
   XAxis,
   YAxis,
   Tooltip,
   CartesianGrid,
-  ResponsiveContainer,
 } from "recharts";
 
 import KosalaAdminSidebar from "./KosalaAdminSidebar";
+import "./styles/MoneyManagement.css";
 
 function ManageMoney() {
   const navigate = useNavigate();
 
   const [data, setData] = useState([]);
+  const [loading, setLoading] = useState(true);
+
+  const API = "https://api.ecowshala.com";
 
   useEffect(() => {
-    fetchData();
+    fetchMoney();
   }, []);
 
-  const fetchData = async () => {
+  const fetchMoney = async () => {
     try {
-      const API =
-        process.env.REACT_APP_API_URL ||
-        "https://api.ecowshala.com";
+      const kosalaId = localStorage.getItem("kosalaId");
 
       const res = await axios.get(
-        `${API}/api/money/${localStorage.getItem("kosalaId")}`
+        `${API}/api/money/${kosalaId}`
       );
 
       setData(res.data || []);
     } catch (err) {
-      console.error(err);
+      console.error("Money fetch error:", err);
+      alert("Unable to load money data");
+    } finally {
+      setLoading(false);
     }
   };
 
@@ -44,43 +49,50 @@ function ManageMoney() {
     0
   );
 
-  const totalMilk = data.reduce(
+  const totalMilkYield = data.reduce(
     (sum, item) => sum + Number(item.milkYield || 0),
     0
   );
 
-  const monthlyData = {};
+  const monthlyMap = {};
 
   data.forEach((item) => {
-    const month = new Date(item.date).toLocaleString("default", {
-      month: "short",
-      year: "numeric",
-    });
+    const month = new Date(item.date).toLocaleString(
+      "default",
+      {
+        month: "short",
+        year: "numeric",
+      }
+    );
 
-    monthlyData[month] =
-      (monthlyData[month] || 0) +
-      Number(item.totalAmount);
+    monthlyMap[month] =
+      (monthlyMap[month] || 0) +
+      Number(item.totalAmount || 0);
   });
 
-  const monthlyChart = Object.keys(monthlyData).map((month) => ({
-    month,
-    amount: monthlyData[month],
-  }));
+  const monthlyChart = Object.keys(monthlyMap).map(
+    (month) => ({
+      month,
+      amount: monthlyMap[month],
+    })
+  );
 
-  const yearlyData = {};
+  const yearlyMap = {};
 
   data.forEach((item) => {
     const year = new Date(item.date).getFullYear();
 
-    yearlyData[year] =
-      (yearlyData[year] || 0) +
-      Number(item.totalAmount);
+    yearlyMap[year] =
+      (yearlyMap[year] || 0) +
+      Number(item.totalAmount || 0);
   });
 
-  const yearlyChart = Object.keys(yearlyData).map((year) => ({
-    year,
-    amount: yearlyData[year],
-  }));
+  const yearlyChart = Object.keys(yearlyMap).map(
+    (year) => ({
+      year,
+      amount: yearlyMap[year],
+    })
+  );
 
   return (
     <div className="dashboard-container">
@@ -89,181 +101,138 @@ function ManageMoney() {
       <div
         style={{
           flex: 1,
-          padding: "30px",
+          padding: "25px",
           overflowY: "auto",
         }}
       >
         <button
           onClick={() => navigate(-1)}
-          style={{
-            marginBottom: "20px",
-            padding: "10px 15px",
-            border: "none",
-            borderRadius: "8px",
-            cursor: "pointer",
-          }}
+          className="back-btn"
         >
           ← Back
         </button>
 
-        <h2 style={{ marginBottom: "20px" }}>
+        <h2 style={{ marginBottom: "20px", fontSize: "24px", fontWeight: "700", color: "#2d3748" }}>
           💰 Money Management
         </h2>
 
-        {/* Summary Cards */}
-        <div
-          style={{
-            display: "grid",
-            gridTemplateColumns: "repeat(auto-fit,minmax(220px,1fr))",
-            gap: "20px",
-            marginBottom: "30px",
-          }}
-        >
-          <div
-            style={{
-              background: "#fff",
-              padding: "20px",
-              borderRadius: "12px",
-              boxShadow: "0 2px 10px rgba(0,0,0,0.08)",
-            }}
-          >
-            <h4>Total Income</h4>
-            <h2>₹{totalIncome.toLocaleString()}</h2>
-          </div>
+        {loading ? (
+          <h3>Loading...</h3>
+        ) : (
+          <>
+            {/* Summary Cards */}
 
-          <div
-            style={{
-              background: "#fff",
-              padding: "20px",
-              borderRadius: "12px",
-              boxShadow: "0 2px 10px rgba(0,0,0,0.08)",
-            }}
-          >
-            <h4>Total Milk Yield</h4>
-            <h2>{totalMilk} L</h2>
-          </div>
+            <div
+              style={{
+                display: "grid",
+                gridTemplateColumns:
+                  "repeat(auto-fit,minmax(220px,1fr))",
+                gap: "20px",
+                marginBottom: "25px",
+              }}
+            >
+              <div className="card-box">
+                <h4>Total Income</h4>
+                <h2>
+                  ₹{totalIncome.toLocaleString()}
+                </h2>
+              </div>
 
-          <div
-            style={{
-              background: "#fff",
-              padding: "20px",
-              borderRadius: "12px",
-              boxShadow: "0 2px 10px rgba(0,0,0,0.08)",
-            }}
-          >
-            <h4>Total Entries</h4>
-            <h2>{data.length}</h2>
-          </div>
-        </div>
+              <div className="card-box">
+                <h4>Total Milk Yield</h4>
+                <h2>{totalMilkYield} L</h2>
+              </div>
 
-        {/* Table */}
-        <div
-          style={{
-            background: "#fff",
-            borderRadius: "12px",
-            padding: "20px",
-            boxShadow: "0 2px 10px rgba(0,0,0,0.08)",
-            marginBottom: "30px",
-            overflowX: "auto",
-          }}
-        >
-          <table
-            style={{
-              width: "100%",
-              borderCollapse: "collapse",
-            }}
-          >
-            <thead>
-              <tr
-                style={{
-                  background: "#f5f5f5",
-                }}
+              <div className="card-box">
+                <h4>Total Entries</h4>
+                <h2>{data.length}</h2>
+              </div>
+            </div>
+
+            {/* Table */}
+
+            <div className="transaction-table-container">
+              <h3>Transaction History</h3>
+
+              <table className="transaction-table">
+                <thead className="table-header">
+                  <tr>
+                    <th>S.No</th>
+                    <th>Date</th>
+                    <th>Milk Yield</th>
+                    <th>Amount/Litre</th>
+                    <th>Total Amount</th>
+                  </tr>
+                </thead>
+
+                <tbody className="table-body">
+                  {data.length > 0 ? (
+                    data.map((item, index) => (
+                      <tr key={item._id}>
+                        <td>{index + 1}</td>
+                        <td>
+                          {new Date(
+                            item.date
+                          ).toLocaleDateString()}
+                        </td>
+                        <td>{item.milkYield} L</td>
+                        <td>₹{item.amountPerLitre}</td>
+                        <td>₹{item.totalAmount}</td>
+                      </tr>
+                    ))
+                  ) : (
+                    <tr>
+                      <td colSpan="5" className="no-records">
+                        No Records Found
+                      </td>
+                    </tr>
+                  )}
+                </tbody>
+              </table>
+            </div>
+
+            {/* Monthly Chart */}
+
+            <div className="chart-container">
+              <h3>📅 Monthly Income</h3>
+
+              <ResponsiveContainer
+                width="100%"
+                height={350}
               >
-                <th style={thStyle}>S.No</th>
-                <th style={thStyle}>Date</th>
-                <th style={thStyle}>Milk Yield</th>
-                <th style={thStyle}>Amount/Litre</th>
-                <th style={thStyle}>Total Amount</th>
-              </tr>
-            </thead>
+                <BarChart data={monthlyChart}>
+                  <CartesianGrid strokeDasharray="3 3" />
+                  <XAxis dataKey="month" />
+                  <YAxis />
+                  <Tooltip />
+                  <Bar dataKey="amount" fill="#667eea" />
+                </BarChart>
+              </ResponsiveContainer>
+            </div>
 
-            <tbody>
-              {data.map((item, index) => (
-                <tr key={item._id}>
-                  <td style={tdStyle}>{index + 1}</td>
-                  <td style={tdStyle}>
-                    {new Date(item.date).toLocaleDateString()}
-                  </td>
-                  <td style={tdStyle}>{item.milkYield} L</td>
-                  <td style={tdStyle}>₹{item.amountPerLitre}</td>
-                  <td style={tdStyle}>
-                    ₹{item.totalAmount}
-                  </td>
-                </tr>
-              ))}
-            </tbody>
-          </table>
-        </div>
+            {/* Yearly Chart */}
 
-        {/* Monthly Chart */}
-        <div
-          style={{
-            background: "#fff",
-            borderRadius: "12px",
-            padding: "20px",
-            marginBottom: "30px",
-            boxShadow: "0 2px 10px rgba(0,0,0,0.08)",
-          }}
-        >
-          <h3>📅 Monthly Income</h3>
+            <div className="chart-container">
+              <h3>📊 Yearly Income</h3>
 
-          <ResponsiveContainer width="100%" height={350}>
-            <BarChart data={monthlyChart}>
-              <CartesianGrid strokeDasharray="3 3" />
-              <XAxis dataKey="month" />
-              <YAxis />
-              <Tooltip />
-              <Bar dataKey="amount" />
-            </BarChart>
-          </ResponsiveContainer>
-        </div>
-
-        {/* Yearly Chart */}
-        <div
-          style={{
-            background: "#fff",
-            borderRadius: "12px",
-            padding: "20px",
-            boxShadow: "0 2px 10px rgba(0,0,0,0.08)",
-          }}
-        >
-          <h3>📊 Yearly Income</h3>
-
-          <ResponsiveContainer width="100%" height={350}>
-            <BarChart data={yearlyChart}>
-              <CartesianGrid strokeDasharray="3 3" />
-              <XAxis dataKey="year" />
-              <YAxis />
-              <Tooltip />
-              <Bar dataKey="amount" />
-            </BarChart>
-          </ResponsiveContainer>
-        </div>
+              <ResponsiveContainer
+                width="100%"
+                height={350}
+              >
+                <BarChart data={yearlyChart}>
+                  <CartesianGrid strokeDasharray="3 3" />
+                  <XAxis dataKey="year" />
+                  <YAxis />
+                  <Tooltip />
+                  <Bar dataKey="amount" fill="#764ba2" />
+                </BarChart>
+              </ResponsiveContainer>
+            </div>
+          </>
+        )}
       </div>
     </div>
   );
 }
-
-const thStyle = {
-  border: "1px solid #ddd",
-  padding: "12px",
-  textAlign: "center",
-};
-
-const tdStyle = {
-  border: "1px solid #ddd",
-  padding: "12px",
-  textAlign: "center",
-};
 
 export default ManageMoney;
