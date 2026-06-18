@@ -12,7 +12,7 @@ import {
   CartesianGrid,
 } from "recharts";
 
-import KosalaAdminSidebar from "./KosalaAdminSidebar";
+import KosalaAdminSidebar from "../components/KosalaAdminSidebar";
 import "./styles/MoneyManagement.css";
 
 function ManageMoney() {

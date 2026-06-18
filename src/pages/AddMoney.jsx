@@ -1,7 +1,7 @@
 import React, { useState } from "react";
 import axios from "axios";
 import { useNavigate } from "react-router-dom";
-import KosalaAdminSidebar from "./KosalaAdminSidebar";
+import KosalaAdminSidebar from "../components/KosalaAdminSidebar";
 import "./styles/MoneyManagement.css";
 
 function AddMoney() {
@@ -54,21 +54,16 @@ function AddMoney() {
     <div className="dashboard-container">
       <KosalaAdminSidebar />
 
-      <div
-        style={{
-          flex: 1,
-          padding: "30px",
-          overflowY: "auto",
-        }}
-      >
-        <button
-          onClick={() => navigate(-1)}
-          className="back-btn"
-        >
-          ← Back
-        </button>
+      <div className="dashboard-main">
+        <div style={{ width: "100%", maxWidth: "760px" }}>
+          <button
+            onClick={() => navigate(-1)}
+            className="back-btn"
+          >
+            ← Back
+          </button>
 
-        <div className="add-money-form-container">
+          <div className="add-money-form-container">
           <h2
             style={{
               marginBottom: "25px",
