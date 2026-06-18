@@ -55,7 +55,12 @@ function AddMoney() {
       <KosalaAdminSidebar />
 
       <div className="dashboard-main">
-        <div style={{ width: "100%", maxWidth: "760px" }}>
+        <div
+          style={{
+            width: "100%",
+            maxWidth: "760px",
+          }}
+        >
           <button
             onClick={() => navigate(-1)}
             className="back-btn"
@@ -64,81 +69,83 @@ function AddMoney() {
           </button>
 
           <div className="add-money-form-container">
-          <h2
-            style={{
-              marginBottom: "25px",
-              color: "#2d3748",
-              fontSize: "24px",
-              fontWeight: "700",
-            }}
-          >
-            💰 Add Money Entry
-          </h2>
-
-          <form onSubmit={handleSubmit}>
-            <div className="form-group">
-              <label className="form-label">
-                Date
-              </label>
-
-              <input
-                type="date"
-                name="date"
-                value={form.date}
-                onChange={handleChange}
-                required
-                className="form-input"
-              />
-            </div>
-
-            <div className="form-group">
-              <label className="form-label">
-                Milk Yield (Litres)
-              </label>
-
-              <input
-                type="number"
-                name="milkYield"
-                value={form.milkYield}
-                onChange={handleChange}
-                placeholder="Enter milk yield"
-                required
-                className="form-input"
-              />
-            </div>
-
-            <div className="form-group">
-              <label className="form-label">
-                Amount Per Litre (₹)
-              </label>
-
-              <input
-                type="number"
-                name="amountPerLitre"
-                value={form.amountPerLitre}
-                onChange={handleChange}
-                placeholder="Enter amount per litre"
-                required
-                className="form-input"
-              />
-            </div>
-
-            <div className="total-amount-box">
-              <span className="total-amount-label">
-                Total Amount
-              </span>
-              <span className="total-amount-value">
-                ₹{totalAmount}
-              </span>
-            </div>
-
-            <button
-              type="submit"
-              className="submit-btn"
+            <h2
+              style={{
+                marginBottom: "25px",
+                color: "#2d3748",
+                fontSize: "24px",
+                fontWeight: "700",
+              }}
             >
-              💾 Save Entry
-            </button>
-          </form>
+              💰 Add Money Entry
+            </h2>
+
+            <form onSubmit={handleSubmit}>
+              <div className="form-group">
+                <label className="form-label">
+                  Date
+                </label>
+
+                <input
+                  type="date"
+                  name="date"
+                  value={form.date}
+                  onChange={handleChange}
+                  required
+                  className="form-input"
+                />
+              </div>
+
+              <div className="form-group">
+                <label className="form-label">
+                  Milk Yield (Litres)
+                </label>
+
+                <input
+                  type="number"
+                  name="milkYield"
+                  value={form.milkYield}
+                  onChange={handleChange}
+                  placeholder="Enter milk yield"
+                  required
+                  className="form-input"
+                />
+              </div>
+
+              <div className="form-group">
+                <label className="form-label">
+                  Amount Per Litre (₹)
+                </label>
+
+                <input
+                  type="number"
+                  name="amountPerLitre"
+                  value={form.amountPerLitre}
+                  onChange={handleChange}
+                  placeholder="Enter amount per litre"
+                  required
+                  className="form-input"
+                />
+              </div>
+
+              <div className="total-amount-box">
+                <span className="total-amount-label">
+                  Total Amount
+                </span>
+
+                <span className="total-amount-value">
+                  ₹{totalAmount}
+                </span>
+              </div>
+
+              <button
+                type="submit"
+                className="submit-btn"
+              >
+                💾 Save Entry
+              </button>
+            </form>
+          </div>
         </div>
       </div>
     </div>
