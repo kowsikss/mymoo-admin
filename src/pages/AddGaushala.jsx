@@ -130,7 +130,7 @@ function AddGaushala() {
 
           {/* KOSALA ADMIN DETAILS */}
           <h3 style={{ borderBottom: "1px solid var(--border)", paddingBottom: "10px", marginTop: "8px" }}>
-            Kosala Admin Details
+            Gaushala Admin Details
           </h3>
 
           <label>Admin Name <span style={{ color: "red" }}>*</span></label>
