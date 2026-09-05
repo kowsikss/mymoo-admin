@@ -5,7 +5,7 @@ function Sidebar() {
 
   return (
     <div className="sidebar">
-      <h2>MYMOO</h2>
+      <h2>E-Gaushala</h2>
 
       <ul>
 
