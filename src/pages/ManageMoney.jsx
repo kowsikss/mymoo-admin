@@ -21,7 +21,7 @@ function ManageMoney() {
   const [data, setData] = useState([]);
   const [loading, setLoading] = useState(true);
 
-  const API = "https://api.ecowshala.com";
+  const API = import.meta.env.VITE_API_URL || "/api";
 
   useEffect(() => {
     fetchMoney();
@@ -32,7 +32,7 @@ function ManageMoney() {
       const kosalaId = localStorage.getItem("kosalaId");
 
       const res = await axios.get(
-        `${API}/api/money/${kosalaId}`
+        `${API}/money/${kosalaId}`
       );
 
       setData(res.data || []);

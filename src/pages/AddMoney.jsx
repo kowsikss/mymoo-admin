@@ -29,10 +29,10 @@ function AddMoney() {
 
     try {
       const API =
-        process.env.REACT_APP_API_URL ||
-        "https://api.ecowshala.com";
+        import.meta.env.VITE_API_URL ||
+        "/api";
 
-      await axios.post(`${API}/api/money/add`, {
+      await axios.post(`${API}/money/add`, {
         kosalaId: localStorage.getItem("kosalaId"),
         ...form,
       });
