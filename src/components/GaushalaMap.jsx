@@ -51,7 +51,7 @@ function getDotColor(cows) {
   return "#22c55e";
 }
 
-export default function GaushalaMap({ gaushalas = [] }) {
+export default function GaushalaMap({ gaushalas = [], onGaushalaSelect }) {
   const validGaushalas = gaushalas.filter((g) => g.lat && g.lon);
   const missingCoords = gaushalas.length - validGaushalas.length;
 
@@ -104,6 +104,7 @@ export default function GaushalaMap({ gaushalas = [] }) {
           <CircleMarker
             key={g._id}
             center={[g.lat, g.lon]}
+            eventHandlers={{ click: () => onGaushalaSelect?.(g) }}
             radius={9}
             pathOptions={{
               fillColor: getDotColor(g.totalCows),
@@ -137,6 +138,25 @@ export default function GaushalaMap({ gaushalas = [] }) {
                 <p style={{ margin: "2px 0", fontSize: 12 }}>
                   🐄 Total Cows: {g.totalCows || 0}
                 </p>
+                {onGaushalaSelect && (
+                  <button
+                    type="button"
+                    onClick={() => onGaushalaSelect(g)}
+                    style={{
+                      marginTop: 8,
+                      padding: "6px 10px",
+                      border: 0,
+                      borderRadius: 6,
+                      background: "#1a4731",
+                      color: "#fff",
+                      cursor: "pointer",
+                      fontSize: 12,
+                      fontWeight: 600,
+                    }}
+                  >
+                    View cows & donate
+                  </button>
+                )}
                 {g.address && (
                   <p style={{ margin: "2px 0", fontSize: 12 }}>
                     📍 {g.address}

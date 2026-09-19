@@ -65,6 +65,7 @@ import ManageReproduction from "./pages/ManageReproduction"; // ✅ was missing
 import AddCattleInfo from "./pages/AddCattleInfo";
 import ApplyGaushala       from "./pages/ApplyGaushala";
 import DonationPage        from "./pages/DonationPage";
+import DonorDashboard      from "./pages/DonorDashboard";
 
 function App() {
   return ( 
@@ -72,6 +73,7 @@ function App() {
       <Routes>
         <Route path="/apply-gaushala" element={<ApplyGaushala />} />
 <Route path="/donate"         element={<DonationPage />} />
+  <Route path="/donor-dashboard" element={<DonorDashboard />} />
 
         <Route
   path="/doctor-manage-cow"

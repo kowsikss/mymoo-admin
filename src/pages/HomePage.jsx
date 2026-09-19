@@ -134,6 +134,24 @@ export default function HomePage() {
           border-radius: 999px;
           letter-spacing: 0.04em;
         }
+        .hp-nav-actions {
+          display: flex;
+          align-items: center;
+          gap: 0.75rem;
+        }
+        .hp-donor-nav-btn {
+          display: inline-flex;
+          align-items: center;
+          gap: 0.45rem;
+          padding: 0.55rem 0.9rem;
+          border: 1px solid rgba(22,101,52,0.24);
+          border-radius: 10px;
+          background: #166534;
+          color: white;
+          cursor: pointer;
+          font: 500 0.78rem 'DM Sans', sans-serif;
+        }
+        .hp-donor-nav-btn:hover { background: #14532d; }
 
         /* ── HERO ── */
         .hp-hero {
@@ -466,6 +484,8 @@ export default function HomePage() {
           .hp-nav { padding: 1rem 1.5rem; }
           .hp-features, .hp-login-section { padding-left: 1.5rem; padding-right: 1.5rem; }
           .hp-divider { padding: 0 1.5rem; }
+          .hp-nav-actions { gap: 0.5rem; }
+          .hp-nav-tag { display: none; }
         }
         @media (max-width: 560px) {
           .hp-features-grid { grid-template-columns: 1fr 1fr; }
@@ -479,7 +499,12 @@ export default function HomePage() {
             <div className="hp-logo-icon">🐄</div>
             <span className="hp-logo-name">Gaushala</span>
           </div>
-          <span className="hp-nav-tag">GAUSHALA MANAGEMENT SYSTEM</span>
+          <div className="hp-nav-actions">
+            <button className="hp-donor-nav-btn" onClick={() => navigate("/donor-dashboard")}>
+              Explore &amp; Donate <span aria-hidden="true">→</span>
+            </button>
+            <span className="hp-nav-tag">GAUSHALA MANAGEMENT SYSTEM</span>
+          </div>
         </nav>
 
         {/* HERO */}
@@ -661,10 +686,10 @@ export default function HomePage() {
       ))}
     </div>
     <button
-      onClick={() => navigate("/donate")}
+      onClick={() => navigate("/donor-dashboard")}
       style={{ padding: "14px 40px", background: "#b45309", color: "white", border: "none", borderRadius: "12px", fontSize: "15px", fontWeight: "600", cursor: "pointer", fontFamily: "inherit" }}
     >
-      Donate Now 🐄
+      Find a Cow to Support 🐄
     </button>
   </div>
 </section>

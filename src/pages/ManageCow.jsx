@@ -216,6 +216,7 @@ function ManageCow() {
 
   const [cows, setCows] = useState([]);
   const [editingCow, setEditingCow] = useState(null);
+  const [search, setSearch] = useState("");
 
   const API = "/api/cows";
 
@@ -341,8 +342,6 @@ function ManageCow() {
     }
 
   };
-
-  const [search, setSearch] = useState("");
 
   const filteredCows = cows.filter((cow) => {
     const searchValue = search.trim().toLowerCase();
