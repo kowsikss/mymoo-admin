@@ -342,6 +342,23 @@ function ManageCow() {
 
   };
 
+  const [search, setSearch] = useState("");
+
+  const filteredCows = cows.filter((cow) => {
+    const searchValue = search.trim().toLowerCase();
+
+    if (!searchValue) return true;
+
+    return [
+      cow.cowId,
+      cow.type,
+      cow.breed?.name || cow.breed,
+      cow.age,
+      cow.weight,
+      cow.tagNumber,
+    ].some((value) => String(value || "").toLowerCase().includes(searchValue));
+  });
+
   return (
 
     <div className="layout">
@@ -403,6 +420,32 @@ function ManageCow() {
 
         </div>
 
+        <div className="cow-search" role="search">
+          <div className="cow-search__input-wrap">
+            <span className="cow-search__icon" aria-hidden="true">⌕</span>
+            <input
+              type="search"
+              aria-label="Search cows"
+              placeholder="Search by cow ID, type, breed, age, weight or tag number"
+              value={search}
+              onChange={(e) => setSearch(e.target.value)}
+            />
+            {search && (
+              <button
+                type="button"
+                className="cow-search__clear"
+                aria-label="Clear cow search"
+                onClick={() => setSearch("")}
+              >
+                ×
+              </button>
+            )}
+          </div>
+          <span className="cow-search__count">
+            {search ? `${filteredCows.length} of ${cows.length} animals` : `${cows.length} animals`}
+          </span>
+        </div>
+
         {/* TABLE */}
 
         <div className="table-wrapper">
@@ -434,7 +477,7 @@ function ManageCow() {
 
             <tbody>
 
-              {cows.length === 0 ? (
+              {filteredCows.length === 0 ? (
 
                 <tr>
 
@@ -444,14 +487,14 @@ function ManageCow() {
                       textAlign: "center",
                     }}
                   >
-                    No cows found
+                    {search ? "No cows match your search" : "No cows found"}
                   </td>
 
                 </tr>
 
               ) : (
 
-                cows.map((cow, index) => (
+                filteredCows.map((cow, index) => (
 
                   <tr key={cow._id}>
 

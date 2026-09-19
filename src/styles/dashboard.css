@@ -358,6 +358,89 @@ body {
   box-shadow: 0 8px 32px rgba(58,155,134,0.10);
 }
 
+/* ================= COW SEARCH ================= */
+.cow-search {
+  display: flex;
+  align-items: center;
+  gap: 16px;
+  margin-bottom: 20px;
+  padding: 12px 14px 12px 18px;
+  background: linear-gradient(105deg, #fff 0%, #f9fcf4 58%, #fff8ee 100%);
+  border: 1px solid rgba(90,140,60,0.18);
+  border-radius: var(--radius-lg);
+  box-shadow: var(--shadow-sm);
+}
+
+.cow-search:focus-within {
+  border-color: rgba(90,140,60,0.48);
+  box-shadow: 0 8px 28px rgba(90,140,60,0.12);
+}
+
+.cow-search__input-wrap {
+  display: flex;
+  align-items: center;
+  flex: 1;
+  min-width: 0;
+  gap: 10px;
+}
+
+.cow-search__icon {
+  flex: 0 0 auto;
+  color: var(--accent-green);
+  font-size: 25px;
+  line-height: 1;
+  transform: rotate(-18deg);
+}
+
+.cow-search input {
+  width: 100%;
+  min-width: 0;
+  padding: 10px 0;
+  border: 0;
+  outline: 0;
+  background: transparent;
+  color: var(--text-primary);
+  font: inherit;
+  font-size: 14px;
+}
+
+.cow-search input::placeholder {
+  color: var(--text-muted);
+}
+
+.cow-search__clear {
+  display: grid;
+  place-items: center;
+  width: 30px;
+  height: 30px;
+  flex: 0 0 auto;
+  border: 0;
+  border-radius: 50%;
+  background: rgba(90,140,60,0.10);
+  color: var(--accent-green);
+  font-size: 21px;
+  line-height: 1;
+  cursor: pointer;
+  transition: var(--transition);
+}
+
+.cow-search__clear:hover {
+  background: var(--accent-green);
+  color: #fff;
+  transform: rotate(90deg);
+}
+
+.cow-search__count {
+  flex: 0 0 auto;
+  padding: 7px 11px;
+  border-radius: 999px;
+  background: rgba(200,125,40,0.10);
+  color: var(--accent-amber);
+  font-size: 12px;
+  font-weight: 700;
+  white-space: nowrap;
+}
+
 .card.purple {
   border-color: rgba(126,79,184,0.18);
   background: linear-gradient(135deg, #fff 0%, #faf5ff 100%);
@@ -886,6 +969,17 @@ hr {
 
 /* ================= RESPONSIVE ================= */
 @media (max-width: 768px) {
+  .cow-search {
+    align-items: stretch;
+    flex-direction: column;
+    gap: 8px;
+    padding: 12px 14px;
+  }
+
+  .cow-search__count {
+    align-self: flex-start;
+  }
+
   .card-container {
     grid-template-columns: 1fr;
   }
