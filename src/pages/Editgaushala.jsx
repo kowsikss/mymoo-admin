@@ -22,10 +22,6 @@ function EditGaushala() {
   const [certificate, setCertificate] = useState(null);
   const [existingCertificate, setExistingCertificate] = useState(null);
 
-  if (localStorage.getItem("role") !== "admin") {
-    return <Navigate to="/" />;
-  }
-
   // Fetch gaushala data
   useEffect(() => {
     const fetchGaushala = async () => {
@@ -39,7 +35,7 @@ function EditGaushala() {
           contactNumber: res.data.contactNumber || "",
           email: res.data.email || "",
         });
-        setExistingCertificate(res.data.certificate || null);
+        setExistingCertificate(res.data.certificateFile || res.data.certificate || null);
       } catch (err) {
         console.error("Error fetching gaushala:", err);
         setError("Error loading gaushala data");
@@ -47,6 +43,10 @@ function EditGaushala() {
     };
     fetchGaushala();
   }, [id]);
+
+  if (localStorage.getItem("role") !== "admin") {
+    return <Navigate to="/" />;
+  }
 
   const handleGaushalaChange = (e) => {
     setGaushalaForm({ ...gaushalaForm, [e.target.name]: e.target.value });
