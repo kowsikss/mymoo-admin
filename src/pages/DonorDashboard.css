@@ -7,6 +7,12 @@
 .donor-brand__mark { display: grid; place-items: center; width: 38px; height: 38px; border-radius: 12px; background: #f7d58b; font-size: 20px; }
 .donor-back { color: #60715d; font-size: 13px; font-weight: 600; }
 .donor-back:hover { color: #a75b20; }
+.donor-account-bar { width: min(1180px, calc(100% - 40px)); margin: 18px auto 0; padding: 11px 14px; border: 1px solid #e2ddd2; border-radius: 10px; background: rgba(255,255,255,.7); color: #667262; font-size: 12px; }
+.donor-account-bar form, .donor-account-bar > * { display: flex; align-items: center; gap: 10px; }
+.donor-account-bar form { flex-wrap: wrap; }
+.donor-account-bar input { min-width: 220px; flex: 1; padding: 8px 10px; border: 1px solid #d9d7cc; border-radius: 7px; background: #fffdf9; color: #26342a; font: inherit; }
+.donor-account-bar button { padding: 8px 12px; border: 0; border-radius: 7px; background: #47704e; color: #fff; cursor: pointer; font: inherit; font-size: 12px; font-weight: 700; }
+.donor-account-bar strong { color: #294d36; }
 .donor-hero, .donor-network, .donor-detail { width: min(1180px, calc(100% - 40px)); margin: 0 auto; }
 .donor-hero { display: flex; justify-content: space-between; align-items: end; gap: 32px; padding: 76px 0 48px; }
 .donor-eyebrow { margin: 0 0 10px; color: #b2692b; font-size: 11px; font-weight: 700; letter-spacing: .14em; text-transform: uppercase; }
@@ -36,6 +42,13 @@
 .donor-gaushala-card__body small { overflow: hidden; color: #7c8477; font-size: 11px; text-overflow: ellipsis; white-space: nowrap; }
 .donor-gaushala-card__arrow, .donor-cow-row__arrow { margin-left: auto; color: #b2692b; font-size: 21px; }
 .donor-detail { margin-top: 72px; padding: 34px; border: 1px solid #e1dbcf; border-radius: 18px; background: #fffdf9; box-shadow: 0 16px 48px rgba(61,69,45,.08); }
+.donor-history { width: min(1180px, calc(100% - 40px)); margin: 50px auto 0; padding: 34px; border: 1px solid #e1dbcf; border-radius: 18px; background: #fffdf9; box-shadow: 0 16px 48px rgba(61,69,45,.08); }
+.donor-history-list { display: flex; flex-direction: column; gap: 9px; }
+.donor-history-row { display: grid; grid-template-columns: 1fr auto auto; align-items: center; gap: 20px; padding: 15px 18px; border: 1px solid #e5e0d7; border-radius: 10px; background: #fff; }
+.donor-history-row div { display: flex; flex-direction: column; gap: 4px; min-width: 0; }
+.donor-history-row strong { color: #294d36; font-size: 14px; }
+.donor-history-row small { color: #7c8477; font-size: 11px; }
+.donor-history-row__amount { color: #a75b20 !important; font-family: 'Playfair Display', serif; font-size: 20px !important; }
 .donor-detail__address { margin: 7px 0 0; color: #788173; font-size: 13px; }
 .donor-detail__count { display: flex; flex-direction: column; align-items: end; color: #728070; }
 .donor-detail__count strong { color: #a75b20; font-family: 'Playfair Display', serif; font-size: 38px; line-height: 1; }
@@ -75,4 +88,4 @@
 .donor-submit:disabled { cursor: not-allowed; opacity: .45; }
 
 @media (max-width: 800px) { .donor-hero { align-items: start; flex-direction: column; padding-top: 52px; } .donor-hero__stat { padding-left: 0; border-left: 0; border-top: 2px solid #d6b477; padding-top: 14px; } .donor-gaushala-grid { grid-template-columns: repeat(2, 1fr); } .donor-cow-layout { grid-template-columns: 1fr; } }
-@media (max-width: 560px) { .donor-nav { height: 66px; } .donor-brand { font-size: 16px; } .donor-back { font-size: 12px; } .donor-hero, .donor-network, .donor-detail, .donor-map-section, .donor-notice { width: min(100% - 28px, 1180px); } .donor-gaushala-grid { grid-template-columns: 1fr; } .donor-detail { padding: 20px 15px; } .donor-section-heading { align-items: start; flex-direction: column; } }
+@media (max-width: 560px) { .donor-nav { height: 66px; } .donor-brand { font-size: 16px; } .donor-back { font-size: 12px; } .donor-hero, .donor-network, .donor-detail, .donor-map-section, .donor-notice, .donor-account-bar, .donor-history { width: min(100% - 28px, 1180px); } .donor-gaushala-grid { grid-template-columns: 1fr; } .donor-detail, .donor-history { padding: 20px 15px; } .donor-section-heading { align-items: start; flex-direction: column; } .donor-history-row { grid-template-columns: 1fr auto; gap: 8px; } .donor-history-row > small { grid-column: 1 / -1; } }

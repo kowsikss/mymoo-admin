@@ -218,6 +218,27 @@ body {
   box-shadow: 0 2px 4px rgba(0, 0, 0, 0.2);
 }
 
+.btn-delete-gaushala {
+  margin-left: 8px;
+  padding: 6px 13px;
+  border: 1px solid #b42318;
+  border-radius: 4px;
+  background: #c9342b;
+  color: white;
+  cursor: pointer;
+  font-size: 13px;
+  font-weight: 600;
+}
+
+.btn-delete-gaushala:hover:not(:disabled) {
+  background: #a9231c;
+}
+
+.btn-delete-gaushala:disabled {
+  cursor: wait;
+  opacity: 0.65;
+}
+
 /* Modal Styles */
 .modal-overlay {
   position: fixed;

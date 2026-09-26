@@ -7,6 +7,8 @@ import apiClient from "../api/client";
 function GaushalasList() {
   const [gaushalas, setGaushalas] = useState([]);
   const [loading, setLoading] = useState(true);
+  const [deletingGaushalaId, setDeletingGaushalaId] = useState(null);
+  const [actionMessage, setActionMessage] = useState("");
   const navigate = useNavigate();
 
   useEffect(() => {
@@ -25,6 +27,23 @@ function GaushalasList() {
       console.error("Error fetching gaushalas:", err);
     } finally {
       setLoading(false);
+    }
+  };
+
+  const handleDelete = async (gaushala) => {
+    if (!window.confirm(`Permanently delete ${gaushala.name}? This action cannot be undone.`)) return;
+
+    setDeletingGaushalaId(gaushala._id);
+    setActionMessage("");
+    try {
+      await apiClient.delete(`/api/kosala/${gaushala._id}`);
+      setGaushalas((current) => current.filter((item) => item._id !== gaushala._id));
+      setActionMessage(`${gaushala.name} was deleted.`);
+    } catch (error) {
+      console.error("Failed to delete Gaushala:", error);
+      setActionMessage(error.response?.data?.message || `Could not delete ${gaushala.name}. Please try again.`);
+    } finally {
+      setDeletingGaushalaId(null);
     }
   };
 
@@ -50,6 +69,8 @@ function GaushalasList() {
             <p>{gaushalas.length}</p>
           </div>
         </div>
+
+        {actionMessage && <p role="status" style={{ color: "var(--text-secondary)", marginBottom: "12px" }}>{actionMessage}</p>}
 
         {loading ? (
           <p style={{ color: "var(--text-secondary)" }}>Loading...</p>
@@ -95,6 +116,15 @@ function GaushalasList() {
                         </button>
                         <button onClick={() => navigate(`/admin/kosala/${g._id}`)}>
                           🐄
+                        </button>
+                        <button
+                          className="btn-delete-gaushala"
+                          type="button"
+                          onClick={() => handleDelete(g)}
+                          disabled={deletingGaushalaId === g._id}
+                          aria-label={`Delete ${g.name}`}
+                        >
+                          {deletingGaushalaId === g._id ? "Deleting..." : "Delete"}
                         </button>
                       </td>
                     </tr>

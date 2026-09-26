@@ -21,6 +21,8 @@ function AdminDashboard() {
   const [selectedGaushala, setSelectedGaushala] = useState(null);
   const [showInfoModal, setShowInfoModal] = useState(false);
   const [showDetailModal, setShowDetailModal] = useState(false);
+  const [deletingGaushalaId, setDeletingGaushalaId] = useState(null);
+  const [gaushalaActionMessage, setGaushalaActionMessage] = useState("");
 
   const navigate = useNavigate();
   const location = useLocation();
@@ -140,6 +142,32 @@ function AdminDashboard() {
     setShowDetailModal(true);
   };
 
+  const handleDeleteGaushala = async (gaushala) => {
+    const confirmed = window.confirm(
+      `Permanently delete ${gaushala.name}? This action cannot be undone.`
+    );
+    if (!confirmed) return;
+
+    setDeletingGaushalaId(gaushala._id);
+    setGaushalaActionMessage("");
+    try {
+      await apiClient.delete(`/api/kosala/${gaushala._id}`);
+      setGaushalas((current) => current.filter((item) => item._id !== gaushala._id));
+      setAdmins((current) => current.filter(
+        (admin) => String(admin.kosalaId?._id || admin.kosalaId) !== String(gaushala._id)
+      ));
+      if (String(selectedGaushala?._id) === String(gaushala._id)) closeModal();
+      setGaushalaActionMessage(`${gaushala.name} was deleted.`);
+    } catch (error) {
+      console.error("Failed to delete Gaushala:", error);
+      setGaushalaActionMessage(
+        error.response?.data?.message || `Could not delete ${gaushala.name}. Please try again.`
+      );
+    } finally {
+      setDeletingGaushalaId(null);
+    }
+  };
+
   const closeModal = () => {
     setShowInfoModal(false);
     setShowDetailModal(false);
@@ -244,6 +272,11 @@ function AdminDashboard() {
             TABLE
         ======================= */}
         <h3>Registered Gaushalas</h3>
+        {gaushalaActionMessage && (
+          <p role="status" style={{ color: "var(--text-secondary)", marginBottom: "12px" }}>
+            {gaushalaActionMessage}
+          </p>
+        )}
 
         <div className="table-wrapper">
           <table className="table">
@@ -282,6 +315,14 @@ function AdminDashboard() {
                         onClick={() => handleOpen(g._id)}
                       >
                         Open
+                      </button>
+                      <button
+                        className="btn-delete-gaushala"
+                        onClick={() => handleDeleteGaushala(g)}
+                        disabled={deletingGaushalaId === g._id}
+                        aria-label={`Delete ${g.name}`}
+                      >
+                        {deletingGaushalaId === g._id ? "Deleting..." : "Delete"}
                       </button>
                     </td>
                   </tr>

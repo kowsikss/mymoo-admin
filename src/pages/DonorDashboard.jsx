@@ -52,6 +52,33 @@ function DonorDashboard() {
   const [cowsLoading, setCowsLoading] = useState(false);
   const [submitting, setSubmitting] = useState(false);
   const [notice, setNotice] = useState({ type: "", text: "" });
+  const [donorEmail, setDonorEmail] = useState(() => localStorage.getItem("donorEmail") || "");
+  const [donations, setDonations] = useState([]);
+  const [donationsLoading, setDonationsLoading] = useState(false);
+
+  const loadDonations = async (email) => {
+    if (!email) {
+      setDonations([]);
+      return;
+    }
+
+    try {
+      setDonationsLoading(true);
+      const response = await apiClient.get("/api/donations");
+      setDonations(response.data.filter((donation) => (
+        donation.donorEmail || ""
+      ).toLowerCase() === email.toLowerCase()));
+    } catch (error) {
+      console.error("Unable to load donor donations:", error);
+      setNotice({ type: "error", text: "Your donation history could not be loaded." });
+    } finally {
+      setDonationsLoading(false);
+    }
+  };
+
+  useEffect(() => {
+    loadDonations(donorEmail);
+  }, [donorEmail]);
 
   useEffect(() => {
     const fetchGaushalas = async () => {
@@ -139,6 +166,8 @@ function DonorDashboard() {
         ...form,
         amount: Number(form.amount),
       });
+      localStorage.setItem("donorEmail", form.donorEmail);
+      setDonorEmail(form.donorEmail);
       setNotice({ type: "success", text: `Thank you. Your donation is supporting ${selectedCow.cowId || "this cow"}.` });
       setForm(emptyForm);
     } catch (error) {
@@ -147,6 +176,21 @@ function DonorDashboard() {
     } finally {
       setSubmitting(false);
     }
+  };
+
+  const handleDonorLogin = (event) => {
+    event.preventDefault();
+    const email = new FormData(event.currentTarget).get("donorLoginEmail").trim().toLowerCase();
+    if (!email) return;
+    localStorage.setItem("donorEmail", email);
+    setDonorEmail(email);
+    setNotice({ type: "success", text: `Signed in as ${email}.` });
+  };
+
+  const donorLogout = () => {
+    localStorage.removeItem("donorEmail");
+    setDonorEmail("");
+    setDonations([]);
   };
 
   return (
@@ -158,6 +202,21 @@ function DonorDashboard() {
         </button>
         <button type="button" className="donor-back" onClick={() => navigate("/")}>Back to home</button>
       </nav>
+
+      <section className="donor-account-bar">
+        {donorEmail ? (
+          <>
+            <span>Donor account: <strong>{donorEmail}</strong></span>
+            <button type="button" onClick={donorLogout}>Log out</button>
+          </>
+        ) : (
+          <form onSubmit={handleDonorLogin}>
+            <span>Already donated?</span>
+            <input type="email" name="donorLoginEmail" placeholder="Enter your donation email" aria-label="Donor email login" required />
+            <button type="submit">View my donations</button>
+          </form>
+        )}
+      </section>
 
       <header className="donor-hero">
         <div>
@@ -279,6 +338,31 @@ function DonorDashboard() {
                   <button className="donor-submit" type="submit" disabled={!selectedCow || submitting}>{submitting ? "Recording donation..." : selectedCow ? `Donate to ${selectedCow.cowId || "this cow"}` : "Select a cow to continue"}</button>
                 </form>
               </div>
+            </div>
+          )}
+        </section>
+      )}
+
+      {donorEmail && (
+        <section className="donor-history" aria-live="polite">
+          <div className="donor-section-heading">
+            <div>
+              <p className="donor-eyebrow">Your account</p>
+              <h2>Donation history</h2>
+            </div>
+            <span>{donations.length} donations</span>
+          </div>
+          {donationsLoading ? <div className="donor-loading">Loading your donations...</div> : donations.length === 0 ? (
+            <p className="donor-empty">No donations found for {donorEmail}. Use the network above to support a cow.</p>
+          ) : (
+            <div className="donor-history-list">
+              {donations.map((donation) => (
+                <article className="donor-history-row" key={donation._id}>
+                  <div><strong>{donation.cowName || donation.cowId || "Gaushala support"}</strong><small>{donation.kosalaName}</small></div>
+                  <strong className="donor-history-row__amount">₹{donation.amount}</strong>
+                  <small>{donation.createdAt ? new Date(donation.createdAt).toLocaleDateString("en-IN") : "Recorded donation"}</small>
+                </article>
+              ))}
             </div>
           )}
         </section>
