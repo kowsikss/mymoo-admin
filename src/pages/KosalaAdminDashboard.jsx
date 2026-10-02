@@ -68,10 +68,35 @@ function KosalaAdminDashboard() {
   const [gaushalas, setGaushalas] = useState([]);
   const [myGaushala, setMyGaushala] = useState(null);
   const [loading, setLoading] = useState(true);
+  const [donations, setDonations] = useState([]);
+  const [donationsLoading, setDonationsLoading] = useState(true);
+  const [donationsError, setDonationsError] = useState("");
 
   useEffect(() => {
     fetchData();
   }, []);
+
+  useEffect(() => {
+    const fetchDonations = async () => {
+      try {
+        const response = await apiClient.get("/api/donations", {
+          params: { kosalaId },
+        });
+        const records = Array.isArray(response.data) ? response.data : [];
+        setDonations(records.filter((donation) => (
+          String(donation.kosalaId?._id || donation.kosalaId) === String(kosalaId)
+        )));
+      } catch (error) {
+        console.error("Unable to load Gaushala donations:", error);
+        setDonationsError("Donor details could not be loaded.");
+      } finally {
+        setDonationsLoading(false);
+      }
+    };
+
+    if (kosalaId) fetchDonations();
+    else setDonationsLoading(false);
+  }, [kosalaId]);
 
   const fetchData = async () => {
     try {
@@ -140,6 +165,52 @@ function KosalaAdminDashboard() {
             </div>
           ))}
         </div>
+
+        <section style={{ marginTop: "30px" }}>
+          <h3>Donor Details ({donations.length})</h3>
+          {donationsLoading ? (
+            <p>Loading donor details...</p>
+          ) : donationsError ? (
+            <p role="alert">{donationsError}</p>
+          ) : donations.length === 0 ? (
+            <p>No donations recorded for this Gaushala yet.</p>
+          ) : (
+            <div className="table-wrapper" style={{ overflowX: "auto" }}>
+              <table className="table">
+                <thead>
+                  <tr>
+                    <th>Donor</th>
+                    <th>Email</th>
+                    <th>Phone</th>
+                    <th>Amount</th>
+                    <th>Supported Cow</th>
+                    <th>Message</th>
+                    <th>Date</th>
+                  </tr>
+                </thead>
+                <tbody>
+                  {donations.map((donation) => (
+                    <tr key={donation._id}>
+                      <td>{donation.donorName || "N/A"}</td>
+                      <td>{donation.donorEmail || "N/A"}</td>
+                      <td>{donation.donorPhone || "N/A"}</td>
+                      <td>{new Intl.NumberFormat("en-IN", {
+                        style: "currency",
+                        currency: "INR",
+                        maximumFractionDigits: 2,
+                      }).format(Number(donation.amount) || 0)}</td>
+                      <td>{donation.cowName || donation.cowId || "Gaushala support"}</td>
+                      <td>{donation.message || "-"}</td>
+                      <td>{donation.createdAt
+                        ? new Date(donation.createdAt).toLocaleDateString("en-IN")
+                        : "-"}</td>
+                    </tr>
+                  ))}
+                </tbody>
+              </table>
+            </div>
+          )}
+        </section>
 
         {/* MAP */}
         <div style={{ marginTop: "30px" }}>
