@@ -81,6 +81,43 @@
   background: #edf4e8;
 }
 
+.manage-cows-page .manage-cow-edit-panel {
+  max-width: 560px;
+  border-color: #a9d2cc;
+  background: linear-gradient(145deg, #f1faf8 0%, #ffffff 62%, #f4faf6 100%);
+  box-shadow: 0 12px 32px rgba(39, 111, 105, 0.12);
+}
+
+.manage-cows-page .manage-cow-edit-panel h3 {
+  color: #245f5a;
+  border-color: #d7e9e5;
+}
+
+.manage-cows-page .manage-cow-edit-panel label {
+  color: #39746d;
+}
+
+.manage-cows-page .manage-cow-edit-panel input,
+.manage-cows-page .manage-cow-edit-panel select {
+  border-color: #c9ded9;
+  background: #fff;
+}
+
+.manage-cows-page .manage-cow-edit-panel input:focus,
+.manage-cows-page .manage-cow-edit-panel select:focus {
+  border-color: #4b9b90;
+  box-shadow: 0 0 0 3px rgba(75, 155, 144, 0.14);
+}
+
+.manage-cows-page .manage-cow-edit-panel .update-btn {
+  background: #276f69;
+}
+
+.manage-cows-page .manage-cow-edit-panel .update-btn:hover {
+  background: #1f5b56;
+  box-shadow: 0 4px 16px rgba(39, 111, 105, 0.22);
+}
+
 .manage-cows-page .cow-pagination {
   display: flex;
   align-items: center;
@@ -213,6 +250,11 @@
 
   .manage-cows-page .cow-search__input-wrap {
     width: 100%;
+  }
+
+  .manage-cows-page .manage-cow-edit-panel {
+    width: 100%;
+    padding: 20px;
   }
 
   .manage-cows-page .cow-image-modal {

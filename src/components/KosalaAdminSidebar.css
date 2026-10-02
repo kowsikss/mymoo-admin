@@ -1,0 +1,58 @@
+.kosala-admin-sidebar__menu-toggle {
+  display: flex;
+  align-items: center;
+  justify-content: space-between;
+  width: 100%;
+  margin: 0 0 8px;
+  padding: 10px 12px;
+  border: 1px solid rgba(90, 140, 60, 0.2);
+  border-radius: 8px;
+  background: #f2f7ed;
+  color: #426d36;
+  font-size: 11px;
+  font-weight: 700;
+  letter-spacing: 0.08em;
+  text-align: left;
+  text-transform: uppercase;
+}
+
+.kosala-admin-sidebar__menu-toggle:hover {
+  border-color: rgba(90, 140, 60, 0.36);
+  background: #e9f2e1;
+  box-shadow: none;
+  transform: none;
+}
+
+.kosala-admin-sidebar__chevron {
+  font-size: 18px;
+  line-height: 1;
+}
+
+.kosala-admin-sidebar__menu {
+  max-height: calc(100vh - 230px);
+  overflow-y: auto;
+  padding-right: 4px !important;
+}
+
+.kosala-admin-sidebar__menu a {
+  font-size: 13px;
+}
+
+.kosala-admin-sidebar__logout {
+  width: 100%;
+  min-height: 42px;
+  margin-top: auto;
+  border: 1px solid #edc9c3;
+  border-radius: 8px;
+  background: #fff2ef;
+  color: #a63f35;
+  font-size: 13px;
+  font-weight: 700;
+}
+
+.kosala-admin-sidebar__logout:hover {
+  border-color: #a63f35;
+  background: #a63f35;
+  color: #fff;
+  box-shadow: 0 5px 16px rgba(166, 63, 53, 0.2);
+}

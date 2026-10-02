@@ -750,7 +750,7 @@ function ManageCow() {
 
         {editingCow && (
 
-          <div className="edit-panel">
+          <div className="edit-panel manage-cow-edit-panel">
 
             <h3>
               Edit Cow Details

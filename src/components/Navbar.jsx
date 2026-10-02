@@ -1,5 +1,6 @@
 import { useState, useEffect, useRef } from "react";
 import { useNavigate } from "react-router-dom";
+import "./Navbar.css";
 
 function Navbar() {
   const [open, setOpen] = useState(false);
@@ -63,7 +64,7 @@ function Navbar() {
           <div className="dropdown">
             <p onClick={() => navigate("/edit-profile")}>My Profile</p>
             <p onClick={() => navigate("/change-password")}>Change Password</p>
-            <p onClick={handleLogout}>Log Out</p>
+            <button type="button" className="navbar-logout" onClick={handleLogout}>Log Out</button>
           </div>
         )}
       </div>
