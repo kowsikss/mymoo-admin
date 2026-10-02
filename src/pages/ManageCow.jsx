@@ -210,6 +210,7 @@ import { Navigate } from "react-router-dom";
 import RoleSidebar from "../components/RoleSidebar";
 import Navbar from "../components/Navbar";
 import "../styles/dashboard.css";
+import "./ManageCow.css";
 import apiClient from "../api/client";
 
 function ManageCow() {
@@ -217,6 +218,7 @@ function ManageCow() {
   const [cows, setCows] = useState([]);
   const [editingCow, setEditingCow] = useState(null);
   const [search, setSearch] = useState("");
+  const [previewImage, setPreviewImage] = useState(null);
 
   const API = "/api/cows";
 
@@ -247,6 +249,17 @@ function ManageCow() {
   useEffect(() => {
     fetchCows();
   }, []);
+
+  useEffect(() => {
+    if (!previewImage) return undefined;
+
+    const closeOnEscape = (event) => {
+      if (event.key === "Escape") setPreviewImage(null);
+    };
+
+    window.addEventListener("keydown", closeOnEscape);
+    return () => window.removeEventListener("keydown", closeOnEscape);
+  }, [previewImage]);
 
   // ROLE CHECK
   const role = localStorage.getItem("role");
@@ -360,7 +373,7 @@ function ManageCow() {
 
   return (
 
-    <div className="layout">
+    <div className="layout manage-cows-page">
 
       <RoleSidebar />
 
@@ -447,7 +460,7 @@ function ManageCow() {
 
         {/* TABLE */}
 
-        <div className="table-wrapper">
+        <div className="table-wrapper manage-cow-table">
 
           <table className="table">
 
@@ -506,28 +519,21 @@ function ManageCow() {
                       {cow.frontImage ||
                       cow.image ? (
 
-                        <img
-                          src={
-                            cow.frontImage ||
-                            cow.image
-                          }
-                          alt="cow"
-                          className="cow-thumb"
-                          style={{
-                            width: "60px",
-                            height: "60px",
-                            objectFit: "cover",
-                            borderRadius: "10px",
-                            cursor: "pointer",
-                          }}
-                          onClick={() =>
-                            window.open(
-                              cow.frontImage ||
-                                cow.image,
-                              "_blank"
-                            )
-                          }
-                        />
+                        <button
+                          type="button"
+                          className="cow-image-trigger"
+                          aria-label={`View image of ${cow.cowId || "cow"}`}
+                          onClick={() => setPreviewImage({
+                            src: cow.frontImage || cow.image,
+                            alt: cow.cowId ? `Cow ${cow.cowId}` : "Cow",
+                          })}
+                        >
+                          <img
+                            src={cow.frontImage || cow.image}
+                            alt=""
+                            className="cow-thumb"
+                          />
+                        </button>
 
                       ) : (
 
@@ -676,6 +682,32 @@ function ManageCow() {
           </table>
 
         </div>
+
+        {previewImage && (
+          <div
+            className="cow-image-modal"
+            role="presentation"
+            onClick={() => setPreviewImage(null)}
+          >
+            <div
+              className="cow-image-modal__content"
+              role="dialog"
+              aria-modal="true"
+              aria-label={previewImage.alt}
+              onClick={(event) => event.stopPropagation()}
+            >
+              <button
+                type="button"
+                className="cow-image-modal__close"
+                aria-label="Close image preview"
+                onClick={() => setPreviewImage(null)}
+              >
+                ×
+              </button>
+              <img src={previewImage.src} alt={previewImage.alt} />
+            </div>
+          </div>
+        )}
 
         {/* EDIT PANEL */}
 
