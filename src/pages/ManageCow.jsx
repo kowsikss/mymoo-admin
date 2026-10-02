@@ -213,12 +213,15 @@ import "../styles/dashboard.css";
 import "./ManageCow.css";
 import apiClient from "../api/client";
 
+const PAGE_SIZE = 20;
+
 function ManageCow() {
 
   const [cows, setCows] = useState([]);
   const [editingCow, setEditingCow] = useState(null);
   const [search, setSearch] = useState("");
   const [previewImage, setPreviewImage] = useState(null);
+  const [currentPage, setCurrentPage] = useState(1);
 
   const API = "/api/cows";
 
@@ -370,6 +373,10 @@ function ManageCow() {
       cow.tagNumber,
     ].some((value) => String(value || "").toLowerCase().includes(searchValue));
   });
+  const pageCount = Math.max(1, Math.ceil(filteredCows.length / PAGE_SIZE));
+  const displayPage = Math.min(currentPage, pageCount);
+  const pageStart = (displayPage - 1) * PAGE_SIZE;
+  const visibleCows = filteredCows.slice(pageStart, pageStart + PAGE_SIZE);
 
   return (
 
@@ -440,14 +447,20 @@ function ManageCow() {
               aria-label="Search cows"
               placeholder="Search by cow ID, type, breed, age, weight or tag number"
               value={search}
-              onChange={(e) => setSearch(e.target.value)}
+              onChange={(e) => {
+                setSearch(e.target.value);
+                setCurrentPage(1);
+              }}
             />
             {search && (
               <button
                 type="button"
                 className="cow-search__clear"
                 aria-label="Clear cow search"
-                onClick={() => setSearch("")}
+                onClick={() => {
+                  setSearch("");
+                  setCurrentPage(1);
+                }}
               >
                 ×
               </button>
@@ -506,11 +519,11 @@ function ManageCow() {
 
               ) : (
 
-                filteredCows.map((cow, index) => (
+                visibleCows.map((cow, index) => (
 
                   <tr key={cow._id}>
 
-                    <td>{index + 1}</td>
+                    <td>{pageStart + index + 1}</td>
 
                     {/* IMAGE */}
 
@@ -682,6 +695,30 @@ function ManageCow() {
           </table>
 
         </div>
+
+        <nav className="cow-pagination" aria-label="Cow list pages">
+          <span className="cow-pagination__range">
+            Showing {filteredCows.length === 0 ? 0 : pageStart + 1}
+            –{Math.min(pageStart + PAGE_SIZE, filteredCows.length)} of {filteredCows.length}
+          </span>
+          <div className="cow-pagination__controls">
+            <button
+              type="button"
+              onClick={() => setCurrentPage(Math.max(1, displayPage - 1))}
+              disabled={displayPage === 1}
+            >
+              Previous
+            </button>
+            <span aria-live="polite">Page {displayPage} of {pageCount}</span>
+            <button
+              type="button"
+              onClick={() => setCurrentPage(Math.min(pageCount, displayPage + 1))}
+              disabled={displayPage === pageCount}
+            >
+              Next
+            </button>
+          </div>
+        </nav>
 
         {previewImage && (
           <div
