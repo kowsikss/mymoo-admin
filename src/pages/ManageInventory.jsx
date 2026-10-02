@@ -3,6 +3,37 @@ import { Navigate } from "react-router-dom";
 import RoleSidebar from "../components/RoleSidebar";
 import Navbar from "../components/Navbar";
 import apiClient from "../api/client";
+import "../styles/data-export.css";
+import { downloadExcel, downloadPdf } from "../utils/dataExport";
+
+const inventoryColumns = {
+  feed: [
+    { key: "date", label: "Date" },
+    { key: "feedType", label: "Feed Type" },
+    { key: "feedTime", label: "Feed Time" },
+    { key: "gunnyBags", label: "Gunny Bags" },
+    { key: "weightPerBag", label: "Weight per Bag (kg)" },
+    { key: "supplier", label: "Supplier" },
+    { key: "notes", label: "Notes" },
+  ],
+  medicine: [
+    { key: "date", label: "Date" },
+    { key: "medicineName", label: "Medicine" },
+    { key: "drugName", label: "Drug" },
+    { key: "quantity", label: "Quantity" },
+    { key: "unit", label: "Unit" },
+    { key: "expiryDate", label: "Expiry Date" },
+    { key: "notes", label: "Notes" },
+  ],
+  semen: [
+    { key: "date", label: "Date" },
+    { key: "breedName", label: "Breed" },
+    { key: "strawCount", label: "Straw Count" },
+    { key: "batchNumber", label: "Batch Number" },
+    { key: "expiryDate", label: "Expiry Date" },
+    { key: "notes", label: "Notes" },
+  ],
+};
 
 function ManageInventory() {
   const [records,   setRecords]   = useState([]);
@@ -41,6 +72,8 @@ function ManageInventory() {
   };
 
   const filtered = records.filter((r) => r.type === activeTab);
+  const exportName = `${activeTab}-inventory`;
+  const exportTitle = `${activeTab[0].toUpperCase()}${activeTab.slice(1)} Inventory`;
 
   const tabBtn = (tab, label) => (
     <button
@@ -70,6 +103,25 @@ function ManageInventory() {
           {tabBtn("feed",     "🌾 Feed")}
           {tabBtn("medicine", "💊 Medicines")}
           {tabBtn("semen",    "🧪 Semen Straw")}
+        </div>
+
+        <div className="data-export-actions" aria-label="Export inventory records">
+          <button
+            type="button"
+            className="data-export-actions__button data-export-actions__button--excel"
+            disabled={filtered.length === 0}
+            onClick={() => downloadExcel(filtered, inventoryColumns[activeTab], exportName, activeTab)}
+          >
+            Download Excel
+          </button>
+          <button
+            type="button"
+            className="data-export-actions__button data-export-actions__button--pdf"
+            disabled={filtered.length === 0}
+            onClick={() => downloadPdf(filtered, inventoryColumns[activeTab], exportName, exportTitle)}
+          >
+            Download PDF
+          </button>
         </div>
 
         {/* FEED TABLE */}

@@ -210,10 +210,25 @@ import { Navigate } from "react-router-dom";
 import RoleSidebar from "../components/RoleSidebar";
 import Navbar from "../components/Navbar";
 import "../styles/dashboard.css";
+import "../styles/data-export.css";
 import "./ManageCow.css";
 import apiClient from "../api/client";
+import { downloadExcel, downloadPdf } from "../utils/dataExport";
 
 const PAGE_SIZE = 20;
+const cowExportColumns = [
+  { key: "cowId", label: "Cow ID" },
+  { key: "type", label: "Type" },
+  { key: "breed", label: "Breed" },
+  { key: "age", label: "Age" },
+  { key: "weight", label: "Weight (kg)" },
+  { key: "tagNumber", label: "Tag Number" },
+  { key: "healthStatus", label: "Health Status" },
+  { key: "insuranceStatus", label: "Insurance" },
+  { key: "registrationDate", label: "Registration Date" },
+  { key: "dateOfDeath", label: "Date of Death" },
+  { key: "causeOfDeath", label: "Cause of Death" },
+];
 
 function ManageCow() {
 
@@ -377,6 +392,19 @@ function ManageCow() {
   const displayPage = Math.min(currentPage, pageCount);
   const pageStart = (displayPage - 1) * PAGE_SIZE;
   const visibleCows = filteredCows.slice(pageStart, pageStart + PAGE_SIZE);
+  const cowExportRows = filteredCows.map((cow) => ({
+    cowId: cow.cowId || "-",
+    type: cow.type || "-",
+    breed: cow.breed?.name || cow.breed || "-",
+    age: cow.age ? `${cow.age} ${cow.ageUnit || "yrs"}` : "-",
+    weight: cow.weight ?? "-",
+    tagNumber: cow.tagNumber || "-",
+    healthStatus: cow.healthStatus || "-",
+    insuranceStatus: cow.insuranceStatus || "-",
+    registrationDate: cow.registrationDate || "-",
+    dateOfDeath: cow.dateOfDeath || "-",
+    causeOfDeath: cow.causeOfDeath || "-",
+  }));
 
   return (
 
@@ -469,6 +497,25 @@ function ManageCow() {
           <span className="cow-search__count">
             {search ? `${filteredCows.length} of ${cows.length} animals` : `${cows.length} animals`}
           </span>
+        </div>
+
+        <div className="data-export-actions" aria-label="Export cow records">
+          <button
+            type="button"
+            className="data-export-actions__button data-export-actions__button--excel"
+            disabled={cowExportRows.length === 0}
+            onClick={() => downloadExcel(cowExportRows, cowExportColumns, "manage-cows", "Cows")}
+          >
+            Download Excel
+          </button>
+          <button
+            type="button"
+            className="data-export-actions__button data-export-actions__button--pdf"
+            disabled={cowExportRows.length === 0}
+            onClick={() => downloadPdf(cowExportRows, cowExportColumns, "manage-cows", "Manage Cows")}
+          >
+            Download PDF
+          </button>
         </div>
 
         {/* TABLE */}

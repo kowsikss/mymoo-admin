@@ -3,6 +3,18 @@ import { Navigate, useNavigate } from "react-router-dom";
 import KosalaAdminSidebar from "../components/KosalaAdminSidebar";
 import Navbar from "../components/Navbar";
 import apiClient from "../api/client";
+import "../styles/data-export.css";
+import { downloadExcel, downloadPdf } from "../utils/dataExport";
+
+const doctorColumns = [
+  { key: "name", label: "Name" },
+  { key: "email", label: "Email" },
+  { key: "mobile", label: "Mobile" },
+  { key: "specialization", label: "Specialization" },
+  { key: "nearbyHospital", label: "Nearby Hospital" },
+  { key: "hospitalPincode", label: "Hospital Pincode" },
+  { key: "joinedOn", label: "Joined On" },
+];
 
 function KosalaAdminDoctorsList() {
   const navigate = useNavigate();
@@ -44,6 +56,16 @@ function KosalaAdminDoctorsList() {
     }
   };
 
+  const doctorExportRows = doctors.map((doctor) => ({
+    name: doctor.name || "-",
+    email: doctor.email || "-",
+    mobile: doctor.mobile || "-",
+    specialization: doctor.specialization || "-",
+    nearbyHospital: doctor.nearbyHospital || "-",
+    hospitalPincode: doctor.hospitalPincode || "-",
+    joinedOn: doctor.createdAt ? new Date(doctor.createdAt).toLocaleDateString("en-IN") : "-",
+  }));
+
   return (
     <div className="layout">
       <KosalaAdminSidebar />
@@ -66,6 +88,25 @@ function KosalaAdminDoctorsList() {
             <h3>Total Doctors</h3>
             <p>{doctors.length}</p>
           </div>
+        </div>
+
+        <div className="data-export-actions" aria-label="Export doctor records">
+          <button
+            type="button"
+            className="data-export-actions__button data-export-actions__button--excel"
+            disabled={loading || doctorExportRows.length === 0}
+            onClick={() => downloadExcel(doctorExportRows, doctorColumns, "manage-doctors", "Doctors")}
+          >
+            Download Excel
+          </button>
+          <button
+            type="button"
+            className="data-export-actions__button data-export-actions__button--pdf"
+            disabled={loading || doctorExportRows.length === 0}
+            onClick={() => downloadPdf(doctorExportRows, doctorColumns, "manage-doctors", "Manage Doctors")}
+          >
+            Download PDF
+          </button>
         </div>
 
         {loading ? (

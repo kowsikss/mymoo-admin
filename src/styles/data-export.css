@@ -1,0 +1,54 @@
+.data-export-actions {
+  display: flex;
+  flex-wrap: wrap;
+  align-items: center;
+  gap: 9px;
+  margin: 0 0 18px;
+}
+
+.data-export-actions__button {
+  display: inline-flex;
+  align-items: center;
+  justify-content: center;
+  min-height: 38px;
+  padding: 0 14px;
+  border: 1px solid transparent;
+  border-radius: 7px;
+  font-size: 13px;
+  font-weight: 650;
+  cursor: pointer;
+  transition: background-color 0.18s ease, border-color 0.18s ease, transform 0.18s ease;
+}
+
+.data-export-actions__button--excel {
+  border-color: #b8d9c0;
+  background: #edf7ef;
+  color: #28613a;
+}
+
+.data-export-actions__button--excel:hover:not(:disabled) {
+  border-color: #4d9b61;
+  background: #dcefe0;
+}
+
+.data-export-actions__button--pdf {
+  border-color: #efc7bf;
+  background: #fff2ef;
+  color: #a34336;
+}
+
+.data-export-actions__button--pdf:hover:not(:disabled) {
+  border-color: #c76555;
+  background: #fbe3de;
+}
+
+.data-export-actions__button:disabled {
+  cursor: not-allowed;
+  opacity: 0.55;
+}
+
+@media (max-width: 560px) {
+  .data-export-actions__button {
+    flex: 1 1 140px;
+  }
+}
