@@ -2,7 +2,7 @@ import { useNavigate } from "react-router-dom";
 import { useEffect, useRef, useState } from "react";
 import homePageTranslations from "./homePageTranslations";
 
-const roles = [
+const roleDefinitions = [
   {
     key: "superAdmin",
     icon: (
@@ -147,6 +147,20 @@ export default function HomePage() {
           display: flex;
           align-items: center;
           gap: 0.75rem;
+        }
+        .hp-language-select {
+          min-height: 38px;
+          padding: 0 2rem 0 0.75rem;
+          border: 1px solid rgba(120,53,15,0.2);
+          border-radius: 8px;
+          background: #fff;
+          color: #78350f;
+          font: 500 0.82rem 'DM Sans', sans-serif;
+          cursor: pointer;
+        }
+        .hp-language-select:focus-visible {
+          outline: 3px solid rgba(180,83,9,0.22);
+          outline-offset: 2px;
         }
         .hp-donor-nav-btn {
           display: inline-flex;
@@ -509,38 +523,47 @@ export default function HomePage() {
             <span className="hp-logo-name">Gaushala</span>
           </div>
           <div className="hp-nav-actions">
+            <select
+              className="hp-language-select"
+              aria-label={copy.languageLabel}
+              value={language}
+              onChange={(event) => setLanguage(event.target.value)}
+            >
+              <option value="en">English</option>
+              <option value="hi">हिन्दी</option>
+              <option value="te">తెలుగు</option>
+            </select>
             <button className="hp-donor-nav-btn" onClick={() => navigate("/donor-dashboard")}>
-              Explore &amp; Donate <span aria-hidden="true">→</span>
+              {copy.nav.donate} <span aria-hidden="true">→</span>
             </button>
-            <span className="hp-nav-tag">GAUSHALA MANAGEMENT SYSTEM</span>
+            <span className="hp-nav-tag">{copy.nav.systemTag}</span>
           </div>
         </nav>
 
         {/* HERO */}
         <section className="hp-hero" ref={heroRef}>
           <div>
-            <div className="hp-hero-badge">Trusted Cattle Care Platform</div>
+            <div className="hp-hero-badge">{copy.hero.badge}</div>
             <h1 className="hp-hero-title">
-              Caring for every<br />
-              <span>Sacred Life</span><br />
-              with precision
+              {copy.hero.titleBefore}<br />
+              <span>{copy.hero.titleHighlight}</span><br />
+              {copy.hero.titleAfter}
             </h1>
             <p className="hp-hero-desc">
-              A unified platform for Gaushalas to manage cattle health, rescued
-              animals, vaccinations, and operations — from a single dashboard.
+              {copy.hero.description}
             </p>
             <div className="hp-hero-stats">
               <div className="hp-stat">
                 <span className="hp-stat-num">360°</span>
-                <span className="hp-stat-label">CATTLE VISIBILITY</span>
+                <span className="hp-stat-label">{copy.hero.stats[0]}</span>
               </div>
               <div className="hp-stat">
                 <span className="hp-stat-num">3</span>
-                <span className="hp-stat-label">ROLE LEVELS</span>
+                <span className="hp-stat-label">{copy.hero.stats[1]}</span>
               </div>
               <div className="hp-stat">
                 <span className="hp-stat-num">∞</span>
-                <span className="hp-stat-label">GAUSHALAS</span>
+                <span className="hp-stat-label">{copy.hero.stats[2]}</span>
               </div>
             </div>
           </div>
@@ -550,20 +573,16 @@ export default function HomePage() {
               <div className="hp-hero-card-header">
                 <div className="hp-hero-cow-icon">🐄</div>
                 <div>
-                  <div className="hp-hero-card-title">Nandini #KSL-042</div>
-                  <div className="hp-hero-card-id">Gaushala · Cow ID 042</div>
+                  <div className="hp-hero-card-title">{copy.hero.sampleCow}</div>
+                  <div className="hp-hero-card-id">{copy.hero.sampleCowMeta}</div>
                 </div>
               </div>
-              {[
-                { key: "Breed", val: "Gir Cow" },
-                { key: "Age", val: "4 Years" },
-                { key: "Last Vaccine", val: "FMD · 12 Jan" },
-                { key: "Deworming", val: "15 Feb" },
-                { key: "Health", val: <span className="hp-status-dot">Healthy</span> },
-              ].map(({ key, val }) => (
+              {copy.hero.sampleRows.map(({ key, value, status }) => (
                 <div className="hp-hero-card-row" key={key}>
                   <span className="hp-hero-card-key">{key}</span>
-                  <span className="hp-hero-card-val">{val}</span>
+                  <span className="hp-hero-card-val">
+                    {status ? <span className="hp-status-dot">{value}</span> : value}
+                  </span>
                 </div>
               ))}
             </div>
@@ -574,7 +593,7 @@ export default function HomePage() {
 
         {/* FEATURES */}
         <section className="hp-features">
-          <p className="hp-section-label">Platform Capabilities</p>
+          <p className="hp-section-label">{copy.featuresHeading}</p>
           <div className="hp-features-grid">
             {features.map((f) => (
               <div className="hp-feature-card" key={f.label}>
@@ -588,8 +607,8 @@ export default function HomePage() {
 
         {/* LOGIN SECTION */}
         <section className="hp-login-section">
-          <h2 className="hp-login-heading">Access your portal</h2>
-          <p className="hp-login-sub">Select your role to continue to the login page.</p>
+          <h2 className="hp-login-heading">{copy.login.heading}</h2>
+          <p className="hp-login-sub">{copy.login.subtitle}</p>
           <div className="hp-roles-grid">
             {roles.map((role) => (
               <div
@@ -611,7 +630,7 @@ export default function HomePage() {
                   className="hp-role-btn"
                   style={{ background: role.accent, color: "white" }}
                 >
-                  Login as {role.title}
+                  {copy.login.buttonPrefix} {role.title}
                   <svg width="14" height="14" viewBox="0 0 14 14" fill="none">
                     <path d="M2 7h10M8 3l4 4-4 4" stroke="white" strokeWidth="1.8" strokeLinecap="round" strokeLinejoin="round" />
                   </svg>
@@ -629,16 +648,16 @@ export default function HomePage() {
   <div style={{ maxWidth: "1200px", margin: "0 auto", display: "grid", gridTemplateColumns: "1fr 1fr", gap: "3rem", alignItems: "center" }}>
     <div>
       <p style={{ fontSize: "0.72rem", color: "#a8d5b5", letterSpacing: "0.1em", marginBottom: "1rem", textTransform: "uppercase" }}>
-        Join the Network
+        {copy.apply.eyebrow}
       </p>
       <h2 style={{ fontFamily: "'Playfair Display', serif", fontSize: "2.2rem", color: "white", fontWeight: "700", lineHeight: "1.2", marginBottom: "1rem" }}>
-        Register Your<br />Gaushala with Us
+        {copy.apply.titleLineOne}<br />{copy.apply.titleLineTwo}
       </h2>
       <p style={{ color: "#a8d5b5", fontSize: "14px", lineHeight: "1.8", marginBottom: "2rem" }}>
-        Is your Gaushala not yet on the platform? Apply now. Fill in basic details and our Super Admin will review and approve your registration — giving you full access to manage cattle, health records, and more.
+        {copy.apply.description}
       </p>
       <div style={{ display: "flex", flexDirection: "column", gap: "10px", marginBottom: "2rem" }}>
-        {["Submit basic Gaushala details", "Super Admin reviews and approves", "Get your Gaushala Admin login instantly", "Start managing cattle & operations"].map((step, i) => (
+        {copy.apply.steps.map((step, i) => (
           <div key={i} style={{ display: "flex", alignItems: "center", gap: "12px" }}>
             <span style={{ width: "24px", height: "24px", background: "#7b4f2e", borderRadius: "50%", display: "flex", alignItems: "center", justifyContent: "center", fontSize: "11px", fontWeight: "700", color: "white", flexShrink: 0 }}>{i + 1}</span>
             <span style={{ color: "white", fontSize: "13px" }}>{step}</span>
@@ -649,17 +668,12 @@ export default function HomePage() {
         onClick={() => navigate("/apply-gaushala")}
         style={{ padding: "14px 32px", background: "#7b4f2e", color: "white", border: "none", borderRadius: "12px", fontSize: "15px", fontWeight: "600", cursor: "pointer", fontFamily: "inherit" }}
       >
-        Apply Now — It's Free 🏛️
+        {copy.apply.button}
       </button>
     </div>
     <div style={{ background: "rgba(255,255,255,0.07)", borderRadius: "20px", padding: "32px", border: "1px solid rgba(255,255,255,0.12)" }}>
-      <h3 style={{ fontFamily: "'Playfair Display', serif", color: "white", fontSize: "1.1rem", marginBottom: "20px" }}>What you'll need:</h3>
-      {[
-        { icon: "🏛️", label: "Gaushala Name" },
-        { icon: "📍", label: "Location & Pincode" },
-        { icon: "📧", label: "Email Address" },
-        { icon: "👤", label: "Admin Name & Password" },
-      ].map(f => (
+      <h3 style={{ fontFamily: "'Playfair Display', serif", color: "white", fontSize: "1.1rem", marginBottom: "20px" }}>{copy.apply.needsHeading}</h3>
+      {copy.apply.needs.map(f => (
         <div key={f.label} style={{ display: "flex", alignItems: "center", gap: "12px", padding: "12px 0", borderBottom: "1px solid rgba(255,255,255,0.08)" }}>
           <span style={{ fontSize: "22px" }}>{f.icon}</span>
           <span style={{ color: "white", fontSize: "13px", fontWeight: "500" }}>{f.label}</span>
@@ -673,20 +687,16 @@ export default function HomePage() {
 <section style={{ background: "#fef9f0", padding: "4rem 3rem" }}>
   <div style={{ maxWidth: "1200px", margin: "0 auto", textAlign: "center" }}>
     <p style={{ fontSize: "0.72rem", color: "#92400e", letterSpacing: "0.1em", marginBottom: "1rem", textTransform: "uppercase" }}>
-      Support Sacred Lives
+      {copy.donation.eyebrow}
     </p>
     <h2 style={{ fontFamily: "'Playfair Display', serif", fontSize: "2.2rem", color: "#1c1917", fontWeight: "700", marginBottom: "1rem" }}>
-      Donate to a <span style={{ color: "#b45309" }}>Gaushala</span>
+      {copy.donation.titleBefore} <span style={{ color: "#b45309" }}>{copy.donation.titleHighlight}</span>
     </h2>
     <p style={{ color: "#78716c", fontSize: "14px", maxWidth: "560px", margin: "0 auto 2.5rem", lineHeight: "1.8" }}>
-      Your donation provides food, medicine, and shelter to rescued and resident cattle. Choose a Gaushala near you and contribute directly.
+      {copy.donation.description}
     </p>
     <div style={{ display: "grid", gridTemplateColumns: "repeat(3, 1fr)", gap: "16px", marginBottom: "2.5rem" }}>
-      {[
-        { icon: "🌾", label: "₹100", desc: "Feeds a cow for a day" },
-        { icon: "💊", label: "₹501", desc: "Medicine for a sick animal" },
-        { icon: "🏥", label: "₹1001", desc: "Sponsors rescue care" },
-      ].map(d => (
+      {copy.donation.amounts.map(d => (
         <div key={d.label} style={{ background: "white", borderRadius: "16px", padding: "24px", border: "1px solid #e7e5e4" }}>
           <span style={{ fontSize: "2rem", display: "block", marginBottom: "8px" }}>{d.icon}</span>
           <p style={{ fontFamily: "'Playfair Display', serif", fontSize: "1.3rem", fontWeight: "700", color: "#b45309", margin: "0 0 4px" }}>{d.label}</p>
@@ -698,15 +708,15 @@ export default function HomePage() {
       onClick={() => navigate("/donor-dashboard")}
       style={{ padding: "14px 40px", background: "#b45309", color: "white", border: "none", borderRadius: "12px", fontSize: "15px", fontWeight: "600", cursor: "pointer", fontFamily: "inherit" }}
     >
-      Find a Cow to Support 🐄
+      {copy.donation.button}
     </button>
   </div>
 </section>
 
         {/* FOOTER */}
         <footer className="hp-footer">
-          <span className="hp-footer-copy">© 2025 Gaushala. All rights reserved.</span>
-          <span className="hp-footer-brand"> Gaushala Management</span>
+          <span className="hp-footer-copy">{copy.footer.copyright}</span>
+          <span className="hp-footer-brand">{copy.footer.brand}</span>
         </footer>
       </div>
     </>
