@@ -512,6 +512,9 @@ export default function HomePage() {
         }
         @media (max-width: 560px) {
           .hp-features-grid { grid-template-columns: 1fr 1fr; }
+          .hp-nav { flex-wrap: wrap; gap: 0.65rem; padding: 0.85rem 1rem; }
+          .hp-nav-actions { width: 100%; justify-content: space-between; }
+          .hp-donor-nav-btn { flex: 1; justify-content: center; }
         }
       `}</style>
 
@@ -531,7 +534,10 @@ export default function HomePage() {
             >
               <option value="en">English</option>
               <option value="hi">हिन्दी</option>
+              <option value="ta">தமிழ்</option>
               <option value="te">తెలుగు</option>
+              <option value="kn">ಕನ್ನಡ</option>
+              <option value="ml">മലയാളം</option>
             </select>
             <button className="hp-donor-nav-btn" onClick={() => navigate("/donor-dashboard")}>
               {copy.nav.donate} <span aria-hidden="true">→</span>
