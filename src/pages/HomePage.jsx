@@ -1,11 +1,10 @@
 import { useNavigate } from "react-router-dom";
-import { useEffect, useRef } from "react";
+import { useEffect, useRef, useState } from "react";
+import homePageTranslations from "./homePageTranslations";
 
 const roles = [
   {
-    title: "Super Admin",
-    subtitle: "Platform Management",
-    description: "Oversee all Gaushalas, manage doctors, and monitor the entire network from one place.",
+    key: "superAdmin",
     icon: (
       <svg viewBox="0 0 40 40" fill="none" xmlns="http://www.w3.org/2000/svg" width="40" height="40">
         <circle cx="20" cy="13" r="6" stroke="currentColor" strokeWidth="2.2" />
@@ -19,9 +18,7 @@ const roles = [
     border: "rgba(180,83,9,0.25)",
   },
   {
-    title: "Gaushala Admin",
-    subtitle: "Gaushala Operations",
-    description: "Manage your Gaushala's cattle, rescued animals, inventory, and medical staff with ease.",
+    key: "gaushalaAdmin",
     icon: (
       <svg viewBox="0 0 40 40" fill="none" xmlns="http://www.w3.org/2000/svg" width="40" height="40">
         <path d="M8 30c0-2 1-4 3-5l3-2v-4c-2-1-3-3-3-5 0-4 4-8 9-8s9 4 9 8c0 2-1 4-3 5v4l3 2c2 1 3 3 3 5" stroke="currentColor" strokeWidth="2.2" strokeLinecap="round" />
@@ -35,9 +32,7 @@ const roles = [
     border: "rgba(22,101,52,0.25)",
   },
   {
-    title: "Doctor",
-    subtitle: "Veterinary Care",
-    description: "Record vaccinations, deworming, immunizations, and reproductive health for every animal.",
+    key: "doctor",
     icon: (
       <svg viewBox="0 0 40 40" fill="none" xmlns="http://www.w3.org/2000/svg" width="40" height="40">
         <rect x="17" y="7" width="6" height="26" rx="3" stroke="currentColor" strokeWidth="2.2" />
@@ -51,16 +46,30 @@ const roles = [
   },
 ];
 
-const features = [
-  { icon: "🐄", label: "Cattle Registry", desc: "Full health & history records for every animal" },
-  { icon: "💉", label: "Medical Tracking", desc: "Vaccinations, deworming & immunizations" },
-  { icon: "🏥", label: "Rescue Management", desc: "Track and care for rescued animals" },
-  { icon: "📦", label: "Inventory Control", desc: "Medicines and supplies, always in check" },
+const featureDefinitions = [
+  { icon: "🐄", key: "cattle" },
+  { icon: "💉", key: "medical" },
+  { icon: "🏥", key: "rescue" },
+  { icon: "📦", key: "inventory" },
 ];
 
 export default function HomePage() {
   const navigate = useNavigate();
   const heroRef = useRef(null);
+  const [language, setLanguage] = useState(() => (
+    localStorage.getItem("homeLanguage") || "en"
+  ));
+  const copy = homePageTranslations[language] || homePageTranslations.en;
+  const roles = roleDefinitions.map((role) => ({ ...role, ...copy.roles[role.key] }));
+  const features = featureDefinitions.map((feature) => ({
+    ...feature,
+    ...copy.features[feature.key],
+  }));
+
+  useEffect(() => {
+    localStorage.setItem("homeLanguage", language);
+    document.documentElement.lang = language;
+  }, [language]);
 
   useEffect(() => {
     const el = heroRef.current;

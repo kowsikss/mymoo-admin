@@ -217,6 +217,7 @@ import { downloadExcel, downloadPdf } from "../utils/dataExport";
 
 const PAGE_SIZE = 20;
 const cowExportColumns = [
+  { key: "serialNumber", label: "S.No" },
   { key: "cowId", label: "Cow ID" },
   { key: "type", label: "Type" },
   { key: "breed", label: "Breed" },
@@ -392,7 +393,8 @@ function ManageCow() {
   const displayPage = Math.min(currentPage, pageCount);
   const pageStart = (displayPage - 1) * PAGE_SIZE;
   const visibleCows = filteredCows.slice(pageStart, pageStart + PAGE_SIZE);
-  const cowExportRows = filteredCows.map((cow) => ({
+  const cowExportRows = filteredCows.map((cow, index) => ({
+    serialNumber: index + 1,
     cowId: cow.cowId || "-",
     type: cow.type || "-",
     breed: cow.breed?.name || cow.breed || "-",

@@ -9,6 +9,18 @@ import RoleSidebar from "../components/RoleSidebar";
 import Navbar from "../components/Navbar";
 
 import apiClient from "../api/client";
+import "../styles/data-export.css";
+import { downloadExcel, downloadPdf } from "../utils/dataExport";
+
+const rescuedAnimalColumns = [
+  { key: "tagNumber", label: "Tag Number" },
+  { key: "sex", label: "Sex" },
+  { key: "breed", label: "Breed" },
+  { key: "age", label: "Age" },
+  { key: "dateOfRescued", label: "Date Rescued" },
+  { key: "reason", label: "Reason" },
+  { key: "ownerName", label: "Owner" },
+];
 
 function ManageRescuedAnimal() {
 
@@ -98,6 +110,16 @@ function ManageRescuedAnimal() {
 
   };
 
+  const rescuedAnimalExportRows = records.map((record) => ({
+    tagNumber: record.tagNumber || "-",
+    sex: record.sex || "-",
+    breed: record.breed || "-",
+    age: record.age || "-",
+    dateOfRescued: record.dateOfRescued || "-",
+    reason: record.reasonOfAdoption || "-",
+    ownerName: record.ownerName || "-",
+  }));
+
   return (
 
     <div className="layout">
@@ -111,6 +133,35 @@ function ManageRescuedAnimal() {
         <h2>
           RESCUED ANIMALS
         </h2>
+
+        <div className="data-export-actions" aria-label="Export rescued animal records">
+          <button
+            type="button"
+            className="data-export-actions__button data-export-actions__button--excel"
+            disabled={rescuedAnimalExportRows.length === 0}
+            onClick={() => downloadExcel(
+              rescuedAnimalExportRows,
+              rescuedAnimalColumns,
+              "rescued-animals",
+              "Rescued Animals"
+            )}
+          >
+            Download Excel
+          </button>
+          <button
+            type="button"
+            className="data-export-actions__button data-export-actions__button--pdf"
+            disabled={rescuedAnimalExportRows.length === 0}
+            onClick={() => downloadPdf(
+              rescuedAnimalExportRows,
+              rescuedAnimalColumns,
+              "rescued-animals",
+              "Rescued Animals"
+            )}
+          >
+            Download PDF
+          </button>
+        </div>
 
         {/* TABLE */}
 
