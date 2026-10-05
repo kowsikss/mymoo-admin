@@ -70,7 +70,9 @@ export default function HomePage() {
     localStorage.setItem("homeLanguage", language);
     document.documentElement.lang = language;
     if (language === "en") {
-      document.cookie = "googtrans=; expires=Thu, 01 Jan 1970 00:00:00 GMT; path=/";
+      const expired = "googtrans=; expires=Thu, 01 Jan 1970 00:00:00 GMT; max-age=0";
+      document.cookie = `${expired}; path=/`;
+      document.cookie = `${expired}; path=${window.location.pathname}`;
     } else {
       document.cookie = `googtrans=/en/${language}; path=/`;
     }
