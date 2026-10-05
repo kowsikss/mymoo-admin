@@ -1,5 +1,6 @@
 import { BrowserRouter, Routes, Route } from "react-router-dom";
 import ProtectedRoute from "./components/ProtectedRoute";
+import LanguageSwitcher from "./components/LanguageSwitcher";
 
 // LOGIN
 import AdminLogin from "./pages/AdminLogin";
@@ -70,6 +71,7 @@ import DonorDashboard      from "./pages/DonorDashboard";
 function App() {
   return ( 
     <BrowserRouter>
+      <LanguageSwitcher />
       <Routes>
         <Route path="/apply-gaushala" element={<ApplyGaushala />} />
 <Route path="/donate"         element={<DonationPage />} />

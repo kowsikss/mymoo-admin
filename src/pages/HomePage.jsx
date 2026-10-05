@@ -69,6 +69,11 @@ export default function HomePage() {
   useEffect(() => {
     localStorage.setItem("homeLanguage", language);
     document.documentElement.lang = language;
+    if (language === "en") {
+      document.cookie = "googtrans=; expires=Thu, 01 Jan 1970 00:00:00 GMT; path=/";
+    } else {
+      document.cookie = `googtrans=/en/${language}; path=/`;
+    }
   }, [language]);
 
   useEffect(() => {
@@ -518,7 +523,7 @@ export default function HomePage() {
         }
       `}</style>
 
-      <div className="hp-root">
+      <div className="hp-root notranslate">
         {/* NAV */}
         <nav className="hp-nav">
           <div className="hp-logo">
@@ -530,7 +535,13 @@ export default function HomePage() {
               className="hp-language-select"
               aria-label={copy.languageLabel}
               value={language}
-              onChange={(event) => setLanguage(event.target.value)}
+              onChange={(event) => {
+                localStorage.setItem("homeLanguage", event.target.value);
+                setLanguage(event.target.value);
+                window.dispatchEvent(new CustomEvent("app-language-change", {
+                  detail: event.target.value,
+                }));
+              }}
             >
               <option value="en">English</option>
               <option value="hi">हिन्दी</option>

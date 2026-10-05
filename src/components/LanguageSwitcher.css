@@ -1,0 +1,57 @@
+.google-translate-hidden {
+  position: absolute;
+  width: 1px;
+  height: 1px;
+  overflow: hidden;
+  clip-path: inset(50%);
+}
+
+.app-language-switcher {
+  position: fixed;
+  right: 16px;
+  bottom: 16px;
+  z-index: 900;
+  display: flex;
+  align-items: center;
+  gap: 7px;
+  padding: 7px 9px;
+  border: 1px solid #d9e4d5;
+  border-radius: 8px;
+  background: rgba(255, 255, 255, 0.96);
+  box-shadow: 0 5px 18px rgba(36, 58, 36, 0.14);
+  color: #365c3b;
+}
+
+.app-language-switcher > span {
+  font-size: 15px;
+  font-weight: 700;
+}
+
+.app-language-switcher select {
+  max-width: 130px;
+  border: 0;
+  outline: 0;
+  background: transparent;
+  color: #294d36;
+  font: inherit;
+  font-size: 12px;
+  cursor: pointer;
+}
+
+body > .skiptranslate,
+.goog-te-banner-frame,
+#goog-gt-tt,
+.goog-te-balloon-frame {
+  display: none !important;
+}
+
+body {
+  top: 0 !important;
+}
+
+@media (max-width: 560px) {
+  .app-language-switcher {
+    right: 10px;
+    bottom: 10px;
+  }
+}
