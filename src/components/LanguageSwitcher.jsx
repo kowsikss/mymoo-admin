@@ -1,5 +1,9 @@
 import { useEffect, useState } from "react";
 import { useLocation } from "react-router-dom";
+import {
+  clearGoogleTranslateCookies,
+  selectGoogleTranslateLanguage,
+} from "../utils/googleTranslate";
 import "./LanguageSwitcher.css";
 
 const languages = [
@@ -51,10 +55,8 @@ function LanguageSwitcher() {
     if (location.pathname === "/") return undefined;
 
     const timer = window.setTimeout(() => {
-      const translateSelect = document.querySelector(".goog-te-combo");
-      if (!translateSelect) return;
-      translateSelect.value = language === "en" ? "" : language;
-      translateSelect.dispatchEvent(new Event("change", { bubbles: true }));
+      if (language === "en") clearGoogleTranslateCookies();
+      selectGoogleTranslateLanguage(language);
     }, 300);
 
     return () => window.clearTimeout(timer);
@@ -66,22 +68,11 @@ function LanguageSwitcher() {
     setLanguage(nextLanguage);
 
     if (nextLanguage === "en") {
-      const expired = "googtrans=; expires=Thu, 01 Jan 1970 00:00:00 GMT; max-age=0";
-      document.cookie = `${expired}; path=/`;
-      document.cookie = `${expired}; path=${location.pathname}`;
-
-      const translateSelect = document.querySelector(".goog-te-combo");
-      if (translateSelect) {
-        translateSelect.value = "";
-        translateSelect.dispatchEvent(new Event("change", { bubbles: true }));
-      }
+      selectGoogleTranslateLanguage("en");
+      clearGoogleTranslateCookies();
     } else {
       document.cookie = `googtrans=/en/${nextLanguage}; path=/`;
-      const translateSelect = document.querySelector(".goog-te-combo");
-      if (translateSelect) {
-        translateSelect.value = nextLanguage;
-        translateSelect.dispatchEvent(new Event("change", { bubbles: true }));
-      }
+      selectGoogleTranslateLanguage(nextLanguage);
     }
 
     window.setTimeout(() => window.location.reload(), 250);

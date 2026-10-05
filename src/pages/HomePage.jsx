@@ -1,6 +1,7 @@
 import { useNavigate } from "react-router-dom";
 import { useEffect, useRef, useState } from "react";
 import homePageTranslations from "./homePageTranslations";
+import { clearGoogleTranslateCookies } from "../utils/googleTranslate";
 
 const roleDefinitions = [
   {
@@ -69,11 +70,8 @@ export default function HomePage() {
   useEffect(() => {
     localStorage.setItem("homeLanguage", language);
     document.documentElement.lang = language;
-    if (language === "en") {
-      const expired = "googtrans=; expires=Thu, 01 Jan 1970 00:00:00 GMT; max-age=0";
-      document.cookie = `${expired}; path=/`;
-      document.cookie = `${expired}; path=${window.location.pathname}`;
-    } else {
+    if (language === "en") clearGoogleTranslateCookies();
+    else {
       document.cookie = `googtrans=/en/${language}; path=/`;
     }
   }, [language]);
