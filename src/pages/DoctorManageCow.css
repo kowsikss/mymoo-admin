@@ -1,0 +1,213 @@
+.doctor-manage-cows-page,
+.doctor-manage-cows-page .main {
+  min-width: 0;
+}
+
+.doctor-manage-cows-page .doctor-cow-table {
+  width: 100%;
+  max-width: 100%;
+  overflow-x: auto;
+  overflow-y: hidden;
+  overscroll-behavior-x: contain;
+  border-radius: 12px;
+  background: #fff;
+}
+
+.doctor-manage-cows-page .doctor-cow-table .table {
+  width: 100%;
+  min-width: 1420px;
+  table-layout: auto;
+}
+
+.doctor-manage-cows-page .doctor-cow-table td {
+  white-space: nowrap;
+}
+
+.doctor-manage-cows-page .doctor-cow-table td:nth-child(14) {
+  min-width: 190px;
+  max-width: 260px;
+  overflow-wrap: anywhere;
+  white-space: normal;
+}
+
+.doctor-manage-cows-page .doctor-cow-table td:last-child {
+  min-width: 120px;
+}
+
+.doctor-manage-cows-page .doctor-cow-table td:last-child button {
+  min-height: 36px;
+  padding: 7px 10px;
+  border: 1px solid #c9ded9;
+  border-radius: 7px;
+  background: #f1faf8;
+  color: #276f69;
+  font-size: 12px;
+  font-weight: 650;
+}
+
+.doctor-manage-cows-page .doctor-cow-table td:last-child button:hover {
+  border-color: #4b9b90;
+  background: #e4f3f0;
+}
+
+.doctor-manage-cows-page .doctor-cow-image-trigger {
+  display: inline-flex;
+  padding: 0;
+  border: 0;
+  border-radius: 8px;
+  background: transparent;
+  cursor: zoom-in;
+}
+
+.doctor-manage-cows-page .doctor-cow-image-trigger:focus-visible,
+.doctor-manage-cows-page .doctor-cow-image-modal__close:focus-visible {
+  outline: 3px solid #47704e;
+  outline-offset: 3px;
+}
+
+.doctor-manage-cows-page .cow-thumb {
+  width: 60px;
+  height: 60px;
+}
+
+.doctor-manage-cows-page .doctor-cow-pagination {
+  display: flex;
+  align-items: center;
+  justify-content: space-between;
+  gap: 16px;
+  padding: 16px 4px 24px;
+  color: #65725f;
+  font-size: 13px;
+}
+
+.doctor-manage-cows-page .doctor-cow-pagination__controls {
+  display: flex;
+  align-items: center;
+  gap: 12px;
+}
+
+.doctor-manage-cows-page .doctor-cow-pagination__controls button {
+  min-width: 88px;
+  min-height: 38px;
+  padding: 0 14px;
+  border: 1px solid #dce4d8;
+  border-radius: 7px;
+  background: #fff;
+  color: #294d36;
+  font-size: 13px;
+  font-weight: 600;
+  cursor: pointer;
+}
+
+.doctor-manage-cows-page .doctor-cow-pagination__controls button:hover:not(:disabled) {
+  border-color: #8cac78;
+  background: #edf4e8;
+}
+
+.doctor-manage-cows-page .doctor-cow-pagination__controls button:disabled {
+  color: #9da69a;
+  cursor: not-allowed;
+  opacity: 0.65;
+}
+
+.doctor-manage-cows-page .doctor-cow-pagination__controls span {
+  min-width: 84px;
+  color: #374b37;
+  text-align: center;
+  white-space: nowrap;
+}
+
+.doctor-manage-cows-page .doctor-cow-image-modal {
+  position: fixed;
+  inset: 0;
+  z-index: 1000;
+  display: grid;
+  place-items: center;
+  padding: 20px;
+  background: rgba(20, 26, 20, 0.84);
+  backdrop-filter: blur(3px);
+}
+
+.doctor-manage-cows-page .doctor-cow-image-modal__content {
+  position: relative;
+  display: grid;
+  place-items: center;
+  max-width: min(1100px, 100%);
+  max-height: 100%;
+}
+
+.doctor-manage-cows-page .doctor-cow-image-modal__content img {
+  display: block;
+  max-width: 100%;
+  max-height: calc(100vh - 40px);
+  object-fit: contain;
+  border-radius: 8px;
+  box-shadow: 0 18px 60px rgba(0, 0, 0, 0.35);
+}
+
+.doctor-manage-cows-page .doctor-cow-image-modal__close {
+  position: absolute;
+  top: 8px;
+  right: 8px;
+  z-index: 1;
+  display: grid;
+  place-items: center;
+  width: 38px;
+  height: 38px;
+  padding: 0;
+  border: 1px solid rgba(255, 255, 255, 0.45);
+  border-radius: 50%;
+  background: rgba(0, 0, 0, 0.72);
+  color: #fff;
+  font-size: 26px;
+  line-height: 1;
+  cursor: pointer;
+}
+
+.doctor-manage-cows-page .edit-panel {
+  max-width: 560px;
+  border-color: #a9d2cc;
+  background: linear-gradient(145deg, #f1faf8 0%, #fff 62%, #f4faf6 100%);
+  box-shadow: 0 12px 32px rgba(39, 111, 105, 0.12);
+}
+
+.doctor-manage-cows-page .edit-panel h3,
+.doctor-manage-cows-page .edit-panel label {
+  color: #245f5a;
+}
+
+.doctor-manage-cows-page .edit-panel input,
+.doctor-manage-cows-page .edit-panel select {
+  border-color: #c9ded9;
+  background: #fff;
+}
+
+.doctor-manage-cows-page .edit-panel input:focus,
+.doctor-manage-cows-page .edit-panel select:focus {
+  border-color: #4b9b90;
+  box-shadow: 0 0 0 3px rgba(75, 155, 144, 0.14);
+}
+
+.doctor-manage-cows-page .edit-panel .update-btn {
+  background: #276f69;
+}
+
+@media (max-width: 560px) {
+  .doctor-manage-cows-page .doctor-cow-pagination {
+    align-items: flex-start;
+    flex-direction: column;
+  }
+
+  .doctor-manage-cows-page .doctor-cow-pagination__controls {
+    width: 100%;
+    justify-content: space-between;
+  }
+
+  .doctor-manage-cows-page .doctor-cow-image-modal {
+    padding: 12px;
+  }
+
+  .doctor-manage-cows-page .doctor-cow-image-modal__content img {
+    max-height: calc(100vh - 24px);
+  }
+}

@@ -197,7 +197,7 @@ function DoctorLogin() {
   };
 
   return (
-    <div className="login-container">
+    <div className="login-container doctor-login-container">
       <div className="login-box">
         <h2>Doctor Login</h2>
         

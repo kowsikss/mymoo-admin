@@ -4,17 +4,37 @@ import Sidebar from "../components/Sidebar";
 import Navbar from "../components/Navbar";
 import apiClient from "../api/client";
 import { API_BASE_URL } from "../api/client";
+import { downloadExcel, downloadPdf } from "../utils/dataExport";
+import "../styles/dashboard.css";
+import "../styles/data-export.css";
+import "./DoctorManageCow.css";
+
+const PAGE_SIZE = 20;
+const doctorCowExportColumns = [
+  { key: "serialNumber", label: "S.No" },
+  { key: "cowId", label: "Cow ID" },
+  { key: "tagNumber", label: "RFID Tag" },
+  { key: "type", label: "Type" },
+  { key: "breed", label: "Breed" },
+  { key: "age", label: "Age" },
+  { key: "weight", label: "Weight" },
+  { key: "healthStatus", label: "Health Status" },
+  { key: "disease", label: "Disease" },
+  { key: "vaccinationDate", label: "Last Vaccination" },
+  { key: "dewormingDate", label: "Last Deworming" },
+  { key: "dateOfDeath", label: "Date of Death" },
+  { key: "causeOfDeath", label: "Cause of Death" },
+];
 
 function DoctorManageCow() {
   const [cows,       setCows]       = useState([]);
   const [editingCow, setEditingCow] = useState(null);
   const [loading,    setLoading]    = useState(true);
   const [search,     setSearch]     = useState("");
+  const [currentPage, setCurrentPage] = useState(1);
+  const [previewImage, setPreviewImage] = useState(null);
 
   const API = "/api/cows";
-
-  const role = localStorage.getItem("role");
-  if (role !== "doctor") return <Navigate to="/" />;
 
   const fetchCows = async () => {
     try {
@@ -29,6 +49,18 @@ function DoctorManageCow() {
   };
 
   useEffect(() => { fetchCows(); }, []);
+
+  useEffect(() => {
+    if (!previewImage) return undefined;
+    const closeOnEscape = (event) => {
+      if (event.key === "Escape") setPreviewImage(null);
+    };
+    window.addEventListener("keydown", closeOnEscape);
+    return () => window.removeEventListener("keydown", closeOnEscape);
+  }, [previewImage]);
+
+  const role = localStorage.getItem("role");
+  if (role !== "doctor") return <Navigate to="/" />;
 
   const handleEditClick = (cow) => setEditingCow({ ...cow });
 
@@ -79,6 +111,29 @@ function DoctorManageCow() {
     (c.tagNumber || "").toLowerCase().includes(search.toLowerCase()) ||
     (c.healthStatus || "").toLowerCase().includes(search.toLowerCase())
   );
+  const pageCount = Math.max(1, Math.ceil(filtered.length / PAGE_SIZE));
+  const displayPage = Math.min(currentPage, pageCount);
+  const pageStart = (displayPage - 1) * PAGE_SIZE;
+  const visibleCows = filtered.slice(pageStart, pageStart + PAGE_SIZE);
+  const exportRows = filtered.map((cow, index) => ({
+    serialNumber: index + 1,
+    cowId: cow.cowId || "-",
+    tagNumber: cow.tagNumber || "-",
+    type: cow.type || "-",
+    breed: cow.breed?.name || cow.breed || "-",
+    age: cow.age ? `${cow.age} ${cow.ageUnit || "yrs"}` : "-",
+    weight: cow.weight ? `${cow.weight} kg` : "-",
+    healthStatus: cow.healthStatus || "-",
+    disease: cow.hasDisease === "Yes" ? (cow.diseaseName || "Yes") : "No",
+    vaccinationDate: cow.vaccinationDate || "-",
+    dewormingDate: cow.dewormingDate || "-",
+    dateOfDeath: cow.dateOfDeath ? new Date(cow.dateOfDeath).toLocaleDateString("en-IN") : "-",
+    causeOfDeath: cow.causeOfDeath || "-",
+  }));
+
+  const getCowImageUrl = (image) => (
+    image?.startsWith("http") ? image : `${API_BASE_URL}/uploads/${image}`
+  );
 
   const healthColor = (status) => {
     if (status === "Healthy")         return "var(--accent-green)";
@@ -89,7 +144,7 @@ function DoctorManageCow() {
   };
 
   return (
-    <div className="layout">
+    <div className="layout doctor-manage-cows-page">
       <Sidebar />
       <div className="main">
         <Navbar />
@@ -128,16 +183,38 @@ function DoctorManageCow() {
           <input
             placeholder="🔍 Search by Cow ID, Tag Number or Health Status..."
             value={search}
-            onChange={(e) => setSearch(e.target.value)}
+            onChange={(e) => {
+              setSearch(e.target.value);
+              setCurrentPage(1);
+            }}
             style={{ width: "100%", maxWidth: "420px" }}
           />
+        </div>
+
+        <div className="data-export-actions" aria-label="Export cow records">
+          <button
+            type="button"
+            className="data-export-actions__button data-export-actions__button--excel"
+            disabled={exportRows.length === 0}
+            onClick={() => downloadExcel(exportRows, doctorCowExportColumns, "doctor-manage-cows", "Cows")}
+          >
+            Download Excel
+          </button>
+          <button
+            type="button"
+            className="data-export-actions__button data-export-actions__button--pdf"
+            disabled={exportRows.length === 0}
+            onClick={() => downloadPdf(exportRows, doctorCowExportColumns, "doctor-manage-cows", "Manage Cows")}
+          >
+            Download PDF
+          </button>
         </div>
 
         {/* TABLE */}
         {loading ? (
           <p style={{ color: "var(--text-secondary)" }}>Loading...</p>
         ) : (
-          <div className="table-wrapper">
+          <div className="table-wrapper doctor-cow-table">
             <table className="table">
               <thead>
                 <tr>
@@ -166,22 +243,26 @@ function DoctorManageCow() {
                     </td>
                   </tr>
                 ) : (
-                  filtered.map((cow, index) => (
+                  visibleCows.map((cow, index) => (
                     <tr key={cow._id}>
-                      <td>{index + 1}</td>
+                      <td>{pageStart + index + 1}</td>
                       <td>
                         {cow.frontImage || cow.image ? (
-                          <img
-                            src={`${API_BASE_URL}/uploads/${cow.frontImage || cow.image}`}
-                            alt="cow"
-                            className="cow-thumb"
-                            onClick={() =>
-                              window.open(
-                                `${API_BASE_URL}/uploads/${cow.frontImage || cow.image}`,
-                                "_blank"
-                              )
-                            }
-                          />
+                          <button
+                            type="button"
+                            className="doctor-cow-image-trigger"
+                            aria-label={`View image of ${cow.cowId || "cow"}`}
+                            onClick={() => setPreviewImage({
+                              src: getCowImageUrl(cow.frontImage || cow.image),
+                              alt: cow.cowId ? `Cow ${cow.cowId}` : "Cow",
+                            })}
+                          >
+                            <img
+                              src={getCowImageUrl(cow.frontImage || cow.image)}
+                              alt=""
+                              className="cow-thumb"
+                            />
+                          </button>
                         ) : (
                           <span className="no-img">No Image</span>
                         )}
@@ -216,6 +297,46 @@ function DoctorManageCow() {
                 )}
               </tbody>
             </table>
+          </div>
+        )}
+
+        <nav className="doctor-cow-pagination" aria-label="Cow list pages">
+          <span>
+            Showing {filtered.length === 0 ? 0 : pageStart + 1}
+            –{Math.min(pageStart + PAGE_SIZE, filtered.length)} of {filtered.length}
+          </span>
+          <div className="doctor-cow-pagination__controls">
+            <button
+              type="button"
+              onClick={() => setCurrentPage(Math.max(1, displayPage - 1))}
+              disabled={displayPage === 1}
+            >Previous</button>
+            <span aria-live="polite">Page {displayPage} of {pageCount}</span>
+            <button
+              type="button"
+              onClick={() => setCurrentPage(Math.min(pageCount, displayPage + 1))}
+              disabled={displayPage === pageCount}
+            >Next</button>
+          </div>
+        </nav>
+
+        {previewImage && (
+          <div className="doctor-cow-image-modal" role="presentation" onClick={() => setPreviewImage(null)}>
+            <div
+              className="doctor-cow-image-modal__content"
+              role="dialog"
+              aria-modal="true"
+              aria-label={previewImage.alt}
+              onClick={(event) => event.stopPropagation()}
+            >
+              <button
+                type="button"
+                className="doctor-cow-image-modal__close"
+                aria-label="Close image preview"
+                onClick={() => setPreviewImage(null)}
+              >×</button>
+              <img src={previewImage.src} alt={previewImage.alt} />
+            </div>
           </div>
         )}
 

@@ -167,6 +167,33 @@
   text-decoration: underline;
 }
 
+.doctor-login-container .login-box {
+  max-width: 450px;
+  padding: 40px;
+}
+
+.doctor-login-container .login-box form {
+  display: flex;
+  flex-direction: column;
+}
+
+.doctor-login-container .login-box label {
+  margin-bottom: 6px;
+}
+
+.doctor-login-container .login-box input,
+.doctor-login-container .login-box select {
+  margin-bottom: 15px;
+}
+
+.doctor-login-container .login-box button {
+  margin-top: 2px;
+}
+
+.doctor-login-container .forgot-password {
+  margin-top: 14px;
+}
+
 /* Responsive Design */
 @media (max-width: 768px) {
   .login-box {
@@ -182,6 +209,11 @@
   .login-box select {
     padding: 10px 12px;
   }
+
+  .doctor-login-container .login-box {
+    max-width: 450px;
+    padding: 30px 25px;
+  }
 }
 
 @media (max-width: 480px) {
@@ -191,5 +223,9 @@
   
   .login-box h2 {
     font-size: 22px;
+  }
+
+  .doctor-login-container .login-box {
+    padding: 25px 20px;
   }
 }
